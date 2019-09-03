@@ -1,12 +1,14 @@
 package com.systemhaus.demo.domain;
 
+import java.time.LocalDate;
+
 public class LivroRetirado {
 	
 	private Livro livro; //referência ao livro editado
-	private String dataRetirada; //data em que o livro foi retirado 
-	private String dataDevolucao; //data em que o livro será devolvido 
+	private LocalDate dataRetirada; //data em que o livro foi retirado 
+	private LocalDate dataDevolucao; //data em que o livro será devolvido 
 	
-	public LivroRetirado(Livro livro, String dataRetirada, String dataDevolucao) {
+	public LivroRetirado(Livro livro, LocalDate dataRetirada, LocalDate dataDevolucao) {
 		super();
 		this.livro = livro;
 		this.dataRetirada = dataRetirada;
@@ -19,16 +21,16 @@ public class LivroRetirado {
 	public void setLivro(Livro livro) {
 		this.livro = livro;
 	}
-	public String getDataRetirada() {
+	public LocalDate getDataRetirada() {
 		return dataRetirada;
 	}
-	public void setDataRetirada(String dataRetirada) {
+	public void setDataRetirada(LocalDate dataRetirada) {
 		this.dataRetirada = dataRetirada;
 	}
-	public String getDataDevolucao() {
+	public LocalDate getDataDevolucao() {
 		return dataDevolucao;
 	}
-	public void setDataDevolucao(String dataDevolucao) {
+	public void setDataDevolucao(LocalDate dataDevolucao) {
 		this.dataDevolucao = dataDevolucao;
 	}
 	
