@@ -9,9 +9,11 @@ public class Livro {
 	private String autor; //autor do livro
 	private String editora; //editora do livro
 	private int numeroPaginas; //número de páginas
-	private boolean disp; //disponibilidade do livro, se está ou não retirado
+	private int quantCopias; //quantidade de livros no acervo
+	private int quantDisp; //quantidade de livros disponíveis para a retirada
 	
-	public Livro(int iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas) {
+	public Livro(int iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas,
+			int quantCopias) {
 		super();
 		ISBN = iSBN;
 		this.edicao = edicao;
@@ -19,9 +21,9 @@ public class Livro {
 		this.autor = autor;
 		this.editora = editora;
 		this.numeroPaginas = numeroPaginas;
-		disp = true;
+		this.quantCopias = quantCopias;
+		this.quantDisp = quantCopias;
 	}
-	
 	public int getISBN() {
 		return ISBN;
 	}
@@ -58,11 +60,18 @@ public class Livro {
 	public void setnumeroPaginas(int numeroPaginas) {
 		this.numeroPaginas = numeroPaginas;
 	}
-	public boolean getDisp() {
-		return disp;
+	public int getQuantCopias() {
+		return quantCopias;
 	}
-	public void setDisp(boolean disp) {
-		this.disp = disp;
+	public void setQuantCopias(int quantCopias) {
+		this.quantCopias = quantCopias;
 	}
+	public int getQuantDisp() {
+		return quantDisp;
+	}
+	public void setQuantDisp(int quantDisp) {
+		this.quantDisp = quantDisp;
+	}
+	
 	
 }
