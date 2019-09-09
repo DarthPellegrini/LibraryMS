@@ -21,57 +21,24 @@ public class CadastroLivroFrm {
 	private JTextField txtfQuant;
 	private JTextField txtfAutor;
 	private JTextField txtfEditora;
+	private JInternalFrame ifCadLivro;
 	
 	public JInternalFrame criarCadastroLivro() {
-		JInternalFrame ifCadLivro = new JInternalFrame("Cadastro de Livros", false, true);
-		ifCadLivro.setBounds(198, 35, 400, 320);
-		
+		initComponents();
+		initLayout();
+
+		return ifCadLivro;
+	}
+
+	private void initLayout() {
 		ifCadLivro.getContentPane().setLayout(new BorderLayout());
-		
-		DefaultFormBuilder builder = new DefaultFormBuilder(
-				new FormLayout("pref, 5px, pref:grow", "27px, 27px,27px, 27px,27px,27px,27px"));
-		builder.border(new EmptyBorder(5, 5, 5, 5));
-		
-		txtfIsbn = new JTextField();
-		txtfIsbn.setColumns(10);
-		builder.append("ISBN:", txtfIsbn);
-		builder.nextLine();
-		
-		txtfTitulo = new JTextField();
-		txtfTitulo.setColumns(10);
-		builder.append("Título:",txtfTitulo);
-		builder.nextLine();
-		
-		txtfAutor = new JTextField();
-		txtfAutor.setColumns(10);
-		builder.append("Autor:", txtfAutor);
-		builder.nextLine();
-		
-		txtfEditora = new JTextField();
-		txtfEditora.setColumns(10);
-		builder.append("Editora:", txtfEditora);
-		builder.nextLine();
-		
-		txtfEdicao = new JTextField();
-		txtfEdicao.setColumns(10);
-		builder.append("Edição:", txtfEdicao);
-		builder.nextLine();
-		
-		txtfNPag = new JTextField();
-		txtfNPag.setColumns(10);
-		builder.append("Num. Páginas:", txtfNPag);
-		builder.nextLine();
-		
-		txtfQuant = new JTextField();
-		txtfQuant.setColumns(10);
-		builder.append("Quantidade:", txtfQuant);
-		builder.nextLine();
-		
-		ifCadLivro.getContentPane().add(builder.build(), BorderLayout.CENTER);
-		
+		ifCadLivro.getContentPane().add(criarPainelPrincipal(), BorderLayout.CENTER);
+		ifCadLivro.getContentPane().add(criarButtonBar(), BorderLayout.SOUTH);
+	}
+
+	private JPanel criarButtonBar() {
 		JPanel panelLivro = new JPanel();
 		panelLivro.setLayout(new FlowLayout());
-		builder.append(panelLivro, 3);
 		
 		JButton btnAdicionarLivro = new JButton("Adicionar");
 		panelLivro.add(btnAdicionarLivro);
@@ -86,8 +53,61 @@ public class CadastroLivroFrm {
 		JButton btnDeletarLivro = new JButton("Deletar");
 		btnDeletarLivro.setEnabled(false);
 		panelLivro.add(btnDeletarLivro);
+		return panelLivro;
+	}
+
+	private JPanel criarPainelPrincipal() {
+		DefaultFormBuilder builder = new DefaultFormBuilder(
+				new FormLayout("right:pref, 5px, pref:grow", "18dlu,18dlu,18dlu, 18dlu,18dlu,18dlu,18dlu"));
+		builder.border(new EmptyBorder(5, 5, 5, 5));
+
+		builder.append("ISBN:", txtfIsbn);
+		builder.nextLine();
 		
-		ifCadLivro.getContentPane().add(panelLivro, BorderLayout.SOUTH);
-		return ifCadLivro;
+		builder.append("Título:",txtfTitulo);
+		builder.nextLine();
+		
+		builder.append("Autor:", txtfAutor);
+		builder.nextLine();
+		
+		builder.append("Editora:", txtfEditora);
+		builder.nextLine();
+		
+		builder.append("Edição:", txtfEdicao);
+		builder.nextLine();
+		
+		builder.append("Num. Páginas:", txtfNPag);
+		builder.nextLine();
+		
+		builder.append("Quantidade:", txtfQuant);
+		builder.nextLine();
+		return builder.build();
+	}
+
+	private void initComponents() {
+		ifCadLivro = new JInternalFrame("Cadastro de Livros", false, true);
+		ifCadLivro.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+		ifCadLivro.setBounds(198, 35, 400, 320);
+		
+		txtfIsbn = new JTextField();
+		txtfIsbn.setColumns(10);
+		
+		txtfTitulo = new JTextField();
+		txtfTitulo.setColumns(10);
+		
+		txtfAutor = new JTextField();
+		txtfAutor.setColumns(10);
+		
+		txtfEditora = new JTextField();
+		txtfEditora.setColumns(10);
+		
+		txtfEdicao = new JTextField();
+		txtfEdicao.setColumns(10);
+		
+		txtfNPag = new JTextField();
+		txtfNPag.setColumns(10);
+		
+		txtfQuant = new JTextField();
+		txtfQuant.setColumns(10);
 	}
 }

@@ -141,11 +141,6 @@ public class MainWindow {
 		//TODO: create individual classes for each JInternalFrame
 		
 		/*
-		 * Tela de Cadastro de Livros
-		 */
-		JInternalFrame ifCadLivro = new CadastroLivroFrm().criarCadastroLivro();
-		desktopPane.add(ifCadLivro);
-		/*
 		 * Tela de Cadastro de Usuários
 		 */
 		JInternalFrame ifCadUser = new JInternalFrame("Cadastro de Clientes",false, true);
@@ -262,7 +257,9 @@ public class MainWindow {
 		//remodelar depois em uma classe que cuidará dos Listeners de eventos
 		btnLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ifCadLivro.setVisible(true);
+				JInternalFrame cadastroLivro = new CadastroLivroFrm().criarCadastroLivro();
+				desktopPane.add(cadastroLivro);
+				cadastroLivro.setVisible(true);
 			}
 		});
 		btnUser.addActionListener(new ActionListener() {
