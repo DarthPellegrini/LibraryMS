@@ -23,7 +23,7 @@ public class CadastroLivroFrm {
 	private JTextField txtfEditora;
 	private JInternalFrame ifCadLivro;
 	
-	public JInternalFrame criarCadastroLivro() {
+	public JInternalFrame createBookCRUD() {
 		initComponents();
 		initLayout();
 
@@ -32,7 +32,7 @@ public class CadastroLivroFrm {
 
 	private void initLayout() {
 		ifCadLivro.getContentPane().setLayout(new BorderLayout());
-		ifCadLivro.getContentPane().add(criarPainelPrincipal(), BorderLayout.CENTER);
+		ifCadLivro.getContentPane().add(createMainPanel(), BorderLayout.CENTER);
 		ifCadLivro.getContentPane().add(criarButtonBar(), BorderLayout.SOUTH);
 	}
 
@@ -56,9 +56,9 @@ public class CadastroLivroFrm {
 		return panelLivro;
 	}
 
-	private JPanel criarPainelPrincipal() {
+	private JPanel createMainPanel() {
 		DefaultFormBuilder builder = new DefaultFormBuilder(
-				new FormLayout("right:pref, 5px, pref:grow", "18dlu,18dlu,18dlu, 18dlu,18dlu,18dlu,18dlu"));
+				new FormLayout("right:pref, 3dlu, pref:grow", "18dlu,18dlu,18dlu, 18dlu,18dlu,18dlu,18dlu"));
 		builder.border(new EmptyBorder(5, 5, 5, 5));
 
 		builder.append("ISBN:", txtfIsbn);
@@ -81,6 +81,7 @@ public class CadastroLivroFrm {
 		
 		builder.append("Quantidade:", txtfQuant);
 		builder.nextLine();
+		
 		return builder.build();
 	}
 
