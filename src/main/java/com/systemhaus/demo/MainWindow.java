@@ -18,6 +18,8 @@ import javax.swing.JInternalFrame;
 import com.jgoodies.forms.layout.FormLayout;
 import com.jgoodies.forms.layout.ColumnSpec;
 import com.jgoodies.forms.layout.RowSpec;
+import com.systemhaus.demo.ui.CadastroLivroFrm;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import com.jgoodies.forms.layout.FormSpecs;
@@ -26,13 +28,6 @@ import javax.swing.JPanel;
 public class MainWindow {
 
 	private JFrame frame;
-	private JTextField txtfIsbn;
-	private JTextField txtfEdicao;
-	private JTextField txtfTitulo;
-	private JTextField txtfNPag;
-	private JTextField txtfQuant;
-	private JTextField txtfAutor;
-	private JTextField txtfEditora;
 	private JTextField txtfNome;
 	private JTextField txtfCpf;
 	private JTextField txtfTelefone;
@@ -144,106 +139,6 @@ public class MainWindow {
 		desktopPane.add(lblRetiradasdevolues);
 		
 		//TODO: create individual classes for each JInternalFrame
-		
-		/*
-		 * Tela de Cadastro de Livros
-		 */
-		JInternalFrame ifCadLivro = new JInternalFrame("Cadastro de Livros", false, true);
-		ifCadLivro.setBounds(198, 35, 400, 320);
-		desktopPane.add(ifCadLivro);
-		ifCadLivro.getContentPane().setLayout(new FormLayout(new ColumnSpec[] {
-				FormSpecs.UNRELATED_GAP_COLSPEC,
-				ColumnSpec.decode("90px"),
-				FormSpecs.LABEL_COMPONENT_GAP_COLSPEC,
-				ColumnSpec.decode("257px"),},
-			new RowSpec[] {
-				RowSpec.decode("24px"),
-				RowSpec.decode("27px"),
-				FormSpecs.LINE_GAP_ROWSPEC,
-				RowSpec.decode("27px"),
-				FormSpecs.LINE_GAP_ROWSPEC,
-				RowSpec.decode("27px"),
-				FormSpecs.LINE_GAP_ROWSPEC,
-				RowSpec.decode("27px"),
-				FormSpecs.LINE_GAP_ROWSPEC,
-				RowSpec.decode("27px"),
-				FormSpecs.LINE_GAP_ROWSPEC,
-				RowSpec.decode("27px"),
-				FormSpecs.LINE_GAP_ROWSPEC,
-				RowSpec.decode("27px"),
-				FormSpecs.RELATED_GAP_ROWSPEC,
-				RowSpec.decode("39px"),}));
-		
-		JLabel lblIsbn = new JLabel("ISBN:");
-		ifCadLivro.getContentPane().add(lblIsbn, "2, 2, right, center");
-		
-		txtfIsbn = new JTextField();
-		ifCadLivro.getContentPane().add(txtfIsbn, "4, 2, fill, top");
-		txtfIsbn.setColumns(10);
-		
-		JLabel lblTtulo = new JLabel("Título:");
-		ifCadLivro.getContentPane().add(lblTtulo, "2, 4, right, center");
-		
-		txtfTitulo = new JTextField();
-		ifCadLivro.getContentPane().add(txtfTitulo, "4, 4, fill, top");
-		txtfTitulo.setColumns(10);
-		
-		JLabel lblAutor = new JLabel("Autor:");
-		ifCadLivro.getContentPane().add(lblAutor, "2, 6, right, center");
-		
-		txtfAutor = new JTextField();
-		ifCadLivro.getContentPane().add(txtfAutor, "4, 6, fill, top");
-		txtfAutor.setColumns(10);
-		
-		JLabel lblEditora = new JLabel("Editora:");
-		ifCadLivro.getContentPane().add(lblEditora, "2, 8, right, center");
-		
-		txtfEditora = new JTextField();
-		ifCadLivro.getContentPane().add(txtfEditora, "4, 8, fill, top");
-		txtfEditora.setColumns(10);
-		
-		JLabel lblEdio = new JLabel("Edição:");
-		ifCadLivro.getContentPane().add(lblEdio, "2, 10, right, center");
-		
-		txtfEdicao = new JTextField();
-		ifCadLivro.getContentPane().add(txtfEdicao, "4, 10, fill, top");
-		txtfEdicao.setColumns(10);
-		
-		JLabel lblNumPginas = new JLabel("Num. Páginas:");
-		ifCadLivro.getContentPane().add(lblNumPginas, "2, 12, right, center");
-		
-		txtfNPag = new JTextField();
-		ifCadLivro.getContentPane().add(txtfNPag, "4, 12, fill, top");
-		txtfNPag.setColumns(10);
-		
-		JLabel lblQuantidade = new JLabel("Quantidade:");
-		ifCadLivro.getContentPane().add(lblQuantidade, "2, 14, right, center");
-		
-		txtfQuant = new JTextField();
-		ifCadLivro.getContentPane().add(txtfQuant, "4, 14, fill, top");
-		txtfQuant.setColumns(10);
-		
-		JPanel panelLivro = new JPanel();
-		ifCadLivro.getContentPane().add(panelLivro, "2, 16, 3, 1, fill, fill");
-		panelLivro.setLayout(null);
-		
-		JButton btnAdicionarLivro = new JButton("Adicionar");
-		btnAdicionarLivro.setBounds(9, 17, 86, 27);
-		panelLivro.add(btnAdicionarLivro);
-		
-		JButton btnPesquisarLivro = new JButton("Pesquisar");
-		btnPesquisarLivro.setBounds(102, 17, 90, 27);
-		panelLivro.add(btnPesquisarLivro);
-		
-		JButton btnSalvarLivro = new JButton("Salvar");
-		btnSalvarLivro.setBounds(199, 17, 66, 27);
-		btnSalvarLivro.setEnabled(false);
-		panelLivro.add(btnSalvarLivro);
-		
-		JButton btnDeletarLivro = new JButton("Deletar");
-		btnDeletarLivro.setBounds(272, 17, 74, 27);
-		btnDeletarLivro.setEnabled(false);
-		panelLivro.add(btnDeletarLivro);
 		
 		/*
 		 * Tela de Cadastro de Usuários
@@ -362,7 +257,9 @@ public class MainWindow {
 		 */
 		btnLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ifCadLivro.setVisible(true);
+				JInternalFrame cadastroLivro = new CadastroLivroFrm().criarCadastroLivro();
+				desktopPane.add(cadastroLivro);
+				cadastroLivro.setVisible(true);
 			}
 		});
 		btnUser.addActionListener(new ActionListener() {
@@ -371,4 +268,6 @@ public class MainWindow {
 			}
 		});
 	}
+
+
 }
