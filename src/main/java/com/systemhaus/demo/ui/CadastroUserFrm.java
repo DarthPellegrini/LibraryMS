@@ -9,9 +9,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.layout.FormLayout;
-public class CadastroUserFrm {
+public class CadastroUserFrm extends SkeletonFrm{
 
 	private JTextField txtfNome;
 	private JTextField txtfCpf;
@@ -23,20 +22,20 @@ public class CadastroUserFrm {
 	private JTextField txtfCodCartao;
 	private JInternalFrame ifCadUser;
 	
-	public JInternalFrame createUserCRUD() {
+	public JInternalFrame createForm() {
 		initComponents();
 		initLayout();
 		
 		return ifCadUser;
 	}
 
-	private void initLayout() {
+	protected void initLayout() {
 		ifCadUser.getContentPane().setLayout(new BorderLayout());
 		ifCadUser.getContentPane().add(createMainPanel(), BorderLayout.CENTER);
-		ifCadUser.getContentPane().add(criarButtonBar(), BorderLayout.SOUTH);
+		ifCadUser.getContentPane().add(createButtonBar(), BorderLayout.SOUTH);
 	}
 	
-	private JPanel criarButtonBar() {
+	protected JPanel createButtonBar() {
 		JPanel panelUser = new JPanel();
 		panelUser.setLayout(new FlowLayout());
 		
@@ -56,9 +55,9 @@ public class CadastroUserFrm {
 		return panelUser;
 	}
 	
-	private JPanel createMainPanel() {
+	protected JPanel createMainPanel() {
 		DefaultFormBuilder builder = new DefaultFormBuilder(
-				new FormLayout("right:pref, 3dlu, pref:grow", "18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu"), new FormDebugPanel());
+				new FormLayout("right:pref, 3dlu, pref:grow", "18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu"));
 		builder.border(new EmptyBorder(5, 5, 5, 5));
 		
 		builder.append("Nome:",txtfNome);
@@ -88,35 +87,27 @@ public class CadastroUserFrm {
 		return builder.build();
 	}
 
-	private void initComponents() {
+	protected void initComponents() {
 		ifCadUser = new JInternalFrame("Cadastro de Clientes",false, true);
 		ifCadUser.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 		ifCadUser.setBounds(190, 35, 535, 345);
 		
 		txtfNome = new JTextField();
-		txtfNome.setColumns(10);
 		
 		txtfCpf = new JTextField();
-		txtfCpf.setColumns(10);
 		
 		txtfTelefone = new JTextField();
-		txtfTelefone.setColumns(10);
 		
 		txtfCidade = new JTextField();
-		txtfCidade.setColumns(10);
 		
 		txtfBairro = new JTextField();
-		txtfBairro.setColumns(10);
 		
 		txtfRua = new JTextField();
-		txtfRua.setColumns(10);
 		
 		txtfNumero = new JTextField();
-		txtfNumero.setColumns(10);
 		
 		txtfCodCartao = new JTextField();
 		txtfCodCartao.setText("Código gerado automaticamente");
 		txtfCodCartao.setEnabled(false);
-		txtfCodCartao.setColumns(10);
 	}
 }

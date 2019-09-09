@@ -12,7 +12,7 @@ import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 
-public class CadastroLivroFrm {
+public class CadastroLivroFrm extends SkeletonFrm{
 	
 	private JTextField txtfIsbn;
 	private JTextField txtfEdicao;
@@ -23,20 +23,20 @@ public class CadastroLivroFrm {
 	private JTextField txtfEditora;
 	private JInternalFrame ifCadLivro;
 	
-	public JInternalFrame createBookCRUD() {
+	public JInternalFrame createForm() {
 		initComponents();
 		initLayout();
 
 		return ifCadLivro;
 	}
 
-	private void initLayout() {
+	protected void initLayout() {
 		ifCadLivro.getContentPane().setLayout(new BorderLayout());
 		ifCadLivro.getContentPane().add(createMainPanel(), BorderLayout.CENTER);
-		ifCadLivro.getContentPane().add(criarButtonBar(), BorderLayout.SOUTH);
+		ifCadLivro.getContentPane().add(createButtonBar(), BorderLayout.SOUTH);
 	}
 
-	private JPanel criarButtonBar() {
+	protected JPanel createButtonBar() {
 		JPanel panelLivro = new JPanel();
 		panelLivro.setLayout(new FlowLayout());
 		
@@ -56,7 +56,7 @@ public class CadastroLivroFrm {
 		return panelLivro;
 	}
 
-	private JPanel createMainPanel() {
+	protected JPanel createMainPanel() {
 		DefaultFormBuilder builder = new DefaultFormBuilder(
 				new FormLayout("right:pref, 3dlu, pref:grow", "18dlu,18dlu,18dlu, 18dlu,18dlu,18dlu,18dlu"));
 		builder.border(new EmptyBorder(5, 5, 5, 5));
@@ -85,30 +85,23 @@ public class CadastroLivroFrm {
 		return builder.build();
 	}
 
-	private void initComponents() {
+	protected void initComponents() {
 		ifCadLivro = new JInternalFrame("Cadastro de Livros", false, true);
 		ifCadLivro.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-		ifCadLivro.setBounds(198, 35, 400, 320);
+		ifCadLivro.setBounds(190, 35, 400, 320);
 		
 		txtfIsbn = new JTextField();
-		txtfIsbn.setColumns(10);
 		
 		txtfTitulo = new JTextField();
-		txtfTitulo.setColumns(10);
 		
 		txtfAutor = new JTextField();
-		txtfAutor.setColumns(10);
 		
 		txtfEditora = new JTextField();
-		txtfEditora.setColumns(10);
 		
 		txtfEdicao = new JTextField();
-		txtfEdicao.setColumns(10);
 		
 		txtfNPag = new JTextField();
-		txtfNPag.setColumns(10);
 		
 		txtfQuant = new JTextField();
-		txtfQuant.setColumns(10);
 	}
 }

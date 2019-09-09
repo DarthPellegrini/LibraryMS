@@ -16,6 +16,8 @@ import java.awt.Cursor;
 import javax.swing.JInternalFrame;
 import com.systemhaus.demo.ui.CadastroLivroFrm;
 import com.systemhaus.demo.ui.CadastroUserFrm;
+import com.systemhaus.demo.ui.TransacaoLivroFrm;
+
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 public class MainWindow {
@@ -130,19 +132,25 @@ public class MainWindow {
 		 */
 		btnLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JInternalFrame cadastroLivro = new CadastroLivroFrm().createBookCRUD();
+				JInternalFrame cadastroLivro = new CadastroLivroFrm().createForm();
 				desktopPane.add(cadastroLivro);
 				cadastroLivro.setVisible(true);
 			}
 		});
 		btnUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JInternalFrame cadastroUser = new CadastroUserFrm().createUserCRUD();
+				JInternalFrame cadastroUser = new CadastroUserFrm().createForm();
 				desktopPane.add(cadastroUser);
 				cadastroUser.setVisible(true);
 			}
 		});
+		btnTran.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JInternalFrame transacaoLivro = new TransacaoLivroFrm().createForm();
+				desktopPane.add(transacaoLivro);
+				transacaoLivro.setVisible(true);
+			}
+		});
+		
 	}
-
-
 }
