@@ -356,10 +356,10 @@ public class MainWindow {
 		panel.add(btnExcluirUser);
 		
 		
+		//TODO: remodelar depois em uma classe que cuidará dos Listeners de eventos
 		/*
 		 * Funcionalidades da tela
 		 */
-		//remodelar depois em uma classe que cuidará dos Listeners de eventos
 		btnLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				ifCadLivro.setVisible(true);
