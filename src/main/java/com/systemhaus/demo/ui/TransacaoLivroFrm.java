@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
-import com.jgoodies.forms.debug.FormDebugPanel;
 import com.jgoodies.forms.layout.FormLayout;
 
 public class TransacaoLivroFrm extends SkeletonFrm{
@@ -81,16 +80,23 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		cbEscolhaLivro.addItem("Quantidade");
 		txtfEscolhaLivro = new JTextField();
 		btnPesquisaLivro = new JButton("Pesquisar");
-		btnPesquisaLivro.setEnabled(false);
 		
 		txtfIsbn = new JTextField();
+		txtfIsbn.setEnabled(false);
 		txtfTitulo = new JTextField();
+		txtfTitulo.setEnabled(false);
 		txtfAutor = new JTextField();
+		txtfAutor.setEnabled(false);
 		txtfEditora = new JTextField();
+		txtfEditora.setEnabled(false);
 		txtfEdicao = new JTextField();
+		txtfEdicao.setEnabled(false);
 		txtfNPag = new JTextField();
+		txtfNPag.setEnabled(false);
 		txtfQuant = new JTextField();
+		txtfQuant.setEnabled(false);
 		txtfQuantDisp = new JTextField();
+		txtfQuantDisp.setEnabled(false);
 		
 		cbEscolhaUser = new JComboBox<String>();
 		cbEscolhaUser.addItem("Nome");
@@ -103,16 +109,23 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		cbEscolhaUser.addItem("Cód. Cartão");
 		txtfEscolhaUser = new JTextField();
 		btnPesquisaUser = new JButton("Pesquisar");
-		btnPesquisaUser.setEnabled(false);
 		
 		txtfNome = new JTextField();
+		txtfNome.setEnabled(false);
 		txtfCpf = new JTextField();
+		txtfCpf.setEnabled(false);
 		txtfTelefone = new JTextField();
+		txtfTelefone.setEnabled(false);
 		txtfCidade = new JTextField();
+		txtfCidade.setEnabled(false);
 		txtfBairro = new JTextField();
+		txtfBairro.setEnabled(false);
 		txtfRua = new JTextField();
+		txtfRua.setEnabled(false);
 		txtfNumero = new JTextField();
+		txtfNumero.setEnabled(false);
 		txtfCodCartao = new JTextField();
+		txtfCodCartao.setEnabled(false);
 	}
 	
 	protected JPanel createMainPanel(){
