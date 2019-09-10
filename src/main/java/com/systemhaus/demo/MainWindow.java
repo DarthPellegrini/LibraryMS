@@ -22,7 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 public class MainWindow {
 
-	private JFrame frame;
+	private JFrame frame;																																													
 
 	/**
 	 * Launch the application.
@@ -64,14 +64,15 @@ public class MainWindow {
 	 */
 	private void initialize() {
 		frame = new JFrame("SGBooks - Sistema de Gerenciamento de Biblioteca");
-		frame.setBounds(100, 100, 900, 700);
+		frame.setBounds(0, 0, 1280, 720);
+		frame.setMaximumSize(new java.awt.Dimension(1280,720));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JDesktopPane desktopPane = new JDesktopPane();
 		frame.getContentPane().add(desktopPane, BorderLayout.CENTER);
 		
 		JMenuBar menuBar = new JMenuBar();
-		menuBar.setBounds(0, 0, 898, 23);
+		menuBar.setBounds(0, 0, frame.getWidth(), 23);
 		desktopPane.add(menuBar);
 		
 		JMenu mnArquivo = new JMenu("Arquivo");

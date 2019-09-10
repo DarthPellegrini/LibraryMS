@@ -76,7 +76,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		builder.append("Edição:", txtfEdicao);
 		builder.nextLine();
 		
-		builder.append("Num. Páginas:", txtfNPag);
+		builder.append("Nº de Páginas:", txtfNPag);
 		builder.nextLine();
 		
 		builder.append("Quantidade:", txtfQuant);
