@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
+import com.systemhaus.demo.FakeServer;
 public class CadastroUserFrm extends SkeletonFrm{
 
 	private JTextField txtfNome;
@@ -21,10 +22,12 @@ public class CadastroUserFrm extends SkeletonFrm{
 	private JTextField txtfNumero;
 	private JTextField txtfCodCartao;
 	private JInternalFrame ifCadUser;
+	private FakeServer fakeServer;
 	
-	public JInternalFrame createForm() {
+	public JInternalFrame createForm(FakeServer fakeServer) {
 		initComponents();
 		initLayout();
+		this.fakeServer = fakeServer;
 		
 		return ifCadUser;
 	}

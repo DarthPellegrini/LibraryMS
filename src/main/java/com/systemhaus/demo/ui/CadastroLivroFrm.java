@@ -2,6 +2,8 @@ package com.systemhaus.demo.ui;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
@@ -11,6 +13,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
+import com.systemhaus.demo.FakeServer;
 
 public class CadastroLivroFrm extends SkeletonFrm{
 	
@@ -22,10 +25,12 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	private JTextField txtfAutor;
 	private JTextField txtfEditora;
 	private JInternalFrame ifCadLivro;
+	private FakeServer fakeServer;
 	
-	public JInternalFrame createForm() {
+	public JInternalFrame createForm(FakeServer fakeServer) {
 		initComponents();
 		initLayout();
+		this.fakeServer = fakeServer;
 
 		return ifCadLivro;
 	}
@@ -42,6 +47,12 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		
 		JButton btnAdicionarLivro = new JButton("Adicionar");
 		panelLivro.add(btnAdicionarLivro);
+		
+		btnAdicionarLivro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				fakeServer.addBook(txtfIsbn.getText(), txtfEdicao.getText(), txtfTitulo.getText(), txtfAutor.getText(), txtfEditora.getText(), txtfNPag.getText(), txtfQuant.getText());
+			}
+		});
 		
 		JButton btnPesquisarLivro = new JButton("Pesquisar");
 		panelLivro.add(btnPesquisarLivro);
@@ -91,6 +102,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		ifCadLivro.setBounds(190, 35, 400, 320);
 		
 		txtfIsbn = new JTextField();
+		txtfIsbn.setText("Ex.: 9789988877773");
 		
 		txtfTitulo = new JTextField();
 		

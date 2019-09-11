@@ -6,20 +6,24 @@ import java.util.List;
 public class Prateleira {
 
 	// cada prateleira terá no máximo 20 livros
-	private List<Livro> prateleira;
+	private List<Livro> livros;
 	private final int size = 20;
 
 	public Prateleira() {
-		prateleira = new ArrayList<Livro>();
+		setPrateleira(new ArrayList<Livro>());
 	}
 	
-	public List<Livro> getPrateleira() {
-		return prateleira;
+	public Prateleira(ArrayList<Livro> livros) {
+		setPrateleira(livros);
+	}
+	
+	public List<Livro> getLivros() {
+		return livros;
 	}
 
-	public boolean setPrateleira(List<Livro> prateleira) {
-		if (prateleira.size() < size) {
-			this.prateleira = prateleira;
+	public boolean setPrateleira(List<Livro> livros) {
+		if (livros.size() < size) {
+			this.livros = livros;
 			return true;
 		} else {
 			return false;
@@ -27,8 +31,8 @@ public class Prateleira {
 	}
 	
 	public boolean addLivro(Livro l) {
-		if (prateleira.size() < size) {
-			prateleira.add(l);
+		if (livros.size() < size) {
+			livros.add(l);
 			return true;
 		} else {
 			return false;

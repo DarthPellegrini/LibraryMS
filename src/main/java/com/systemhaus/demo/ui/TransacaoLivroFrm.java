@@ -10,6 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
+import com.systemhaus.demo.FakeServer;
 
 public class TransacaoLivroFrm extends SkeletonFrm{
 
@@ -36,11 +37,12 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	private JTextField txtfRua;
 	private JTextField txtfNumero;
 	private JTextField txtfCodCartao;
+	private FakeServer fakeServer;
 	
-	
-	public JInternalFrame createForm() {
+	public JInternalFrame createForm(FakeServer fakeServer) {
 		initComponents();
 		initLayout();
+		this.fakeServer = fakeServer;
 		
 		return ifTranBook;
 	}
@@ -82,21 +84,21 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		btnPesquisaLivro = new JButton("Pesquisar");
 		
 		txtfIsbn = new JTextField();
-		txtfIsbn.setEnabled(false);
+		txtfIsbn.setEditable(false);
 		txtfTitulo = new JTextField();
-		txtfTitulo.setEnabled(false);
+		txtfTitulo.setEditable(false);
 		txtfAutor = new JTextField();
-		txtfAutor.setEnabled(false);
+		txtfAutor.setEditable(false);
 		txtfEditora = new JTextField();
-		txtfEditora.setEnabled(false);
+		txtfEditora.setEditable(false);
 		txtfEdicao = new JTextField();
-		txtfEdicao.setEnabled(false);
+		txtfEdicao.setEditable(false);
 		txtfNPag = new JTextField();
-		txtfNPag.setEnabled(false);
+		txtfNPag.setEditable(false);
 		txtfQuant = new JTextField();
-		txtfQuant.setEnabled(false);
+		txtfQuant.setEditable(false);
 		txtfQuantDisp = new JTextField();
-		txtfQuantDisp.setEnabled(false);
+		txtfQuantDisp.setEditable(false);
 		
 		cbEscolhaUser = new JComboBox<String>();
 		cbEscolhaUser.addItem("Nome");
@@ -111,21 +113,21 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		btnPesquisaUser = new JButton("Pesquisar");
 		
 		txtfNome = new JTextField();
-		txtfNome.setEnabled(false);
+		txtfNome.setEditable(false);
 		txtfCpf = new JTextField();
-		txtfCpf.setEnabled(false);
+		txtfCpf.setEditable(false);
 		txtfTelefone = new JTextField();
-		txtfTelefone.setEnabled(false);
+		txtfTelefone.setEditable(false);
 		txtfCidade = new JTextField();
-		txtfCidade.setEnabled(false);
+		txtfCidade.setEditable(false);
 		txtfBairro = new JTextField();
-		txtfBairro.setEnabled(false);
+		txtfBairro.setEditable(false);
 		txtfRua = new JTextField();
-		txtfRua.setEnabled(false);
+		txtfRua.setEditable(false);
 		txtfNumero = new JTextField();
-		txtfNumero.setEnabled(false);
+		txtfNumero.setEditable(false);
 		txtfCodCartao = new JTextField();
-		txtfCodCartao.setEnabled(false);
+		txtfCodCartao.setEditable(false);
 	}
 	
 	protected JPanel createMainPanel(){

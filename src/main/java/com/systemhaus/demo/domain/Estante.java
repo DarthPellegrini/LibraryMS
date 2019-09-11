@@ -1,18 +1,24 @@
 package com.systemhaus.demo.domain;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Estante {
 
 	// cada estante terá no máximo 5 prateleiras
-	private ArrayList<Prateleira> prateleiras;
+	private List<Prateleira> prateleiras;
 	private final int size = 5;
 	
 	public Estante() {
-		prateleiras = new ArrayList<Prateleira>();
+		setEstante(new ArrayList<Prateleira>());
+		
 	}
 
-	public ArrayList<Prateleira> getPrateleira() {
+	public Estante(ArrayList<Prateleira> prateleiras) {
+		setEstante(prateleiras);
+	}
+	
+	public List<Prateleira> getPrateleiras() {
 		return prateleiras;
 	}
 
@@ -33,5 +39,4 @@ public class Estante {
 			return false;
 		}
 	}
-	
 }
