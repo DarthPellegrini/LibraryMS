@@ -17,11 +17,15 @@ public class Prateleira {
 		setPrateleira(livros);
 	}
 	
+	public int getSize() {
+		return size;
+	}
+	
 	public List<Livro> getLivros() {
 		return livros;
 	}
 
-	public boolean setPrateleira(List<Livro> livros) {
+	private boolean setPrateleira(List<Livro> livros) {
 		if (livros.size() < size) {
 			this.livros = livros;
 			return true;

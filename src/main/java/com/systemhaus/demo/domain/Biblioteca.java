@@ -20,9 +20,18 @@ public class Biblioteca {
 		this.estantes = estantes;
 	}
 	
-	//retorna as prateleiras da última estante adicionada
-	public List<Prateleira> getLastPrateleiras() {
-		return this.getEstantes().get(this.getEstantes().size()-1).getPrateleiras();
+	public void addEstante() {
+		estantes.add(new Estante());
+	}
+	
+	//retorna a última estante adicionada
+	public Estante getLastEstante() { 
+		return this.getEstantes().get(this.getEstantes().size()-1);
+	}
+	
+	//retorna a última prateleira da última estante adicionada
+	public Prateleira getLastPrateleira() {
+		return this.getEstantes().get(this.getEstantes().size()-1).getPrateleiras().get(this.getEstantes().get(this.getEstantes().size()-1).getPrateleiras().size()-1);
 	}
 	
 	//retorna os livros da última prateleira adicionadas

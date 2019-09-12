@@ -50,7 +50,15 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		
 		btnAdicionarLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				fakeServer.addBook(txtfIsbn.getText(), txtfEdicao.getText(), txtfTitulo.getText(), txtfAutor.getText(), txtfEditora.getText(), txtfNPag.getText(), txtfQuant.getText());
+				//validação dos campos
+				if (!txtfIsbn.getText().isEmpty() && !txtfEdicao.getText().isEmpty() &&
+						!txtfTitulo.getText().isEmpty() && !txtfAutor.getText().isEmpty() &&
+						!txtfEditora.getText().isEmpty() && !txtfNPag.getText().isEmpty() && 
+						!txtfQuant.getText().isEmpty()) 
+					fakeServer.addNewBookRoutine(txtfIsbn.getText(), txtfEdicao.getText(), txtfTitulo.getText(), txtfAutor.getText(), txtfEditora.getText(), txtfNPag.getText(), txtfQuant.getText());
+				else
+					//TODO: print error message
+					return;
 			}
 		});
 		
