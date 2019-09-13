@@ -50,6 +50,17 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		JButton btnAdicionarLivro = new JButton("Adicionar");
 		panelLivro.add(btnAdicionarLivro);
 		
+		JButton btnPesquisarLivro = new JButton("Pesquisar");
+		panelLivro.add(btnPesquisarLivro);
+		
+		JButton btnSalvarLivro = new JButton("Salvar");
+		btnSalvarLivro.setEnabled(false);
+		panelLivro.add(btnSalvarLivro);
+		
+		JButton btnDeletarLivro = new JButton("Deletar");
+		btnDeletarLivro.setEnabled(false);
+		panelLivro.add(btnDeletarLivro);
+		
 		btnAdicionarLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//validação dos campos
@@ -57,7 +68,11 @@ public class CadastroLivroFrm extends SkeletonFrm{
 						!txtfTitulo.getText().isEmpty() && !txtfAutor.getText().isEmpty() &&
 						!txtfEditora.getText().isEmpty() && !txtfNPag.getText().isEmpty() && 
 						!txtfQuant.getText().isEmpty()) 
-					if(fakeServer.addNewBookRoutine(txtfIsbn.getText(), txtfEdicao.getText(), txtfTitulo.getText(), txtfAutor.getText(), txtfEditora.getText(), txtfNPag.getText(), txtfQuant.getText()))
+					if(fakeServer.addNewBookRoutine(txtfIsbn.getText(), 
+													Integer.parseInt(txtfEdicao.getText()), 
+													txtfTitulo.getText(), txtfAutor.getText(), txtfEditora.getText(), 
+													Integer.parseInt(txtfNPag.getText()), 
+													Integer.parseInt(txtfQuant.getText())))
 						JOptionPane.showMessageDialog(null, "Livro(s) inserido(s) com sucesso!");
 					else
 						JOptionPane.showMessageDialog(null, "Ops, aconteceu um erro na inserção do livro!");
@@ -65,9 +80,6 @@ public class CadastroLivroFrm extends SkeletonFrm{
 					JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
 			}
 		});
-		
-		JButton btnPesquisarLivro = new JButton("Pesquisar");
-		panelLivro.add(btnPesquisarLivro);
 		
 		btnPesquisarLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -87,17 +99,36 @@ public class CadastroLivroFrm extends SkeletonFrm{
 					txtfEditora.setText(l.getEditora());
 					txtfNPag.setText("" + l.getNumeroPaginas());
 					txtfQuant.setText("" + l.getQuantCopias());
+					btnAdicionarLivro.setEnabled(false);
+					btnSalvarLivro.setEnabled(true);
+					btnDeletarLivro.setEnabled(true);
 				}
 			}
 		});
 		
-		JButton btnSalvarLivro = new JButton("Salvar");
-		btnSalvarLivro.setEnabled(false);
-		panelLivro.add(btnSalvarLivro);
+		btnDeletarLivro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				//validação dos campos
+				if (!txtfIsbn.getText().isEmpty() || !txtfEdicao.getText().isEmpty() ||
+						!txtfTitulo.getText().isEmpty() || !txtfAutor.getText().isEmpty() ||
+						!txtfEditora.getText().isEmpty() || !txtfNPag.getText().isEmpty() || 
+						!txtfQuant.getText().isEmpty()) 
+					if(fakeServer.deleteBook(txtfIsbn.getText(), 
+											Integer.parseInt(txtfEdicao.getText()), 
+											txtfTitulo.getText(), txtfAutor.getText(), txtfEditora.getText(), 
+											Integer.parseInt(txtfNPag.getText()), 
+											Integer.parseInt(txtfQuant.getText()))) {
+						JOptionPane.showMessageDialog(null, "Livro(s) deletado(s) com sucesso!");
+						btnAdicionarLivro.setEnabled(true);
+						btnSalvarLivro.setEnabled(false);
+						btnDeletarLivro.setEnabled(false);
+					}else
+						JOptionPane.showMessageDialog(null, "Ops, aconteceu um erro na remoção do(s) livro(s)!");
+				else
+					JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
+			}
+		});
 		
-		JButton btnDeletarLivro = new JButton("Deletar");
-		btnDeletarLivro.setEnabled(false);
-		panelLivro.add(btnDeletarLivro);
 		return panelLivro;
 	}
 
