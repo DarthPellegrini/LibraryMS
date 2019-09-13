@@ -30,26 +30,24 @@ public class FakeServer {
 	public boolean addNewBookRoutine(String iSBN, String edicao, String titulo, String autor, String editora, String numeroPaginas,
 			String quantCopias) {
 		if (validateBook(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias))
-			for (int x = 0; x < Integer.parseInt(quantCopias); x++) {
+			for (int x = 0; x < Integer.parseInt(quantCopias); x++) 
 				if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias))
-					System.out.println(biblioteca.getLastLivros().get(biblioteca.getLastLivros().size()-1).toString());
-				else {
-					System.out.println("prateleira cheia");
+					return true;
+				else 
+					//caso a prateleira esteja cheia
 					if(biblioteca.getLastEstante().addPrateleira(new Prateleira()))
 						if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias))
-							System.out.println(biblioteca.getLastLivros().get(biblioteca.getLastLivros().size()-1).toString());
+							return true;
 						else
 							addNewBookRoutine(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias);
 					else {
-						System.out.println("estante cheia");
+						//caso a estante esteja cheia
 						biblioteca.addEstante();
 						if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias))
 							return true;
 						else
 							addNewBookRoutine(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias);
 					}
-				}
-			} 
 		else
 			return false;
 		//o java quer que quer colocar esse return aqui, mas, se o if for falso, cairá no else acima, wtf java?
