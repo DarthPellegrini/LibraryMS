@@ -4,13 +4,16 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 import javax.swing.JButton;
+import javax.swing.JFormattedTextField;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.NumberFormatter;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -20,10 +23,10 @@ import com.systemhaus.demo.domain.Livro;
 public class CadastroLivroFrm extends SkeletonFrm{
 	
 	private JTextField txtfIsbn;
-	private JTextField txtfEdicao;
 	private JTextField txtfTitulo;
-	private JTextField txtfNPag;
-	private JTextField txtfQuant;
+	private JFormattedTextField txtfNPag;
+	private JFormattedTextField txtfQuant;
+	private JFormattedTextField txtfEdicao;
 	private JTextField txtfAutor;
 	private JTextField txtfEditora;
 	private JInternalFrame ifCadLivro;
@@ -166,8 +169,15 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		ifCadLivro.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 		ifCadLivro.setBounds(190, 35, 400, 320);
 		
+		//formatador para aceitar somente números
+		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
+	    formatter.setValueClass(Integer.class);
+	    formatter.setMinimum(0);
+	    formatter.setMaximum(Integer.MAX_VALUE);
+	    formatter.setAllowsInvalid(false);
+	    formatter.setCommitsOnValidEdit(true);
+		
 		txtfIsbn = new JTextField();
-		txtfIsbn.setText("Ex.: 9789988877773");
 		
 		txtfTitulo = new JTextField();
 		
@@ -175,10 +185,10 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		
 		txtfEditora = new JTextField();
 		
-		txtfEdicao = new JTextField();
+		txtfEdicao = new JFormattedTextField(formatter);
 		
-		txtfNPag = new JTextField();
+		txtfNPag = new JFormattedTextField(formatter);
 		
-		txtfQuant = new JTextField();
+		txtfQuant = new JFormattedTextField(formatter);
 	}
 }

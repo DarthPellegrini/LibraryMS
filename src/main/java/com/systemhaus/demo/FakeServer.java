@@ -32,7 +32,7 @@ public class FakeServer {
 			int quantCopias) {
 		//verifica se o livro inserido possui todos os campos válidos e se o mesmo livro já não foi inserido
 		if (validateBook(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias)
-				&& findABook(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias) != null)
+				&& findABook(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias) == null)
 			for (int quantLivros = 0; quantLivros < quantCopias; quantLivros++) 
 				if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias))
 					return true;
