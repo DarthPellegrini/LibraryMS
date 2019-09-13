@@ -30,7 +30,7 @@ public class FakeServer {
 	public boolean addNewBookRoutine(String iSBN, String edicao, String titulo, String autor, String editora, String numeroPaginas,
 			String quantCopias) {
 		if (validateBook(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias))
-			for (int x = 0; x < Integer.parseInt(quantCopias); x++) 
+			for (int quantLivros = 0; quantLivros < Integer.parseInt(quantCopias); quantLivros++) 
 				if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias))
 					return true;
 				else 
