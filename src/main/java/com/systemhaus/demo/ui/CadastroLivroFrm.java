@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -14,6 +15,7 @@ import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 import com.systemhaus.demo.FakeServer;
+import com.systemhaus.demo.domain.Livro;
 
 public class CadastroLivroFrm extends SkeletonFrm{
 	
@@ -55,15 +57,39 @@ public class CadastroLivroFrm extends SkeletonFrm{
 						!txtfTitulo.getText().isEmpty() && !txtfAutor.getText().isEmpty() &&
 						!txtfEditora.getText().isEmpty() && !txtfNPag.getText().isEmpty() && 
 						!txtfQuant.getText().isEmpty()) 
-					fakeServer.addNewBookRoutine(txtfIsbn.getText(), txtfEdicao.getText(), txtfTitulo.getText(), txtfAutor.getText(), txtfEditora.getText(), txtfNPag.getText(), txtfQuant.getText());
+					if(fakeServer.addNewBookRoutine(txtfIsbn.getText(), txtfEdicao.getText(), txtfTitulo.getText(), txtfAutor.getText(), txtfEditora.getText(), txtfNPag.getText(), txtfQuant.getText()))
+						JOptionPane.showMessageDialog(null, "Livro(s) inserido(s) com sucesso!");
+					else
+						JOptionPane.showMessageDialog(null, "Ops, aconteceu um erro na inserção do livro!");
 				else
-					//TODO: print error message
-					return;
+					JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
 			}
 		});
 		
 		JButton btnPesquisarLivro = new JButton("Pesquisar");
 		panelLivro.add(btnPesquisarLivro);
+		
+		btnPesquisarLivro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// caso alguma string seja vazia, temos que definir valores default para elas
+				Livro l = fakeServer.findABook(txtfIsbn.getText(), 
+						txtfEdicao.getText().isEmpty() ? 0 : Integer.parseInt(txtfEdicao.getText()), 
+						txtfTitulo.getText(), txtfAutor.getText(), txtfEditora.getText(), 
+						txtfNPag.getText().isEmpty() ? 0 : Integer.parseInt(txtfNPag.getText()), 
+						txtfQuant.getText().isEmpty() ? 0 : Integer.parseInt(txtfQuant.getText()));
+				if	(l == null)
+					JOptionPane.showMessageDialog(null, "Nenhum livro encontrado!");
+				else {
+					txtfIsbn.setText(l.getISBN());
+					txtfEdicao.setText("" + l.getEdicao());
+					txtfTitulo.setText(l.getTitulo());
+					txtfAutor.setText(l.getAutor());
+					txtfEditora.setText(l.getEditora());
+					txtfNPag.setText("" + l.getNumeroPaginas());
+					txtfQuant.setText("" + l.getQuantCopias());
+				}
+			}
+		});
 		
 		JButton btnSalvarLivro = new JButton("Salvar");
 		btnSalvarLivro.setEnabled(false);

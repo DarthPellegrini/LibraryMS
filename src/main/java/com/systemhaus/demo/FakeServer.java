@@ -27,10 +27,9 @@ public class FakeServer {
 	/*
 	 * Método recursivo infalível de inserção de livros
 	 */
-	public void addNewBookRoutine(String iSBN, String edicao, String titulo, String autor, String editora, String numeroPaginas,
+	public boolean addNewBookRoutine(String iSBN, String edicao, String titulo, String autor, String editora, String numeroPaginas,
 			String quantCopias) {
 		if (validateBook(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias))
-			
 			for (int x = 0; x < Integer.parseInt(quantCopias); x++) {
 				if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias))
 					System.out.println(biblioteca.getLastLivros().get(biblioteca.getLastLivros().size()-1).toString());
@@ -45,16 +44,16 @@ public class FakeServer {
 						System.out.println("estante cheia");
 						biblioteca.addEstante();
 						if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias))
-							//TODO: exibir mensagem de sucesso
-							System.out.println(biblioteca.getLastLivros().get(biblioteca.getLastLivros().size()-1).toString());
+							return true;
 						else
 							addNewBookRoutine(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias);
 					}
 				}
-			}
+			} 
 		else
-			//TODO: exibir mensagem de erro na tela
-			System.out.println("Erro - dados inválidos");
+			return false;
+		//o java quer que quer colocar esse return aqui, mas, se o if for falso, cairá no else acima, wtf java?
+		return false; 
 	}
 	
 	public boolean validateBook(String iSBN, String edicao, String titulo, String autor, String editora, String numeroPaginas,
@@ -84,8 +83,27 @@ public class FakeServer {
 				);
 	}
 	
-	//test method
-	public void showAllBooks() {
+	//TODO: implement passing of parameters
+	public Livro findABook(String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas, int quantCopias) {
+		//buscando em todas as estantes e em todos as prateleiras
+		for (Estante e : biblioteca.getEstantes()) 
+			for (Prateleira p : e.getPrateleiras()) 
+				for (Livro l : p.getLivros()) {
+					//a seleção de parâmetros será mais fácil no BD, já que poderão ou não ser incluídas no select.
+					if ( (l.getISBN().equals(iSBN) || iSBN.isEmpty()) && (l.getEdicao() == edicao || edicao == 0) && 
+							(l.getTitulo().equals(titulo) || titulo.isEmpty()) && (l.getAutor().equals(autor) || autor.isEmpty()) && 
+							(l.getEditora().equals(editora) || editora.isEmpty()) && (l.getNumeroPaginas() == numeroPaginas || numeroPaginas == 0) && 
+							(l.getQuantCopias() == quantCopias || quantCopias == 0)) {
+						return l;
+					}
+				}
+		return null;
 		
 	}
+	
+	//TODO: finish this method
+	public void updateBookCounter() {
+		
+	}
+	
 }

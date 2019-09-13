@@ -79,7 +79,7 @@ public class Livro {
 			this.quantDisp = quantDisp;
 	}
 	
-	//valida os dados de um livro;
+	//valida os dados de um livro
 	public boolean validate() {
 		return (ISBN != null && edicao > 0 && numeroPaginas > 0 && quantCopias > 0) ? true: false;
 	}
