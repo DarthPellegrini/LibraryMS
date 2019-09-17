@@ -113,4 +113,10 @@ public class CadastroUserFrm extends SkeletonFrm{
 		txtfCodCartao.setText("Código gerado automaticamente");
 		txtfCodCartao.setEnabled(false);
 	}
+
+	@Override
+	protected void clearField() {
+		// TODO Auto-generated method stub
+		
+	}
 }

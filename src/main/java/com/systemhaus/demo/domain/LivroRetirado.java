@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 public class LivroRetirado {
 	
-	private Livro livro; //referência ao livro editado
+	private Livro livro; //referência ao livro retirado
 	private LocalDate dataRetirada; //data em que o livro foi retirado 
 	private LocalDate dataDevolucao; //data em que o livro será devolvido 
 	

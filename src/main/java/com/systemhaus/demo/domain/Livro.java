@@ -9,11 +9,9 @@ public class Livro {
 	private String autor; //autor do livro
 	private String editora; //editora do livro
 	private int numeroPaginas; //número de páginas
-	private int quantCopias; //quantidade de livros no acervo
-	private int quantDisp; //quantidade de livros disponíveis para a retirada
+	private boolean retirado; //boolean que define se o livro está ou não retirado
 	
-	public Livro(String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas,
-			int quantCopias) {
+	public Livro(String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas, boolean retirado) {
 		super();
 		setISBN(iSBN);
 		setEdicao(edicao);
@@ -21,8 +19,7 @@ public class Livro {
 		setAutor(autor);
 		setEditora(editora);
 		setNumeroPaginas(numeroPaginas);
-		setQuantCopias(quantCopias);
-		setQuantDisp(quantCopias);
+		this.retirado = retirado;
 	}
 	public String getISBN() {
 		return ISBN;
@@ -63,31 +60,26 @@ public class Livro {
 	public void setNumeroPaginas(int numeroPaginas) {
 		if (numeroPaginas > 0)
 			this.numeroPaginas = numeroPaginas;
+		else
+			this.numeroPaginas = 1;
 	}
-	public int getQuantCopias() {
-		return quantCopias;
+	public boolean isRetirado() {
+		return retirado;
 	}
-	public void setQuantCopias(int quantCopias) {
-		if (quantCopias > 0)
-			this.quantCopias = quantCopias;
-	}
-	public int getQuantDisp() {
-		return quantDisp;
-	}
-	public void setQuantDisp(int quantDisp) {
-		if (quantDisp >= 0)
-			this.quantDisp = quantDisp;
+	public void setRetirado(boolean retirado) {
+		this.retirado = retirado;
 	}
 	
 	//valida os dados de um livro
 	public boolean validate() {
-		return (ISBN != null && edicao > 0 && numeroPaginas > 0 && quantCopias > 0) ? true: false;
+		return (ISBN != null && edicao > 0 && numeroPaginas > 0) ? true: false;
 	}
 	
 	@Override
 	public String toString() {
 		return getISBN() + "-" + getAutor() + "-" + getTitulo() + "-" + getEditora() + "-" 
-				+ getEdicao() + "-" + getNumeroPaginas() + "-" + getQuantCopias() + "-" + getQuantDisp();
+				+ getEdicao() + "-" + getNumeroPaginas() + "-" + isRetirado();
 	}
+	
 	
 }

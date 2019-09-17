@@ -2,7 +2,7 @@ package com.systemhaus.demo.domain;
 
 import java.time.LocalDate;
 
-public class Registro {
+public class RegistroDeEvento {
 	
 	//registro de eventos
 	
@@ -11,14 +11,14 @@ public class Registro {
 	private LocalDate data; //data do evento
 	private Cliente cliente; //opcional, caso um cliente envolvido em um evento (retirada/devolucao)
 	
-	public Registro(Livro livro, Evento evento, LocalDate data) {
+	public RegistroDeEvento(Livro livro, Evento evento, LocalDate data) {
 		super();
 		this.livro = livro;
 		this.setEvento(evento);
 		this.data = data;
 	}
 	
-	public Registro(Livro livro, Evento evento, LocalDate data, Cliente cliente) {
+	public RegistroDeEvento(Livro livro, Evento evento, LocalDate data, Cliente cliente) {
 		super();
 		this.livro = livro;
 		this.setEvento(evento);

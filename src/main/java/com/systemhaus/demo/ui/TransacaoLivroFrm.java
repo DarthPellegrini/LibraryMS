@@ -188,6 +188,12 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 			
 		return builder.build();
 	}
+
+	@Override
+	protected void clearField() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	
 	

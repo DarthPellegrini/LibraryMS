@@ -11,4 +11,5 @@ public abstract class SkeletonFrm {
 	
 	protected abstract void initComponents();
 	protected abstract void initLayout();
+	protected abstract void clearField();
 }

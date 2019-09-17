@@ -4,16 +4,13 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.NumberFormat;
 
 import javax.swing.JButton;
-import javax.swing.JFormattedTextField;
 import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
-import javax.swing.text.NumberFormatter;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -24,9 +21,9 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	
 	private JTextField txtfIsbn;
 	private JTextField txtfTitulo;
-	private JFormattedTextField txtfNPag;
-	private JFormattedTextField txtfQuant;
-	private JFormattedTextField txtfEdicao;
+	private JTextField txtfNPag;
+	private JTextField txtfQuant;
+	private JTextField txtfEdicao;
 	private JTextField txtfAutor;
 	private JTextField txtfEditora;
 	private JInternalFrame ifCadLivro;
@@ -64,6 +61,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		btnDeletarLivro.setEnabled(false);
 		panelLivro.add(btnDeletarLivro);
 		
+		//TODO transferir actionListeners para uma classe CareTaker (possivelmente)
 		btnAdicionarLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//validação dos campos
@@ -71,14 +69,18 @@ public class CadastroLivroFrm extends SkeletonFrm{
 						!txtfTitulo.getText().isEmpty() && !txtfAutor.getText().isEmpty() &&
 						!txtfEditora.getText().isEmpty() && !txtfNPag.getText().isEmpty() && 
 						!txtfQuant.getText().isEmpty()) 
+					//TODO: criar mensagens de erro para cada tipo de erro diferente
 					if(fakeServer.addNewBookRoutine(txtfIsbn.getText(), 
-													Integer.parseInt(txtfEdicao.getText()), 
+													fakeServer.strToInt(txtfEdicao.getText()), 
 													txtfTitulo.getText(), txtfAutor.getText(), txtfEditora.getText(), 
-													Integer.parseInt(txtfNPag.getText()), 
-													Integer.parseInt(txtfQuant.getText())))
+													fakeServer.strToInt(txtfNPag.getText()), 
+													fakeServer.strToInt(txtfQuant.getText()))) {
 						JOptionPane.showMessageDialog(null, "Livro(s) inserido(s) com sucesso!");
-					else
-						JOptionPane.showMessageDialog(null, "Ops, aconteceu um erro na inserção do livro!");
+						System.out.println(
+						fakeServer.getB().getRegistroDeLivros());
+						clearField();
+					}else
+						JOptionPane.showMessageDialog(null, "Ocorreu um erro na inserção do livro!");
 				else
 					JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
 			}
@@ -86,12 +88,10 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		
 		btnPesquisarLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// caso alguma string seja vazia, temos que definir valores default para elas
-				Livro l = fakeServer.findABook(txtfIsbn.getText(), 
-						txtfEdicao.getText().isEmpty() ? 0 : Integer.parseInt(txtfEdicao.getText()), 
-						txtfTitulo.getText(), txtfAutor.getText(), txtfEditora.getText(), 
-						txtfNPag.getText().isEmpty() ? 0 : Integer.parseInt(txtfNPag.getText()), 
-						txtfQuant.getText().isEmpty() ? 0 : Integer.parseInt(txtfQuant.getText()));
+				Livro l = fakeServer.findBook(txtfIsbn.getText(), 
+						txtfEdicao.getText(), txtfTitulo.getText(), 
+						txtfAutor.getText(), txtfEditora.getText(), 
+						txtfNPag.getText());
 				if	(l == null)
 					JOptionPane.showMessageDialog(null, "Nenhum livro encontrado!");
 				else {
@@ -101,11 +101,34 @@ public class CadastroLivroFrm extends SkeletonFrm{
 					txtfAutor.setText(l.getAutor());
 					txtfEditora.setText(l.getEditora());
 					txtfNPag.setText("" + l.getNumeroPaginas());
-					txtfQuant.setText("" + l.getQuantCopias());
 					btnAdicionarLivro.setEnabled(false);
 					btnSalvarLivro.setEnabled(true);
 					btnDeletarLivro.setEnabled(true);
 				}
+			}
+		});
+		
+		btnSalvarLivro.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (!txtfIsbn.getText().isEmpty() || !txtfEdicao.getText().isEmpty() ||
+						!txtfTitulo.getText().isEmpty() || !txtfAutor.getText().isEmpty() ||
+						!txtfEditora.getText().isEmpty() || !txtfNPag.getText().isEmpty() || 
+						!txtfQuant.getText().isEmpty())
+					if(fakeServer.editBook(txtfIsbn.getText(), 
+											fakeServer.strToInt(txtfEdicao.getText()), 
+											txtfTitulo.getText(), txtfAutor.getText(), txtfEditora.getText(), 
+											fakeServer.strToInt(txtfNPag.getText()), 
+											fakeServer.strToInt(txtfQuant.getText()))) {
+						JOptionPane.showMessageDialog(null, "Livro(s) modificado(s) com sucesso!");
+						btnAdicionarLivro.setEnabled(true);
+						btnSalvarLivro.setEnabled(false);
+						btnDeletarLivro.setEnabled(false);
+						clearField();
+					}else
+						JOptionPane.showMessageDialog(null, "Ocorreu um erro na modificação do(s) livro(s)!");
+				else
+					JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
+						
 			}
 		});
 		
@@ -117,16 +140,17 @@ public class CadastroLivroFrm extends SkeletonFrm{
 						!txtfEditora.getText().isEmpty() || !txtfNPag.getText().isEmpty() || 
 						!txtfQuant.getText().isEmpty()) 
 					if(fakeServer.deleteBook(txtfIsbn.getText(), 
-											Integer.parseInt(txtfEdicao.getText()), 
+											fakeServer.strToInt(txtfEdicao.getText()), 
 											txtfTitulo.getText(), txtfAutor.getText(), txtfEditora.getText(), 
-											Integer.parseInt(txtfNPag.getText()), 
-											Integer.parseInt(txtfQuant.getText()))) {
+											fakeServer.strToInt(txtfNPag.getText()), 
+											fakeServer.strToInt(txtfQuant.getText()),0)) {
 						JOptionPane.showMessageDialog(null, "Livro(s) deletado(s) com sucesso!");
 						btnAdicionarLivro.setEnabled(true);
 						btnSalvarLivro.setEnabled(false);
 						btnDeletarLivro.setEnabled(false);
+						clearField();
 					}else
-						JOptionPane.showMessageDialog(null, "Ops, aconteceu um erro na remoção do(s) livro(s)!");
+						JOptionPane.showMessageDialog(null, "Ocorreu um erro na remoção do(s) livro(s)!");
 				else
 					JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
 			}
@@ -168,15 +192,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		ifCadLivro = new JInternalFrame("Cadastro de Livros", false, true);
 		ifCadLivro.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 		ifCadLivro.setBounds(190, 35, 400, 320);
-		
-		//formatador para aceitar somente números
-		NumberFormatter formatter = new NumberFormatter(NumberFormat.getInstance());
-	    formatter.setValueClass(Integer.class);
-	    formatter.setMinimum(0);
-	    formatter.setMaximum(Integer.MAX_VALUE);
-	    formatter.setAllowsInvalid(false);
-	    formatter.setCommitsOnValidEdit(true);
-		
+	    
 		txtfIsbn = new JTextField();
 		
 		txtfTitulo = new JTextField();
@@ -185,10 +201,21 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		
 		txtfEditora = new JTextField();
 		
-		txtfEdicao = new JFormattedTextField(formatter);
+		txtfEdicao = new JTextField();
 		
-		txtfNPag = new JFormattedTextField(formatter);
+		txtfNPag = new JTextField();
 		
-		txtfQuant = new JFormattedTextField(formatter);
+		txtfQuant = new JTextField();
 	}
+
+	protected void clearField() {
+		txtfIsbn.setText("");
+		txtfTitulo.setText("");
+		txtfAutor.setText("");
+		txtfEditora.setText("");
+		txtfEdicao.setText("");
+		txtfNPag.setText("");
+		txtfQuant.setText("");
+	}
+	
 }
