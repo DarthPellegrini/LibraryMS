@@ -1,6 +1,7 @@
 package com.systemhaus.demo;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import com.systemhaus.demo.domain.Biblioteca;
@@ -11,7 +12,7 @@ import com.systemhaus.demo.domain.Livro;
 public class FakeServer {
 
 	private Biblioteca biblioteca;
-	private Livro livroBuscado;
+	private Livro livroTemp; //livro buscado na biblioteca que poderá ser modificado ou excluído 
 	
 	public FakeServer () {
 		createLibrary();
@@ -34,29 +35,26 @@ public class FakeServer {
 		//verifica se o livro inserido possui todos os campos válidos
 		if (validateBook(iSBN, edicao, titulo, autor, editora, numeroPaginas))
 			for (int quantLivros = 0; quantLivros < quantCopias; quantLivros++) 
-				if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas)) {
-					biblioteca.addDisponivel(iSBN);
-					return true;
-				}else 
+				if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas))
+					biblioteca.addDisponivel(iSBN, quantCopias);
+				else 
 					//caso a prateleira esteja cheia
 					if(biblioteca.getLastEstante().addPrateleira(new Prateleira()))
-						if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas)) {
-							biblioteca.addDisponivel(iSBN);
-							return true;
-						}else
-							addNewBookRoutine(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias);
+						if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas))
+							biblioteca.addDisponivel(iSBN, quantCopias);
+						else
+							addNewBookRoutine(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantLivros);
 					else {
 						//caso a estante esteja cheia
 						biblioteca.addEstante();
-						if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas)) {
-							biblioteca.addDisponivel(iSBN);
-							return true;
-						}else
-							addNewBookRoutine(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias);
+						if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas))
+							biblioteca.addDisponivel(iSBN, quantCopias);
+						else
+							addNewBookRoutine(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantLivros);
 					}
 		else
 			return false;
-		return false; 
+		return true; 
 	}
 	
 	public boolean validateBook(String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas) {
@@ -70,6 +68,10 @@ public class FakeServer {
 				);
 	}
 	
+	public int returnBookCount(String iSBN) {
+		return biblioteca.getRegistroDeLivros().get(iSBN)[0];
+	}
+	
 	public Livro findBook(String iSBN, String edicao, String titulo, String autor, String editora, String numeroPaginas) {
 		//buscando em todas as estantes e em todos as prateleiras
 		for (Estante e : biblioteca.getEstantes()) 
@@ -80,7 +82,7 @@ public class FakeServer {
 					(l.getTitulo().equals(titulo) || titulo.isEmpty()) && (l.getAutor().equals(autor) || autor.isEmpty()) && 
 					(l.getEditora().equals(editora) || editora.isEmpty()) && 
 					(l.getNumeroPaginas() == strToInt(numeroPaginas) || numeroPaginas.isEmpty())) {
-						livroBuscado = l;
+						livroTemp = l;
 						return l;
 					}
 		return null;
@@ -102,62 +104,83 @@ public class FakeServer {
 		return withdraw;
 	}
 	
-	//método para testes, será removido em breve
-	public Biblioteca getB() {
-		return biblioteca;
-	}
-	
 	//TODO: para adicionar livros, chamar o método de adição, e para remover, o de remoção
 	public boolean editBook(String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas, 
 			int quantCopias) {
-		//quantidade de livros máxima que pode ser deletada
-		int booksToDelete = findWithdrawnBookCount(iSBN, edicao, titulo, autor, editora, numeroPaginas);
+		//caso o número de cópias final seja menor que o disponível, os livros que:
+		int quantNoAcervo = biblioteca.getRegistroDeLivros().get(iSBN)[0];
+		if(!biblioteca.havingOnlyThisAmountOfCopiesWontCauseProblems(iSBN, quantCopias))
+			return false;
+		if(quantCopias > quantNoAcervo)
+			this.addNewBookRoutine(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias);
+		else
+			if(quantCopias < quantNoAcervo) 
+				this.deleteBook(quantNoAcervo-quantCopias);
+		//alteração dos dados
 		for (Estante e : biblioteca.getEstantes()) 
 			for (Prateleira p : e.getPrateleiras()) 
 				for (Livro l : p.getLivros())
 					//a seleção de parâmetros será mais fácil no BD, já que poderão ou não ser incluídas no select.
-					if ( (l.getISBN().equals(livroBuscado.getISBN())) && (l.getEdicao() == livroBuscado.getEdicao()) && 
-					(l.getTitulo().equals(livroBuscado.getTitulo())) && (l.getAutor().equals(livroBuscado.getAutor())) && 
-					(l.getEditora().equals(livroBuscado.getEditora())) && (l.getNumeroPaginas() == livroBuscado.getNumeroPaginas())) {
+					if ( (l.getISBN().equals(livroTemp.getISBN())) && (l.getEdicao() == livroTemp.getEdicao()) && 
+					(l.getTitulo().equals(livroTemp.getTitulo())) && (l.getAutor().equals(livroTemp.getAutor())) && 
+					(l.getEditora().equals(livroTemp.getEditora())) && (l.getNumeroPaginas() == livroTemp.getNumeroPaginas())) {
 						l.setISBN(iSBN);
 						l.setEdicao(edicao);
 						l.setTitulo(titulo);
 						l.setAutor(autor);
 						l.setEditora(editora);
 						l.setNumeroPaginas(numeroPaginas);
-						//caso o número de cópias seja menor que o anterior, os livros que:
-						//não tiverem sido retirados serão removidos
-						//a quantidade dependerá de quantos livros estão disponíveis
-						
 					}
+		//caso o usuário queira deletar o livro após modificá-lo (não que faça sentido, mas para evitar erros)
+		livroTemp = new Livro(iSBN, edicao, titulo, autor, editora, numeroPaginas, false);
 		return true;
 	}
 	
 	//TODO: remover os livros baseado na sua disponibilidade
-	public boolean deleteBook(String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas,
-			int quantRem, int delete) {
+	public boolean deleteBook(int delete) {
 		//criando uma lista para saber em quais prateleiras estão os livros a serem deletados
 		List<Prateleira> prateleiras = new ArrayList<Prateleira>();
-		Livro livroParaDeletar = new Livro(iSBN, edicao, titulo, autor, editora, numeroPaginas, false);
+		List<Livro> livros = new ArrayList<Livro>();
+		//primeiramente verificando se podemos deletar todos os livros (se não há nenhum retirado)
+		//delete será igual a 0 para o caso de deletar TODOS os livros com os dados inseridos
+		if(!biblioteca.allTheBooksAreAvailable(livroTemp.getISBN()) && delete == 0)
+			return false;
 		//percorrendo a lista duas vezes, uma para marcar as prateleiras com livros a serem removidos
 		for (Estante e : biblioteca.getEstantes()) 
 			for (Prateleira p : e.getPrateleiras()) 
-				for (Livro l : p.getLivros())
-					if ( l.getISBN().equals(iSBN) && l.getEdicao() == edicao && l.getTitulo().equals(titulo) && l.getAutor().equals(autor) && 
-					l.getEditora().equals(editora) && l.getNumeroPaginas() == numeroPaginas && !l.isRetirado() && !prateleiras.contains(p))
-						prateleiras.add(p);
-		//e na outra para removê-los, isso evita erros durante a remoção
-		int removidos = 0;
-		for (Prateleira p : prateleiras) {
-			if (removidos < quantRem)
-				break;
-			else
-				break;
+				for (Livro l : p.getLivros()) {
+					if ( l.getISBN().equals(livroTemp.getISBN()) && l.getEdicao() == livroTemp.getEdicao() && 
+					l.getTitulo().equals(livroTemp.getTitulo()) && l.getAutor().equals(livroTemp.getAutor()) && 
+					l.getEditora().equals(livroTemp.getEditora()) && l.getNumeroPaginas() == livroTemp.getNumeroPaginas() && 
+					!l.isRetirado()) {
+						if(!prateleiras.contains(p))
+							prateleiras.add(p);
+						//caso algum dos livros esteja retirado, não podemos removê-los do estoque
+						if (!livros.contains(l))
+							livros.add(l);
+					}
+				}
+		//TODO: remover prateleiras e estantes vazias
+		//e na outra para removê-los, isso evita erros de iteração durante a busca & remoção
+		if(delete == 0) {
+			//remoção de todos os livros com os dados pesquisados
+			biblioteca.getRegistroDeLivros().remove(livroTemp.getISBN());
+			for (Prateleira p : prateleiras) 
+				p.getLivros().removeAll(livros);
+		}else {
+			//remoção dos livros (no modo de edição de livro, removendo cópias que não tenham sido retiradas)
+			biblioteca.remDisponivel(livroTemp.getISBN(), delete);
+			for (Prateleira p : prateleiras)
+				for (Iterator<Livro> iterator = p.getLivros().iterator(); iterator.hasNext(); ) {
+				    Livro l = iterator.next();
+				    if (livros.contains(l) && !l.isRetirado()) {
+				        iterator.remove();
+				        if (--delete <= 0) 
+					    	return true;
+				    }
+				}
 		}
-		if (prateleiras.size() == 0)
-			return false;
-		else
-			return true;
+		return true;
 	}
 	
 	public int strToInt(String s) {

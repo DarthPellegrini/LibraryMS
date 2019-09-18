@@ -61,9 +61,10 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		btnDeletarLivro.setEnabled(false);
 		panelLivro.add(btnDeletarLivro);
 		
-		//TODO transferir actionListeners para uma classe CareTaker (possivelmente)
+		//TODO transferir actionListeners para uma classe careTaker (possivelmente)
 		btnAdicionarLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//TODO: criar método de validação na classe careTaker
 				//validação dos campos
 				if (!txtfIsbn.getText().isEmpty() && !txtfEdicao.getText().isEmpty() &&
 						!txtfTitulo.getText().isEmpty() && !txtfAutor.getText().isEmpty() &&
@@ -76,8 +77,6 @@ public class CadastroLivroFrm extends SkeletonFrm{
 													fakeServer.strToInt(txtfNPag.getText()), 
 													fakeServer.strToInt(txtfQuant.getText()))) {
 						JOptionPane.showMessageDialog(null, "Livro(s) inserido(s) com sucesso!");
-						System.out.println(
-						fakeServer.getB().getRegistroDeLivros());
 						clearField();
 					}else
 						JOptionPane.showMessageDialog(null, "Ocorreu um erro na inserção do livro!");
@@ -101,6 +100,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 					txtfAutor.setText(l.getAutor());
 					txtfEditora.setText(l.getEditora());
 					txtfNPag.setText("" + l.getNumeroPaginas());
+					txtfQuant.setText("" + fakeServer.returnBookCount(l.getISBN()));
 					btnAdicionarLivro.setEnabled(false);
 					btnSalvarLivro.setEnabled(true);
 					btnDeletarLivro.setEnabled(true);
@@ -134,16 +134,13 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		
 		btnDeletarLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//validação dos campos
+				//validação dos campos (pode ser removida)
 				if (!txtfIsbn.getText().isEmpty() || !txtfEdicao.getText().isEmpty() ||
 						!txtfTitulo.getText().isEmpty() || !txtfAutor.getText().isEmpty() ||
 						!txtfEditora.getText().isEmpty() || !txtfNPag.getText().isEmpty() || 
 						!txtfQuant.getText().isEmpty()) 
-					if(fakeServer.deleteBook(txtfIsbn.getText(), 
-											fakeServer.strToInt(txtfEdicao.getText()), 
-											txtfTitulo.getText(), txtfAutor.getText(), txtfEditora.getText(), 
-											fakeServer.strToInt(txtfNPag.getText()), 
-											fakeServer.strToInt(txtfQuant.getText()),0)) {
+					//não há necessidade de passar os dados, pois os mesmos já foram salvos anteriormente na busca
+					if(fakeServer.deleteBook(0)) {
 						JOptionPane.showMessageDialog(null, "Livro(s) deletado(s) com sucesso!");
 						btnAdicionarLivro.setEnabled(true);
 						btnSalvarLivro.setEnabled(false);

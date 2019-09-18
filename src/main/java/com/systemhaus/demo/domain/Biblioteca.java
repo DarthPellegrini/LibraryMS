@@ -48,31 +48,51 @@ public class Biblioteca {
 		return this.regLivros;
 	}
 	
-	public void addDisponivel(String key) {
+	public boolean allTheBooksAreAvailable(String key) {
+		return this.regLivros.get(key)[0] == this.regLivros.get(key)[1];
+	}
+	
+	/**
+	 * Caso todos os livros estejam disponíveis, não há problema em deletar alguns exemplares,
+	 * senão, é necessário conferir que o número atual de livros depois da remoção 
+	 * não será inferior ao de livros disponíveis
+	 */
+	public boolean havingOnlyThisAmountOfCopiesWontCauseProblems(String key, int quant) {
+		return this.regLivros.get(key)[0] == this.regLivros.get(key)[1] ? true :
+				quant >= this.regLivros.get(key)[1] ;
+	}
+	
+	public void addDisponivel(String key, int quant) {
 		int value[] = new int[2];
 		if(!this.regLivros.containsKey(key)) {
-			value[0] = 0;
-			value[1] = 0;
+			value[0] = quant;
+			value[1] = quant;
 		}else {
 			value[0] = this.regLivros.get(key)[0]++;
 			value[1] = this.regLivros.get(key)[1]++;
 		}
 		this.regLivros.put(key, value);
 	}
-	public void remDisponivel(String key) {
-		int value[] = {this.regLivros.get(key)[0]--
-				,this.regLivros.get(key)[1]--};
+	public void remDisponivel(String key, int quant) {
+		int value[] = {this.regLivros.get(key)[0]-=quant,
+				this.regLivros.get(key)[1]-=quant};
 		this.regLivros.put(key, value);
 	}
-	public void addRetirado(String key) {
+	public boolean addRetirado(String key) {
+		if(this.regLivros.get(key)[1] + 1 > this.regLivros.get(key)[0])
+			return false;
 		int value[] = {this.regLivros.get(key)[0]
 				,this.regLivros.get(key)[1]++};
 		this.regLivros.put(key, value);
+		return true;
 	}
-	public void remRetirado(String key) {
+	public boolean remRetirado(String key) {
+		if(this.regLivros.get(key)[1] - 1 < 0)
+			return false;
 		int value[] = {this.regLivros.get(key)[0]
 				,this.regLivros.get(key)[1]--};
 		this.regLivros.put(key, value);
+		return true;
 	}
 	
 	//TODO: métodos de retorno de todas as prateleiras e todos os livros
