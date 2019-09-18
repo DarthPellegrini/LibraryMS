@@ -27,7 +27,7 @@ public class FakeServer {
 		biblioteca.setEstantes(estantes);
 	}	
 	
-	/*
+	/**
 	 * Método recursivo infalível de inserção de livros
 	 */
 	public boolean addNewBookRoutine(String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas, 
@@ -104,7 +104,6 @@ public class FakeServer {
 		return withdraw;
 	}
 	
-	//TODO: para adicionar livros, chamar o método de adição, e para remover, o de remoção
 	public boolean editBook(String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas, 
 			int quantCopias) {
 		//caso o número de cópias final seja menor que o disponível, os livros que:
@@ -136,7 +135,6 @@ public class FakeServer {
 		return true;
 	}
 	
-	//TODO: remover os livros baseado na sua disponibilidade
 	public boolean deleteBook(int delete) {
 		//criando uma lista para saber em quais prateleiras estão os livros a serem deletados
 		List<Prateleira> prateleiras = new ArrayList<Prateleira>();
@@ -182,6 +180,8 @@ public class FakeServer {
 		}
 		return true;
 	}
+	
+	//TODO: criar método de organizar a biblioteca e remover espaços vazios
 	
 	public int strToInt(String s) {
 		int i = 0;

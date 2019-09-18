@@ -95,5 +95,5 @@ public class Biblioteca {
 		return true;
 	}
 	
-	//TODO: métodos de retorno de todas as prateleiras e todos os livros
+	//TODO: métodos de retorno de todas as prateleiras e todos os livros (opcional)
 }
