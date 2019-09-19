@@ -82,6 +82,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 						JOptionPane.showMessageDialog(null, "Ocorreu um erro na inserção do livro!");
 				else
 					JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
+				fakeServer.showLibrary();
 			}
 		});
 		
@@ -105,6 +106,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 					btnSalvarLivro.setEnabled(true);
 					btnDeletarLivro.setEnabled(true);
 				}
+				fakeServer.showLibrary();
 			}
 		});
 		
@@ -128,7 +130,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 						JOptionPane.showMessageDialog(null, "Ocorreu um erro na modificação do(s) livro(s)!");
 				else
 					JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
-						
+				fakeServer.showLibrary();
 			}
 		});
 		
@@ -150,6 +152,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 						JOptionPane.showMessageDialog(null, "Ocorreu um erro na remoção do(s) livro(s)!");
 				else
 					JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
+				fakeServer.showLibrary();
 			}
 		});
 		

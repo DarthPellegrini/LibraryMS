@@ -11,11 +11,16 @@ public class Estante {
 	
 	public Estante() {
 		setEstante(new ArrayList<Prateleira>());
-		prateleiras.add(new Prateleira());
+		initializeEstante();
 	}
 
 	public Estante(ArrayList<Prateleira> prateleiras) {
 		setEstante(prateleiras);
+	}
+	
+	public void initializeEstante() {
+		for (int i = 0; i < size; i++)
+			this.getPrateleiras().add(new Prateleira());
 	}
 	
 	public int getSize() {
@@ -42,5 +47,19 @@ public class Estante {
 		} else {
 			return false;
 		}
+	}
+	
+	public boolean isEmpty() {
+		for (Prateleira p : this.getPrateleiras())
+			if (!p.isEmpty())
+				return false;
+		return true;
+	}
+	
+	public boolean isFull() {
+		for (Prateleira p : this.getPrateleiras())
+			if (!p.isFull())
+				return false;
+		return true;
 	}
 }

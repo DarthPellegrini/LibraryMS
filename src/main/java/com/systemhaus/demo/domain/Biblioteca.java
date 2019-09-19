@@ -58,8 +58,7 @@ public class Biblioteca {
 	 * não será inferior ao de livros disponíveis
 	 */
 	public boolean havingOnlyThisAmountOfCopiesWontCauseProblems(String key, int quant) {
-		return this.regLivros.get(key)[0] == this.regLivros.get(key)[1] ? true :
-				quant >= this.regLivros.get(key)[1] ;
+		return this.allTheBooksAreAvailable(key) ? true : quant >= this.regLivros.get(key)[1];
 	}
 	
 	public void addDisponivel(String key, int quant) {
@@ -93,6 +92,14 @@ public class Biblioteca {
 				,this.regLivros.get(key)[1]--};
 		this.regLivros.put(key, value);
 		return true;
+	}
+	
+	public Prateleira getPrateleiraWithEmptySpace() {
+		for (Estante e : estantes)
+			for (Prateleira p : e.getPrateleiras())
+				if(!p.isFull())
+					return p;
+		return null;
 	}
 	
 	//TODO: métodos de retorno de todas as prateleiras e todos os livros (opcional)

@@ -1,8 +1,8 @@
 package com.systemhaus.demo;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.Estante;
@@ -37,21 +37,14 @@ public class FakeServer {
 			for (int quantLivros = 0; quantLivros < quantCopias; quantLivros++) 
 				if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas))
 					biblioteca.addDisponivel(iSBN, quantCopias);
-				else 
-					//caso a prateleira esteja cheia
-					if(biblioteca.getLastEstante().addPrateleira(new Prateleira()))
-						if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas))
-							biblioteca.addDisponivel(iSBN, quantCopias);
-						else
-							addNewBookRoutine(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantLivros);
-					else {
-						//caso a estante esteja cheia
-						biblioteca.addEstante();
-						if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas))
-							biblioteca.addDisponivel(iSBN, quantCopias);
-						else
-							addNewBookRoutine(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantLivros);
-					}
+				else {
+					//caso a estante esteja cheia
+					biblioteca.addEstante();
+					if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas))
+						biblioteca.addDisponivel(iSBN, quantCopias);
+					else
+						addNewBookRoutine(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantLivros);
+				}
 		else
 			return false;
 		return true; 
@@ -63,7 +56,9 @@ public class FakeServer {
 	}
 	
 	public boolean addBook(String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas) {
-		return biblioteca.getLastPrateleira().addLivro(
+		Prateleira p = biblioteca.getPrateleiraWithEmptySpace();
+		System.out.println("p= " + p);
+		return p == null ? false : p.addLivro(
 				new Livro(iSBN, edicao, titulo, autor, editora, numeroPaginas, false)
 				);
 	}
@@ -86,22 +81,6 @@ public class FakeServer {
 						return l;
 					}
 		return null;
-	}
-	
-	public int findWithdrawnBookCount(String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas) {
-		//buscando em todas as estantes e em todos as prateleiras
-		int withdraw = 0;
-		for (Estante e : biblioteca.getEstantes()) 
-			for (Prateleira p : e.getPrateleiras()) 
-				for (Livro l : p.getLivros())
-					//a seleção de parâmetros será mais fácil no BD, já que poderão ou não ser incluídas no select.
-					if ( (l.getISBN().equals(iSBN)) && (l.getEdicao() == edicao) && 
-					(l.getTitulo().equals(titulo)) && (l.getAutor().equals(autor)) && 
-					(l.getEditora().equals(editora)) && (l.getNumeroPaginas() == numeroPaginas) && 
-					!l.isRetirado()) {
-						withdraw++;
-					}
-		return withdraw;
 	}
 	
 	public boolean editBook(String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas, 
@@ -143,22 +122,29 @@ public class FakeServer {
 		//delete será igual a 0 para o caso de deletar TODOS os livros com os dados inseridos
 		if(!biblioteca.allTheBooksAreAvailable(livroTemp.getISBN()) && delete == 0)
 			return false;
-		//percorrendo a lista duas vezes, uma para marcar as prateleiras com livros a serem removidos
-		for (Estante e : biblioteca.getEstantes()) 
-			for (Prateleira p : e.getPrateleiras()) 
-				for (Livro l : p.getLivros()) {
+		for(ListIterator<Estante> eIt = biblioteca.getEstantes().listIterator(biblioteca.getEstantes().size());
+				eIt.hasPrevious();) {
+			Estante e = eIt.previous();
+			for(ListIterator<Prateleira> pIt = e.getPrateleiras().listIterator(e.getPrateleiras().size());
+					pIt.hasPrevious();) {
+				Prateleira p = pIt.previous();
+				for(ListIterator<Livro> lIt = p.getLivros().listIterator(p.getLivros().size());
+						lIt.hasPrevious();) {
+					Livro l = lIt.previous();
 					if ( l.getISBN().equals(livroTemp.getISBN()) && l.getEdicao() == livroTemp.getEdicao() && 
-					l.getTitulo().equals(livroTemp.getTitulo()) && l.getAutor().equals(livroTemp.getAutor()) && 
-					l.getEditora().equals(livroTemp.getEditora()) && l.getNumeroPaginas() == livroTemp.getNumeroPaginas() && 
-					!l.isRetirado()) {
-						if(!prateleiras.contains(p))
-							prateleiras.add(p);
-						//caso algum dos livros esteja retirado, não podemos removê-los do estoque
-						if (!livros.contains(l))
-							livros.add(l);
-					}
+							l.getTitulo().equals(livroTemp.getTitulo()) && l.getAutor().equals(livroTemp.getAutor()) && 
+							l.getEditora().equals(livroTemp.getEditora()) && l.getNumeroPaginas() == livroTemp.getNumeroPaginas() && 
+							!l.isRetirado()) {
+								if(!prateleiras.contains(p))
+									prateleiras.add(p);
+								//caso algum dos livros esteja retirado, não podemos removê-los do estoque
+								if (!livros.contains(l))
+									livros.add(l);
+							}
 				}
-		//TODO: remover prateleiras e estantes vazias
+			}
+		}
+		//TODO: remover estantes vazias
 		//e na outra para removê-los, isso evita erros de iteração durante a busca & remoção
 		if(delete == 0) {
 			//remoção de todos os livros com os dados pesquisados
@@ -169,10 +155,11 @@ public class FakeServer {
 			//remoção dos livros (no modo de edição de livro, removendo cópias que não tenham sido retiradas)
 			biblioteca.remDisponivel(livroTemp.getISBN(), delete);
 			for (Prateleira p : prateleiras)
-				for (Iterator<Livro> iterator = p.getLivros().iterator(); iterator.hasNext(); ) {
-				    Livro l = iterator.next();
+				for(ListIterator<Livro> lIt = p.getLivros().listIterator(p.getLivros().size());
+						lIt.hasPrevious();) {
+					Livro l = lIt.previous();
 				    if (livros.contains(l) && !l.isRetirado()) {
-				        iterator.remove();
+				        lIt.remove();
 				        if (--delete <= 0) 
 					    	return true;
 				    }
@@ -181,7 +168,37 @@ public class FakeServer {
 		return true;
 	}
 	
-	//TODO: criar método de organizar a biblioteca e remover espaços vazios
+	//TODO: implementar o método de organizar a biblioteca e remover espaços vazios
+	public void organizeLibrary() {
+		
+	/*
+	 * Lógica:
+	 * verificar se a última prateleira está vazia (se sim, remove essa prateleira e segue o carreto)
+	 * verificar se todas as prateleiras anteriores a última estão cheias (senão, continua a lógica)
+	 * ver as estantes de trás pra frente
+	 * ver as prateleiras de trás pra frente
+	 * pegar os livros 1 por 1 e ir inserindo nos espaços vazios
+	 * (pode-se utilizar um addBook e delete para facilitar as trocas)
+	 */
+		
+	}
+	
+	/**
+	 * Exibe o estado atual da biblioteca
+	 */
+	public void showLibrary() {
+		for (Estante e : biblioteca.getEstantes()) {
+			System.out.println("------Estante------");
+			for (Prateleira p : e.getPrateleiras()) {
+				System.out.println("---Prateleira");
+				if(p.getLivros().size() == 0)
+					System.out.println("vazia");
+				else
+					for (Livro l : p.getLivros())
+						System.out.println(l.toString());
+			}
+		}
+	}
 	
 	public int strToInt(String s) {
 		int i = 0;

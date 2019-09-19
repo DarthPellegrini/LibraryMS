@@ -43,4 +43,12 @@ public class Prateleira {
 		}
 	}
 	
+	public boolean isFull() {
+		return this.livros.size() == size;
+	}
+	
+	public boolean isEmpty() {
+		return this.livros.size() == 0;
+	}
+	
 }
