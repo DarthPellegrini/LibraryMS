@@ -81,5 +81,7 @@ public class Livro {
 				+ getEdicao() + "-" + getNumeroPaginas() + "-" + isRetirado();
 	}
 	
-	
+	public Livro copy() {
+		return new Livro(ISBN, edicao, titulo, autor, editora, numeroPaginas, retirado);
+	}
 }

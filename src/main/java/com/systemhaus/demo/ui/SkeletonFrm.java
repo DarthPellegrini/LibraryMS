@@ -1,9 +1,9 @@
 package com.systemhaus.demo.ui;
-import com.systemhaus.demo.FakeServer;
+import com.systemhaus.demo.Server;
 
 public abstract class SkeletonFrm {
 	
-	protected abstract javax.swing.JInternalFrame createForm(FakeServer fakeserver);
+	protected abstract javax.swing.JInternalFrame createForm(Server fakeserver);
 	
 	protected abstract java.awt.Component createMainPanel();
 

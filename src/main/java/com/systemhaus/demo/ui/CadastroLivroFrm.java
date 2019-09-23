@@ -14,7 +14,7 @@ import javax.swing.border.EmptyBorder;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
-import com.systemhaus.demo.FakeServer;
+import com.systemhaus.demo.Server;
 import com.systemhaus.demo.domain.Livro;
 
 public class CadastroLivroFrm extends SkeletonFrm{
@@ -27,9 +27,9 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	private JTextField txtfAutor;
 	private JTextField txtfEditora;
 	private JInternalFrame ifCadLivro;
-	private FakeServer fakeServer;
+	private Server fakeServer;
 	
-	public JInternalFrame createForm(FakeServer fakeServer) {
+	public JInternalFrame createForm(Server fakeServer) {
 		initComponents();
 		initLayout();
 		this.fakeServer = fakeServer;
@@ -71,10 +71,10 @@ public class CadastroLivroFrm extends SkeletonFrm{
 						!txtfEditora.getText().isEmpty() && !txtfNPag.getText().isEmpty() && 
 						!txtfQuant.getText().isEmpty()) 
 					//TODO: criar mensagens de erro para cada tipo de erro diferente
-					if(fakeServer.addNewBookRoutine(txtfIsbn.getText(), 
+					if(fakeServer.addNewBookRoutine(new Livro(txtfIsbn.getText(), 
 													fakeServer.strToInt(txtfEdicao.getText()), 
 													txtfTitulo.getText(), txtfAutor.getText(), txtfEditora.getText(), 
-													fakeServer.strToInt(txtfNPag.getText()), 
+													fakeServer.strToInt(txtfNPag.getText()), false), 
 													fakeServer.strToInt(txtfQuant.getText()))) {
 						JOptionPane.showMessageDialog(null, "Livro(s) inserido(s) com sucesso!");
 						clearField();

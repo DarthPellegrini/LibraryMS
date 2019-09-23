@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
-import com.systemhaus.demo.FakeServer;
+import com.systemhaus.demo.Server;
 
 public class TransacaoLivroFrm extends SkeletonFrm{
 
@@ -37,9 +37,9 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	private JTextField txtfRua;
 	private JTextField txtfNumero;
 	private JTextField txtfCodCartao;
-	private FakeServer fakeServer;
+	private Server fakeServer;
 	
-	public JInternalFrame createForm(FakeServer fakeServer) {
+	public JInternalFrame createForm(Server fakeServer) {
 		initComponents();
 		initLayout();
 		this.fakeServer = fakeServer;

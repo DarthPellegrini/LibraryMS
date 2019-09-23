@@ -4,17 +4,31 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import com.systemhaus.demo.dao.memory.LivroDAO;
+import com.systemhaus.demo.dao.memory.EstanteDAO;
 import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.Estante;
-import com.systemhaus.demo.domain.Prateleira;
+import com.systemhaus.demo.domain.EstanteRepository;
 import com.systemhaus.demo.domain.Livro;
+import com.systemhaus.demo.domain.LivroRepository;
+import com.systemhaus.demo.domain.Prateleira;
 
-public class FakeServer {
+public class Server {
 
 	private Biblioteca biblioteca;
 	private Livro livroTemp; //livro buscado na biblioteca que poderá ser modificado ou excluído 
+	private EstanteRepository estanteRepository;
+	private LivroRepository livroRepository;
 	
-	public FakeServer () {
+	public Server () {
+		createLibrary();
+		this.estanteRepository = new EstanteDAO(biblioteca);
+		this.livroRepository = new LivroDAO(biblioteca);
+	}
+	
+	public Server(EstanteRepository estanteRepository, LivroRepository livroRepository) {
+		this.estanteRepository = estanteRepository;
+		this.livroRepository = livroRepository;
 		createLibrary();
 	}
 	
@@ -25,37 +39,26 @@ public class FakeServer {
 	/**
 	 * Método recursivo infalível de inserção de livros
 	 */
-	public boolean addNewBookRoutine(String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas, 
-			int quantCopias) {
+	public boolean addNewBookRoutine(Livro livro, int quantCopias) {
 		//verifica se o livro inserido possui todos os campos válidos
-		if (validateBook(iSBN, edicao, titulo, autor, editora, numeroPaginas))
-			for (int quantLivros = 0; quantLivros < quantCopias; quantLivros++) 
-				if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas, false))
-					biblioteca.addDisponivel(iSBN, quantCopias);
-				else {
-					//caso a estante esteja cheia
-					biblioteca.addEstante();
-					if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas, false))
-						biblioteca.addDisponivel(iSBN, quantCopias);
-					else
-						addNewBookRoutine(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantLivros);
+		if (livro.validate()) {
+			for (int quantLivros = 0; quantLivros < quantCopias; quantLivros++) {
+				Livro copy = livro.copy();
+				livroRepository.save(copy);
+				if(!addBook(copy)) {
+					estanteRepository.addEstante();
+					addBook(copy);
 				}
-		else
+			}
+		} else {
 			return false;
+		}
 		return true; 
 	}
 	
-	public boolean validateBook(String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas) {
-		Livro l = new Livro(iSBN, edicao, titulo, autor, editora, numeroPaginas, false);
-		return l.validate();
-	}
-	
-	public boolean addBook(String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas,
-			boolean retirado) {
-		Prateleira p = biblioteca.getPrateleiraWithEmptySpace();
-		return p == null ? false : p.addLivro(
-				new Livro(iSBN, edicao, titulo, autor, editora, numeroPaginas, retirado)
-				);
+	public boolean addBook(Livro livro) {
+		Prateleira p = estanteRepository.getPrateleiraWithEmptySpace();
+		return p == null ? false : p.addLivro(livro);
 	}
 	
 	public int returnBookCount(String iSBN) {
@@ -63,29 +66,17 @@ public class FakeServer {
 	}
 	
 	public Livro findBook(String iSBN, String edicao, String titulo, String autor, String editora, String numeroPaginas) {
-		//buscando em todas as estantes e em todos as prateleiras
-		for (Estante e : biblioteca.getEstantes()) 
-			for (Prateleira p : e.getPrateleiras()) 
-				for (Livro l : p.getLivros())
-					//a seleção de parâmetros será mais fácil no BD, já que poderão ou não ser incluídas no select.
-					if ( (l.getISBN().equals(iSBN) || iSBN.isEmpty()) && (l.getEdicao() == strToInt(edicao) || edicao.isEmpty()) && 
-					(l.getTitulo().equals(titulo) || titulo.isEmpty()) && (l.getAutor().equals(autor) || autor.isEmpty()) && 
-					(l.getEditora().equals(editora) || editora.isEmpty()) && 
-					(l.getNumeroPaginas() == strToInt(numeroPaginas) || numeroPaginas.isEmpty())) {
-						livroTemp = l;
-						return l;
-					}
-		return null;
+		return livroRepository.findByExample(new Livro(iSBN, strToInt(edicao), titulo, autor, editora, strToInt(numeroPaginas), false));
 	}
 	
-	public boolean editBook(String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas, 
+	public boolean editBook(String iSBNOriginal, String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas, 
 			int quantCopias) {
 		//caso o número de cópias final seja menor que o disponível, os livros que:
 		int quantNoAcervo = biblioteca.getRegistroDeLivros().get(iSBN)[0];
 		if(!biblioteca.havingOnlyThisAmountOfCopiesWontCauseProblems(iSBN, quantCopias))
 			return false;
 		if(quantCopias > quantNoAcervo)
-			this.addNewBookRoutine(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantCopias);
+			this.addNewBookRoutine(new Livro(iSBN, edicao, titulo, autor, editora, numeroPaginas, false), quantCopias);
 		else
 			if(quantCopias < quantNoAcervo) 
 				this.deleteBook(quantNoAcervo-quantCopias);
@@ -94,9 +85,7 @@ public class FakeServer {
 			for (Prateleira p : e.getPrateleiras()) 
 				for (Livro l : p.getLivros())
 					//a seleção de parâmetros será mais fácil no BD, já que poderão ou não ser incluídas no select.
-					if ( (l.getISBN().equals(livroTemp.getISBN())) && (l.getEdicao() == livroTemp.getEdicao()) && 
-					(l.getTitulo().equals(livroTemp.getTitulo())) && (l.getAutor().equals(livroTemp.getAutor())) && 
-					(l.getEditora().equals(livroTemp.getEditora())) && (l.getNumeroPaginas() == livroTemp.getNumeroPaginas())) {
+					if ( l.getISBN().equals(iSBNOriginal)) {
 						l.setISBN(iSBN);
 						l.setEdicao(edicao);
 						l.setTitulo(titulo);
@@ -185,8 +174,7 @@ public class FakeServer {
 							lIt.hasPrevious();) {
 						Livro l = lIt.previous();
 						//adiciona o livro no primeiro espaço vazio
-						addBook(l.getISBN(), l.getEdicao(), l.getTitulo(), l.getAutor(), 
-								l.getEditora(), l.getNumeroPaginas(), l.isRetirado());
+						addBook(l);
 						lIt.remove();
 						if(!needsReorganization())
 							return;
@@ -245,5 +233,9 @@ public class FakeServer {
 			//do nothing, will return zero either way
 		}
 		return i;
+	}
+	
+	public int getCountOfEstantes() {
+		return biblioteca.getEstantes().size();
 	}
 }

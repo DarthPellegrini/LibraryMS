@@ -62,11 +62,11 @@ public class Biblioteca {
 		return this.allTheBooksAreAvailable(key) ? true : quant >= this.regLivros.get(key)[1];
 	}
 	
-	public void addDisponivel(String key, int quant) {
+	public void addDisponivel(String key) {
 		int value[] = new int[2];
 		if(!this.regLivros.containsKey(key)) {
-			value[0] = quant;
-			value[1] = quant;
+			value[0] = 1;
+			value[1] = 1;
 		}else {
 			value[0] = this.regLivros.get(key)[0]++;
 			value[1] = this.regLivros.get(key)[1]++;
