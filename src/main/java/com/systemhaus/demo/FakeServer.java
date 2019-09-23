@@ -20,11 +20,6 @@ public class FakeServer {
 	
 	private void createLibrary() {
 		biblioteca = new Biblioteca();
-		ArrayList<Estante> estantes = new ArrayList<Estante>();
-		ArrayList<Prateleira> prateleiras = new ArrayList<Prateleira>();
-		prateleiras.add(new Prateleira());
-		estantes.add(new Estante(prateleiras));
-		biblioteca.setEstantes(estantes);
 	}	
 	
 	/**
@@ -35,12 +30,12 @@ public class FakeServer {
 		//verifica se o livro inserido possui todos os campos válidos
 		if (validateBook(iSBN, edicao, titulo, autor, editora, numeroPaginas))
 			for (int quantLivros = 0; quantLivros < quantCopias; quantLivros++) 
-				if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas))
+				if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas, false))
 					biblioteca.addDisponivel(iSBN, quantCopias);
 				else {
 					//caso a estante esteja cheia
 					biblioteca.addEstante();
-					if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas))
+					if(addBook(iSBN, edicao, titulo, autor, editora, numeroPaginas, false))
 						biblioteca.addDisponivel(iSBN, quantCopias);
 					else
 						addNewBookRoutine(iSBN, edicao, titulo, autor, editora, numeroPaginas, quantLivros);
@@ -55,11 +50,11 @@ public class FakeServer {
 		return l.validate();
 	}
 	
-	public boolean addBook(String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas) {
+	public boolean addBook(String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas,
+			boolean retirado) {
 		Prateleira p = biblioteca.getPrateleiraWithEmptySpace();
-		System.out.println("p= " + p);
 		return p == null ? false : p.addLivro(
-				new Livro(iSBN, edicao, titulo, autor, editora, numeroPaginas, false)
+				new Livro(iSBN, edicao, titulo, autor, editora, numeroPaginas, retirado)
 				);
 	}
 	
@@ -151,6 +146,7 @@ public class FakeServer {
 			biblioteca.getRegistroDeLivros().remove(livroTemp.getISBN());
 			for (Prateleira p : prateleiras) 
 				p.getLivros().removeAll(livros);
+			organizeLibrary();
 		}else {
 			//remoção dos livros (no modo de edição de livro, removendo cópias que não tenham sido retiradas)
 			biblioteca.remDisponivel(livroTemp.getISBN(), delete);
@@ -160,27 +156,68 @@ public class FakeServer {
 					Livro l = lIt.previous();
 				    if (livros.contains(l) && !l.isRetirado()) {
 				        lIt.remove();
-				        if (--delete <= 0) 
+				        if (--delete <= 0) {
+				        	organizeLibrary();
 					    	return true;
+				        }
 				    }
 				}
 		}
 		return true;
 	}
 	
-	//TODO: implementar o método de organizar a biblioteca e remover espaços vazios
-	public void organizeLibrary() {
-		
-	/*
-	 * Lógica:
-	 * verificar se a última prateleira está vazia (se sim, remove essa prateleira e segue o carreto)
-	 * verificar se todas as prateleiras anteriores a última estão cheias (senão, continua a lógica)
-	 * ver as estantes de trás pra frente
-	 * ver as prateleiras de trás pra frente
-	 * pegar os livros 1 por 1 e ir inserindo nos espaços vazios
-	 * (pode-se utilizar um addBook e delete para facilitar as trocas)
+	/**
+	 * Método que organiza a biblioteca, preenchendo os espaços vazios deixados pela remoção de livros
 	 */
+	public void organizeLibrary() {
+		//removendo estantes vazias
+		removeEmptyEstantes();
 		
+		//verificando se há necessidade de reorganizar a biblioteca
+		if(needsReorganization())
+			for(ListIterator<Estante> eIt = biblioteca.getEstantes().listIterator(biblioteca.getEstantes().size());
+					eIt.hasPrevious();) {
+				Estante e = eIt.previous();
+				for(ListIterator<Prateleira> pIt = e.getPrateleiras().listIterator(e.getPrateleiras().size());
+						pIt.hasPrevious();) {
+					Prateleira p = pIt.previous();
+					for(ListIterator<Livro> lIt = p.getLivros().listIterator(p.getLivros().size());
+							lIt.hasPrevious();) {
+						Livro l = lIt.previous();
+						//adiciona o livro no primeiro espaço vazio
+						addBook(l.getISBN(), l.getEdicao(), l.getTitulo(), l.getAutor(), 
+								l.getEditora(), l.getNumeroPaginas(), l.isRetirado());
+						lIt.remove();
+						if(!needsReorganization())
+							return;
+					}
+				}
+				//caso a estante esteja vazia, será removida
+				if(e.isEmpty())
+					eIt.remove();
+			}	
+	}
+	
+	/**
+	 * Verifica se a biblioteca precisa ser reorganizada
+	 */
+	public boolean needsReorganization() {
+		for (Estante e : biblioteca.getEstantes())
+			if(!e.isFull() && e != biblioteca.getLastEstante())
+				return true;
+		return false;
+	}
+	
+	/**
+	 * Remove estantes vazias
+	 */
+	public void removeEmptyEstantes() {
+		for(ListIterator<Estante> eIt = biblioteca.getEstantes().listIterator();
+				eIt.hasNext();) {
+			Estante e = eIt.next();
+			if (e.isEmpty())
+				eIt.remove();
+		}
 	}
 	
 	/**

@@ -14,6 +14,7 @@ public class Biblioteca {
 	public Biblioteca() {
 		estantes = new ArrayList<Estante>();
 		regLivros = new HashMap<String,int[]>();
+		this.addEstante();
 	}
 	
 	public List<Estante> getEstantes() {
@@ -94,6 +95,10 @@ public class Biblioteca {
 		return true;
 	}
 	
+	/**
+	 * Retorna a primeira prateleira com espaço vazio, se houver, senão, retorna nulo
+	 * @return
+	 */
 	public Prateleira getPrateleiraWithEmptySpace() {
 		for (Estante e : estantes)
 			for (Prateleira p : e.getPrateleiras())
