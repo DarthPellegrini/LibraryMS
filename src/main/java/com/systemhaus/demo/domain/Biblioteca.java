@@ -55,7 +55,7 @@ public class Biblioteca {
 	
 	/**
 	 * Caso todos os livros estejam disponíveis, não há problema em deletar alguns exemplares,
-	 * senão, é necessário conferir que o número atual de livros depois da remoção 
+	 * senão, é necessário conferir se o número atual de livros depois da remoção 
 	 * não será inferior ao de livros disponíveis
 	 */
 	public boolean havingOnlyThisAmountOfCopiesWontCauseProblems(String key, int quant) {

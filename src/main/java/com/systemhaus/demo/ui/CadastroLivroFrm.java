@@ -28,6 +28,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	private JTextField txtfEditora;
 	private JInternalFrame ifCadLivro;
 	private Server fakeServer;
+	private String livroISBN;
 	
 	public JInternalFrame createForm(Server fakeServer) {
 		initComponents();
@@ -82,19 +83,19 @@ public class CadastroLivroFrm extends SkeletonFrm{
 						JOptionPane.showMessageDialog(null, "Ocorreu um erro na inserção do livro!");
 				else
 					JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
-				fakeServer.showLibrary();
 			}
 		});
 		
 		btnPesquisarLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Livro l = fakeServer.findBook(txtfIsbn.getText(), 
-						txtfEdicao.getText(), txtfTitulo.getText(), 
+				Livro l = fakeServer.findBook(new Livro(txtfIsbn.getText(), 
+						fakeServer.strToInt(txtfEdicao.getText()), txtfTitulo.getText(), 
 						txtfAutor.getText(), txtfEditora.getText(), 
-						txtfNPag.getText());
+						fakeServer.strToInt(txtfNPag.getText()),false));
 				if	(l == null)
 					JOptionPane.showMessageDialog(null, "Nenhum livro encontrado!");
 				else {
+					livroISBN = l.getISBN();
 					txtfIsbn.setText(l.getISBN());
 					txtfEdicao.setText("" + l.getEdicao());
 					txtfTitulo.setText(l.getTitulo());
@@ -106,7 +107,6 @@ public class CadastroLivroFrm extends SkeletonFrm{
 					btnSalvarLivro.setEnabled(true);
 					btnDeletarLivro.setEnabled(true);
 				}
-				fakeServer.showLibrary();
 			}
 		});
 		
@@ -115,34 +115,32 @@ public class CadastroLivroFrm extends SkeletonFrm{
 				if (!txtfIsbn.getText().isEmpty() || !txtfEdicao.getText().isEmpty() ||
 						!txtfTitulo.getText().isEmpty() || !txtfAutor.getText().isEmpty() ||
 						!txtfEditora.getText().isEmpty() || !txtfNPag.getText().isEmpty() || 
-						!txtfQuant.getText().isEmpty())
-					if(fakeServer.editBook(txtfIsbn.getText(), 
+						!txtfQuant.getText().isEmpty()) {
+					Livro l = new Livro(txtfIsbn.getText(), 
 											fakeServer.strToInt(txtfEdicao.getText()), 
 											txtfTitulo.getText(), txtfAutor.getText(), txtfEditora.getText(), 
-											fakeServer.strToInt(txtfNPag.getText()), 
-											fakeServer.strToInt(txtfQuant.getText()))) {
+											fakeServer.strToInt(txtfNPag.getText()),false);
+					if(fakeServer.editBook(livroISBN,l,fakeServer.strToInt(txtfQuant.getText()))){
 						JOptionPane.showMessageDialog(null, "Livro(s) modificado(s) com sucesso!");
 						btnAdicionarLivro.setEnabled(true);
 						btnSalvarLivro.setEnabled(false);
 						btnDeletarLivro.setEnabled(false);
+						livroISBN = txtfIsbn.getText();
 						clearField();
 					}else
 						JOptionPane.showMessageDialog(null, "Ocorreu um erro na modificação do(s) livro(s)!");
-				else
+				}else
 					JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
-				fakeServer.showLibrary();
 			}
 		});
 		
 		btnDeletarLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//validação dos campos (pode ser removida)
 				if (!txtfIsbn.getText().isEmpty() || !txtfEdicao.getText().isEmpty() ||
 						!txtfTitulo.getText().isEmpty() || !txtfAutor.getText().isEmpty() ||
 						!txtfEditora.getText().isEmpty() || !txtfNPag.getText().isEmpty() || 
 						!txtfQuant.getText().isEmpty()) 
-					//não há necessidade de passar os dados, pois os mesmos já foram salvos anteriormente na busca
-					if(fakeServer.deleteBook(0)) {
+					if(fakeServer.deleteBook(livroISBN, 0)) {
 						JOptionPane.showMessageDialog(null, "Livro(s) deletado(s) com sucesso!");
 						btnAdicionarLivro.setEnabled(true);
 						btnSalvarLivro.setEnabled(false);
@@ -152,7 +150,6 @@ public class CadastroLivroFrm extends SkeletonFrm{
 						JOptionPane.showMessageDialog(null, "Ocorreu um erro na remoção do(s) livro(s)!");
 				else
 					JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
-				fakeServer.showLibrary();
 			}
 		});
 		

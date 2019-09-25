@@ -1,8 +1,13 @@
 package com.systemhaus.demo.dao.memory;
 
+import java.util.List;
+import java.util.ListIterator;
+
 import com.systemhaus.demo.domain.Biblioteca;
+import com.systemhaus.demo.domain.Estante;
 import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.LivroRepository;
+import com.systemhaus.demo.domain.Prateleira;
 
 public class LivroDAO implements LivroRepository {
 	
@@ -33,4 +38,58 @@ public class LivroDAO implements LivroRepository {
 			.findFirst().orElse(null);
 	}
 
+	@Override
+	public void editByExample(String iSBNOriginal, Livro livro) {
+		for (Estante e : biblioteca.getEstantes()) 
+			for (Prateleira p : e.getPrateleiras()) 
+				for (Livro l : p.getLivros())
+					if ( l.getISBN().equals(iSBNOriginal)) {
+						livro.setRetirado(l.isRetirado());
+						l = livro.copy();
+					}
+	}
+	
+	@Override
+	public void markBooksForDeletion(String iSBNOriginal,List<Prateleira> prateleiras, List<Livro> livros) {
+		for(ListIterator<Estante> eIt = biblioteca.getEstantes().listIterator(biblioteca.getEstantes().size());
+				eIt.hasPrevious();) {
+			Estante e = eIt.previous();
+			for(ListIterator<Prateleira> pIt = e.getPrateleiras().listIterator(e.getPrateleiras().size());
+					pIt.hasPrevious();) {
+				Prateleira p = pIt.previous();
+				for(ListIterator<Livro> lIt = p.getLivros().listIterator(p.getLivros().size());
+						lIt.hasPrevious();) {
+					Livro l = lIt.previous();
+					if ( l.getISBN().equals(iSBNOriginal) && !l.isRetirado()) {
+						if(!prateleiras.contains(p))
+							prateleiras.add(p);
+						if (!livros.contains(l))
+							livros.add(l);
+					}
+				}
+			}
+		}
+	}
+	
+	@Override
+	public void deleteAllTheseBooks(String iSBNOriginal, List<Prateleira> prateleiras, List<Livro> livros) {
+		biblioteca.getRegistroDeLivros().remove(iSBNOriginal);
+		for (Prateleira p : prateleiras) 
+			p.getLivros().removeAll(livros);
+	}
+	
+	@Override
+	public void deleteOnlyTheseBooks(String iSBNOriginal, List<Prateleira> prateleiras, List<Livro> livros, int delete) {
+		biblioteca.remDisponivel(iSBNOriginal, delete);
+		for (Prateleira p : prateleiras)
+			for(ListIterator<Livro> lIt = p.getLivros().listIterator(p.getLivros().size());
+					lIt.hasPrevious();) {
+				Livro l = lIt.previous();
+			    if (livros.contains(l) && !l.isRetirado()) {
+			        lIt.remove();
+			        if (--delete <= 0)
+				    	return;
+			    }
+			}
+	}
 }

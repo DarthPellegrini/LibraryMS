@@ -2,6 +2,7 @@ package com.systemhaus.demo;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -42,6 +43,13 @@ public class ServerTest {
 	}
 	
 	@Test
+	public void testErrorAddingNewBookRoutineWithInvalidQuantity() {
+		Server s = new Server();
+		boolean result = s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 0);
+		assertFalse(result);
+	}
+	
+	@Test
 	public void testAddingNewBookRoutineToCreateANewEstate() {
 		Server s = new Server();
 		assertEquals(1, s.getCountOfEstantes());
@@ -56,5 +64,67 @@ public class ServerTest {
 		Server s = new Server();
 		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 1);
 		assertEquals(1, s.returnBookCount("9780123456789"));
+	}
+	
+	@Test
+	public void testEditBook() {
+		Server s = new Server();
+		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 2);
+		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, true), 8);
+		boolean result = s.editBook("9780123456789", new Livro("9780123456789", 1, "Book", "Agatha Cristie", "LP&M", 250, false), 8);
+		assertTrue(result);
+	}
+	
+	@Test
+	public void testEditBookWithMoreCopiesThanExpected() {
+		Server s = new Server();
+		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 2);
+		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, true), 8);
+		boolean result = s.editBook("9780123456789", new Livro("9780123456789", 1, "Book", "Agatha Cristie", "LP&M", 250, false), 20);
+		assertTrue(result);
+	}
+	
+	@Test
+	public void testEditBookWithLessCopiesThanExpected() {
+		Server s = new Server();
+		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 2);
+		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, true), 8);
+		boolean result = s.editBook("9780123456789", new Livro("9780123456789", 1, "Book", "Agatha Cristie", "LP&M", 250, false), 5);
+		assertFalse(result);
+	}
+	
+	@Test
+	public void testDeleteBook() {
+		Server s = new Server();
+		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 140);
+		s.addNewBookRoutine(new Livro("9780123456790", 1, "Livro novo", "Agatha Cristie", "LP&M", 250, false), 20);
+		s.addNewBookRoutine(new Livro("9780123456790", 1, "Livro novo", "Agatha Cristie", "LP&M", 250, true), 20);
+		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 100);
+		boolean result = s.deleteBook("9780123456790", 20);
+		assertTrue(result);
+	}
+	
+	@Test
+	public void testDeleteBookFail() {
+		Server s = new Server();
+		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 140);
+		s.addNewBookRoutine(new Livro("9780123456790", 1, "Livro novo", "Agatha Cristie", "LP&M", 250, false), 20);
+		s.addNewBookRoutine(new Livro("9780123456790", 1, "Livro novo", "Agatha Cristie", "LP&M", 250, true), 20);
+		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 100);
+		boolean result = s.deleteBook("9780123456790", 0);
+		assertFalse(result);
+	}
+	
+	@Test
+	public void testOrganizeLibrary() {
+		Server s = new Server();
+		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 140);
+		s.addNewBookRoutine(new Livro("9780123456790", 1, "Livro novo", "Agatha Cristie", "LP&M", 250, false), 20);
+		s.addNewBookRoutine(new Livro("9780123456790", 1, "Livro novo", "Agatha Cristie", "LP&M", 250, true), 20);
+		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 100);
+		boolean result1 = s.needsReorganization();
+		s.deleteBook("9780123456790", 0);
+		boolean result2 = s.needsReorganization();
+		assertEquals(result1, result2);
 	}
 }
