@@ -1,8 +1,21 @@
 package com.systemhaus.demo.domain;
 
-public class Livro {
+import com.jgoodies.binding.beans.Model;
 
-	//private int id; //único, código que identifica o livro na biblioteca (usado somente no BD)
+public class Livro extends Model{
+
+	/**
+	 * Serial e bindings
+	 */
+	private static final long serialVersionUID = 1L;
+	public static final String PROPERTY_ISBN = "ISBN";
+	public static final String PROPERTY_EDICAO = "edicao";
+	public static final String PROPERTY_TITULO = "titulo";
+	public static final String PROPERTY_AUTOR = "autor";
+	public static final String PROPERTY_EDITORA = "editora";
+	public static final String PROPERTY_NUMPAG = "numeroPaginas";
+	public static final String PROPERTY_RETIRADO = "retirado";
+	
 	private String ISBN; //pode ser repetido, para n volumes do mesmo livro
 	private int edicao; //edição do livro
 	private String titulo; //título do livro
@@ -21,53 +34,76 @@ public class Livro {
 		setNumeroPaginas(numeroPaginas);
 		this.retirado = retirado;
 	}
+	
+	public Livro() {
+		this.retirado = false;
+	}
+	
 	public String getISBN() {
 		return ISBN;
 	}
 	public void setISBN(String iSBN) {
 		if (!iSBN.isEmpty() && iSBN.matches("97(8|9)[0-9]{10}")) {
-			ISBN = iSBN;
+			String oldValue = this.ISBN;
+            this.ISBN= iSBN;
+            firePropertyChange(PROPERTY_ISBN, oldValue, this.ISBN);
 		}
 	}
 	public int getEdicao() {
 		return edicao;
 	}
 	public void setEdicao(int edicao) {
-		if (edicao > 0)
-			this.edicao = edicao;
+		int oldValue = this.edicao;
+		if (edicao > 0) {
+		    this.edicao = edicao;
+        }else {
+		    this.edicao = 1;
+        }
+        firePropertyChange(PROPERTY_EDICAO, oldValue, this.edicao);	
 	}
 	public String getTitulo() {
 		return titulo;
 	}
 	public void setTitulo(String titulo) {
-		this.titulo = titulo;
+		String oldValue = this.titulo;
+        this.titulo = titulo;
+        firePropertyChange(PROPERTY_TITULO, oldValue, this.titulo);
 	}
 	public String getAutor() {
 		return autor;
 	}
 	public void setAutor(String autor) {
-		this.autor = autor;
+		String oldValue = this.autor;
+        this.autor = autor;
+        firePropertyChange(PROPERTY_AUTOR, oldValue, this.autor);
 	}
 	public String getEditora() {
 		return editora;
 	}
 	public void setEditora(String editora) {
-		this.editora = editora;
+		String oldValue = this.editora;
+        this.editora = editora;
+        firePropertyChange(PROPERTY_EDITORA, oldValue, this.editora);
 	}
 	public int getNumeroPaginas() {
 		return numeroPaginas;
 	}
 	public void setNumeroPaginas(int numeroPaginas) {
-		if (numeroPaginas > 0)
-			this.numeroPaginas = numeroPaginas;
-		else
-			this.numeroPaginas = 1;
+		int oldValue = this.numeroPaginas;
+		if (numeroPaginas > 0) {
+		    this.numeroPaginas = numeroPaginas;
+		}else {
+		    this.numeroPaginas = 1;
+		}
+		firePropertyChange(PROPERTY_NUMPAG, oldValue, this.numeroPaginas);
 	}
 	public boolean isRetirado() {
 		return retirado;
 	}
 	public void setRetirado(boolean retirado) {
-		this.retirado = retirado;
+		boolean oldValue = this.retirado;
+        this.retirado = retirado;
+        firePropertyChange(PROPERTY_RETIRADO, oldValue, this.retirado);
 	}
 	
 	//valida os dados de um livro

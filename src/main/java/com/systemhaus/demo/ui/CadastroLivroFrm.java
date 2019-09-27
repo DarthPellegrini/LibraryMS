@@ -12,6 +12,9 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import com.jgoodies.binding.adapter.BasicComponentFactory;
+import com.jgoodies.binding.beans.BeanAdapter;
+import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 import com.systemhaus.demo.Server;
@@ -29,12 +32,13 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	private JInternalFrame ifCadLivro;
 	private Server fakeServer;
 	private String livroISBN;
+	private Livro livroBean;
 	
 	public JInternalFrame createForm(Server fakeServer) {
 		initComponents();
 		initLayout();
 		this.fakeServer = fakeServer;
-
+		livroBean = new Livro("9780123456789",1,"Titulo","Autor","Editora",250,false);
 		return ifCadLivro;
 	}
 
@@ -189,18 +193,28 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		ifCadLivro = new JInternalFrame("Cadastro de Livros", false, true);
 		ifCadLivro.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 		ifCadLivro.setBounds(190, 35, 400, 320);
-	    
-		txtfIsbn = new JTextField();
+		this.livroBean = new Livro();
+	
+		BeanAdapter<Livro> beanAdapter = new BeanAdapter<Livro>(this.livroBean, true);
+		ValueModel ISBNAdapter = beanAdapter.getValueModel("ISBN");
+		ValueModel tituloAdapter = beanAdapter.getValueModel("titulo");
+		ValueModel autorAdapter = beanAdapter.getValueModel("autor");
+		ValueModel editoraAdapter = beanAdapter.getValueModel("editora");
+		ValueModel edicaoAdapter = beanAdapter.getValueModel("edicao");
+		ValueModel numPagAdapter = beanAdapter.getValueModel("numeroPaginas");
 		
-		txtfTitulo = new JTextField();
 		
-		txtfAutor = new JTextField();
+		txtfIsbn = BasicComponentFactory.createTextField(ISBNAdapter);
 		
-		txtfEditora = new JTextField();
+		txtfTitulo = BasicComponentFactory.createTextField(tituloAdapter);
 		
-		txtfEdicao = new JTextField();
+		txtfAutor = BasicComponentFactory.createTextField(autorAdapter);
 		
-		txtfNPag = new JTextField();
+		txtfEditora = BasicComponentFactory.createTextField(editoraAdapter);
+		
+		txtfEdicao = BasicComponentFactory.createTextField(edicaoAdapter);
+		
+		txtfNPag = BasicComponentFactory.createTextField(numPagAdapter);
 		
 		txtfQuant = new JTextField();
 	}
