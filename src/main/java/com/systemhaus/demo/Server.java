@@ -111,19 +111,19 @@ public class Server {
 	 * Exibe o estado atual da biblioteca
 	 * somente é usada para testes
 	 */
-	public void showLibrary() {
-		for (com.systemhaus.demo.domain.Estante e : biblioteca.getEstantes()) {
-			System.out.println("------Estante------");
-			for (Prateleira p : e.getPrateleiras()) {
-				System.out.println("---Prateleira");
-				if(p.getLivros().size() == 0)
-					System.out.println("vazia");
-				else
-					for (Livro l : p.getLivros())
-						System.out.println(l.toString());
-			}
-		}
-	}
+//	public void showLibrary() {
+//		for (com.systemhaus.demo.domain.Estante e : biblioteca.getEstantes()) {
+//			System.out.println("------Estante------");
+//			for (Prateleira p : e.getPrateleiras()) {
+//				System.out.println("---Prateleira");
+//				if(p.getLivros().size() == 0)
+//					System.out.println("vazia");
+//				else
+//					for (Livro l : p.getLivros())
+//						System.out.println(l.toString());
+//			}
+//		}
+//	}
 	
 	/**
 	 * Converte String para Inteiro com retorno automático de um 0 no caso de caracteres inválidos
