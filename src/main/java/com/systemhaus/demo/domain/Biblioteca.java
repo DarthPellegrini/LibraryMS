@@ -68,8 +68,8 @@ public class Biblioteca {
 			value[0] = 1;
 			value[1] = 1;
 		}else {
-			value[0] = this.regLivros.get(key)[0]++;
-			value[1] = this.regLivros.get(key)[1]++;
+			value[0] = ++this.regLivros.get(key)[0];
+			value[1] = ++this.regLivros.get(key)[1];
 		}
 		this.regLivros.put(key, value);
 	}

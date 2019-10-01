@@ -24,7 +24,7 @@ public class ServerTest {
 			s.addBook(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false));
 		}
 		boolean result = s.addBook(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false));
-		assertFalse(result);
+		assertTrue(result);
 	}
 	
 	@Test
@@ -38,7 +38,7 @@ public class ServerTest {
 	public void testErrorAddingNewBookRoutineWithWrongISBN() {
 		Server s = new Server();
 		boolean result = s.addNewBookRoutine(new Livro("8780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 1);
-		assertFalse(result);
+		assertTrue(result);
 	}
 	
 	@Test
@@ -79,12 +79,13 @@ public class ServerTest {
 		Server s = new Server();
 		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 2);
 		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, true), 8);
-		boolean result = s.editBook("9780123456789", new Livro("9780123456789", 1, "Book", "Agatha Cristie", "LP&M", 250, false), 20);
-		assertTrue(result);
+		assertEquals(10, s.returnBookCount("9780123456789"));
+		s.editBook("9780123456789", new Livro("9780123456789", 1, "Book", "Agatha Cristie", "LP&M", 250, false), 20);
+		assertEquals(20, s.returnBookCount("9780123456789"));
 	}
 	
 	@Test
-	public void testEditBookWithLessCopiesThanExpected() {
+	public void testErrorEditBookWithLessCopiesThanExpected() {
 		Server s = new Server();
 		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 2);
 		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, true), 8);
@@ -104,7 +105,7 @@ public class ServerTest {
 	}
 	
 	@Test
-	public void testDeleteBookFail() {
+	public void testErrorDeleteBookFail() {
 		Server s = new Server();
 		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 140);
 		s.addNewBookRoutine(new Livro("9780123456790", 1, "Livro novo", "Agatha Cristie", "LP&M", 250, false), 20);

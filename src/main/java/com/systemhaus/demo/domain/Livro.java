@@ -36,7 +36,7 @@ public class Livro extends Model{
 	}
 	
 	public Livro() {
-		this.retirado = false;
+		this.clear();
 	}
 	
 	public String getISBN() {
@@ -119,5 +119,15 @@ public class Livro extends Model{
 	
 	public Livro copy() {
 		return new Livro(ISBN, edicao, titulo, autor, editora, numeroPaginas, retirado);
+	}
+	
+	public void clear() {
+		this.ISBN = "";
+		this.edicao = 0;
+		this.titulo = "";
+		this.autor = "";
+		this.editora = "";
+		this.numeroPaginas = 0;
+		this.retirado = false;
 	}
 }

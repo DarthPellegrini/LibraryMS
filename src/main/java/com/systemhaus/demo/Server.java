@@ -13,12 +13,12 @@ import com.systemhaus.demo.domain.Prateleira;
 
 public class Server {
 
-	//private Biblioteca biblioteca;
+	private Biblioteca biblioteca;
 	private EstanteRepository estanteRepository;
 	private LivroRepository livroRepository;
 	
 	public Server () {
-		Biblioteca biblioteca = new Biblioteca();
+		biblioteca = new Biblioteca();
 		this.estanteRepository = new EstanteDAO(biblioteca);
 		this.livroRepository = new LivroDAO(biblioteca);
 	}
@@ -67,7 +67,7 @@ public class Server {
 		if(!estanteRepository.havingOnlyThisAmountOfCopiesWontCauseProblems(iSBNOriginal, quantCopias))
 			return false;
 		if(quantCopias > quantNoAcervo)
-			this.addNewBookRoutine(livro, quantCopias);
+			this.addNewBookRoutine(livro, quantCopias-quantNoAcervo);
 		else
 			if(quantCopias < quantNoAcervo) 
 				this.deleteBook(iSBNOriginal,quantNoAcervo-quantCopias);
@@ -111,19 +111,19 @@ public class Server {
 	 * Exibe o estado atual da biblioteca
 	 * somente é usada para testes
 	 */
-//	public void showLibrary() {
-//		for (Estante e : biblioteca.getEstantes()) {
-//			System.out.println("------Estante------");
-//			for (Prateleira p : e.getPrateleiras()) {
-//				System.out.println("---Prateleira");
-//				if(p.getLivros().size() == 0)
-//					System.out.println("vazia");
-//				else
-//					for (Livro l : p.getLivros())
-//						System.out.println(l.toString());
-//			}
-//		}
-//	}
+	public void showLibrary() {
+		for (com.systemhaus.demo.domain.Estante e : biblioteca.getEstantes()) {
+			System.out.println("------Estante------");
+			for (Prateleira p : e.getPrateleiras()) {
+				System.out.println("---Prateleira");
+				if(p.getLivros().size() == 0)
+					System.out.println("vazia");
+				else
+					for (Livro l : p.getLivros())
+						System.out.println(l.toString());
+			}
+		}
+	}
 	
 	/**
 	 * Converte String para Inteiro com retorno automático de um 0 no caso de caracteres inválidos
