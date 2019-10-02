@@ -14,7 +14,6 @@ import javax.swing.border.EmptyBorder;
 
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.BasicComponentFactory;
-import com.jgoodies.binding.value.Trigger;
 import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
@@ -33,8 +32,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	private JInternalFrame ifCadLivro;
 	private Server server;
 	private String livroISBN;
-	private Livro livroBean;
-	final private Trigger trigger = new Trigger();
+	private PresentationModel<Livro> model;
 	
 	public JInternalFrame createForm(Server server) {
 		initComponents();
@@ -73,8 +71,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 				//validação dos campos
 				if (allFieldsAreFilled()) {
 					//TODO: criar mensagens de erro para cada tipo de erro diferente
-					trigger.triggerCommit();
-					if(server.addNewBookRoutine(livroBean.copy(), server.strToInt(txtfQuant.getText()))){
+					if(server.addNewBookRoutine(model.getBean(), server.strToInt(txtfQuant.getText()))){
 						JOptionPane.showMessageDialog(null, "Livro(s) inserido(s) com sucesso!");
 						clearField();
 					}else
@@ -87,23 +84,15 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		btnPesquisarLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				//System.out.println("FIND antes trigger: " + livroBean.toString());
-				trigger.triggerCommit();
 				//System.out.println("after trigger: " + livroBean.toString());
-				Livro livro = server.findBook(livroBean);
-				trigger.triggerFlush();
+				Livro livro = server.findBook(model.getBean());
 				//System.out.println("after find: " + livro);
 				if	(livro == null) {
 					JOptionPane.showMessageDialog(null, "Nenhum livro encontrado!");
 				} else {
-					livroBean = livro.copy();
-					livroISBN = livroBean.getISBN();
-					txtfIsbn.setText(livroBean.getISBN());
-					txtfEdicao.setText(String.valueOf(livroBean.getEdicao()));
-					txtfTitulo.setText(livroBean.getTitulo());
-					txtfAutor.setText(livroBean.getAutor());
-					txtfEditora.setText(livroBean.getEditora());
-					txtfNPag.setText(String.valueOf(livroBean.getNumeroPaginas()));
-					txtfQuant.setText(String.valueOf(server.returnBookCount(livroBean.getISBN())));
+					model.setBean(livro.copy());
+					livroISBN = model.getBean().getISBN();
+					txtfQuant.setText(String.valueOf(server.returnBookCount(livro.getISBN())));
 					btnAdicionarLivro.setEnabled(false);
 					btnSalvarLivro.setEnabled(true);
 					btnDeletarLivro.setEnabled(true);
@@ -113,9 +102,9 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		
 		btnSalvarLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Livro livroBean = model.getBean();
 				if (allFieldsAreFilled()) {
 					System.out.println("EDIT antes trigger: " + livroBean.toString());
-					trigger.triggerCommit();
 					System.out.println("after trigger: " + livroBean.toString());
 					if(server.editBook(livroISBN,livroBean,server.strToInt(txtfQuant.getText()))){
 						JOptionPane.showMessageDialog(null, "Livro(s) modificado(s) com sucesso!");
@@ -185,16 +174,15 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		ifCadLivro = new JInternalFrame("Cadastro de Livros", false, true);
 		ifCadLivro.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 		ifCadLivro.setBounds(190, 35, 400, 320);
-		this.livroBean = new Livro();
 		
-		PresentationModel<Livro> beanAdapter = new PresentationModel<Livro>(this.livroBean, trigger);
+		model = new PresentationModel<Livro>(new Livro());
 		
-		ValueModel ISBNAdapter = beanAdapter.getBufferedModel("ISBN");
-		ValueModel tituloAdapter = beanAdapter.getBufferedModel("titulo");
-		ValueModel autorAdapter = beanAdapter.getBufferedModel("autor");
-		ValueModel editoraAdapter = beanAdapter.getBufferedModel("editora");
-		ValueModel edicaoAdapter = beanAdapter.getBufferedModel("edicao");
-		ValueModel numPagAdapter = beanAdapter.getBufferedModel("numeroPaginas");
+		ValueModel ISBNAdapter = model.getModel("ISBN");
+		ValueModel tituloAdapter = model.getModel("titulo");
+		ValueModel autorAdapter = model.getModel("autor");
+		ValueModel editoraAdapter = model.getModel("editora");
+		ValueModel edicaoAdapter = model.getModel("edicao");
+		ValueModel numPagAdapter = model.getModel("numeroPaginas");
 		
 		txtfIsbn = BasicComponentFactory.createTextField(ISBNAdapter);
 		
@@ -212,15 +200,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	}
 
 	protected void clearField() {
-		livroBean.clear();
-		txtfIsbn.setText("");
-		txtfTitulo.setText("");
-		txtfAutor.setText("");
-		txtfEditora.setText("");
-		txtfEdicao.setText("");
-		txtfNPag.setText("");
-		txtfQuant.setText("");
-		trigger.triggerFlush();
+		model.setBean(new Livro());
 	}
 	
 	protected boolean allFieldsAreFilled() {

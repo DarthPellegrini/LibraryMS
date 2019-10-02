@@ -48,8 +48,8 @@ public class LivroDAO implements LivroRepository {
 			for (Prateleira p : e.getPrateleiras()) 
 				for (Livro l : p.getLivros())
 					if ( l.getISBN().equals(iSBNOriginal)) {
-						livro.setRetirado(l.isRetirado());
-						l = livro.copy();
+						l.setAutor(livro.getAutor());
+						l.setEdicao(livro.getEdicao());
 					}
 	}
 	
