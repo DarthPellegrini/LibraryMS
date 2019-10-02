@@ -117,6 +117,22 @@ public class Livro extends Model{
 				+ getEdicao() + "-" + getNumeroPaginas() + "-" + isRetirado();
 	}
 	
+	/*
+	 * Utilizado para a edição do livro:
+	 * Copia todos os atributos de um livro
+	 */
+	public final void setAllDataFrom(Livro l) {
+		setISBN(l.getISBN());
+		setEdicao(l.getEdicao());
+		setTitulo(l.getTitulo());
+		setAutor(l.getAutor());
+		setEditora(l.getEditora());
+		setNumeroPaginas(l.getNumeroPaginas());
+	}
+	
+	/*
+	 * Cria uma cópia do livro
+	 */
 	public Livro copy() {
 		return new Livro(ISBN, edicao, titulo, autor, editora, numeroPaginas, retirado);
 	}

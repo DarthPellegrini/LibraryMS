@@ -83,10 +83,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		
 		btnPesquisarLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//System.out.println("FIND antes trigger: " + livroBean.toString());
-				//System.out.println("after trigger: " + livroBean.toString());
 				Livro livro = server.findBook(model.getBean());
-				//System.out.println("after find: " + livro);
 				if	(livro == null) {
 					JOptionPane.showMessageDialog(null, "Nenhum livro encontrado!");
 				} else {
@@ -104,17 +101,13 @@ public class CadastroLivroFrm extends SkeletonFrm{
 			public void actionPerformed(ActionEvent e) {
 				Livro livroBean = model.getBean();
 				if (allFieldsAreFilled()) {
-					System.out.println("EDIT antes trigger: " + livroBean.toString());
-					System.out.println("after trigger: " + livroBean.toString());
 					if(server.editBook(livroISBN,livroBean,server.strToInt(txtfQuant.getText()))){
 						JOptionPane.showMessageDialog(null, "Livro(s) modificado(s) com sucesso!");
 						btnAdicionarLivro.setEnabled(true);
 						btnSalvarLivro.setEnabled(false);
 						btnDeletarLivro.setEnabled(false);
 						livroISBN = "";
-						System.out.println("after op: " + livroBean.toString());
 						clearField();
-						System.out.println("after clear: " + livroBean.toString());
 					}else
 						JOptionPane.showMessageDialog(null, "Ocorreu um erro na modificação do(s) livro(s)!");
 				}else
@@ -201,6 +194,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 
 	protected void clearField() {
 		model.setBean(new Livro());
+		txtfQuant.setText("");
 	}
 	
 	protected boolean allFieldsAreFilled() {
