@@ -29,7 +29,10 @@ public class EstanteDAO implements EstanteRepository {
 	
 	@Override
 	public int returnBookCount(String iSBN) {
-		return biblioteca.getRegistroDeLivros().get(iSBN)[0];
+		if(biblioteca.getRegistroDeLivros().isEmpty())
+			return 0;
+		else
+			return biblioteca.getRegistroDeLivros().get(iSBN)[0];
 	}
 	
 	@Override

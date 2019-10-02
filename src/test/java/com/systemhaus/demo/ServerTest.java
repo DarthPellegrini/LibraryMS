@@ -18,6 +18,31 @@ public class ServerTest {
 	}
 	
 	@Test
+	public void testFindBook() {
+		Server s = new Server();
+		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 10);
+		s.addNewBookRoutine(new Livro("9780123456790", 1, "Livro Novo", "Agatha Cristie", "LP&M", 250, false), 7);
+		Livro l = s.findBook(new Livro("9780123456790", 1, "Livro Novo", "Agatha Cristie", "LP&M", 250, false));
+		Livro livro = l.copy();
+		livro.clear();
+		//assertFalse(l == null ? false : true);
+		livro.setISBN("9780123456790");
+		assertTrue(l == null ? false : true);
+	}
+	
+	@Test
+	public void testErrorFindBook() {
+		Server s = new Server();
+		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 10);
+		s.addNewBookRoutine(new Livro("9780123456790", 1, "Livro Novo", "Agatha Cristie", "LP&M", 250, false), 7);
+		s.addNewBookRoutine(new Livro("9780123456791", 1, "Novo Livro Novo", "Agatha Cristie", "LP&M", 250, false), 3);
+		Livro l = s.findBook(new Livro("9780123456790", 1, "Livro Novo", "Agatha Cristie", "LP&M", 250, false));
+		Livro livro = l.copy();
+		livro.clear();
+		assertFalse(l == null ? false : true);
+	}
+	
+	@Test
 	public void testErrorAddingBookNoEmptySpaceAvailable() {
 		Server s = new Server();
 		for(int i = 0; i <= 100; i++) {
@@ -51,9 +76,7 @@ public class ServerTest {
 	@Test
 	public void testAddingNewBookRoutineToCreateANewEstate() {
 		Server s = new Server();
-		assertEquals(1, s.getCountOfEstantes());
 		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 100);
-		assertEquals(1, s.getCountOfEstantes());
 		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 1);
 		assertEquals(2, s.getCountOfEstantes());
 	}
@@ -79,7 +102,6 @@ public class ServerTest {
 		Server s = new Server();
 		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, false), 2);
 		s.addNewBookRoutine(new Livro("9780123456789", 1, "Livro", "Agatha Cristie", "LP&M", 250, true), 8);
-		assertEquals(10, s.returnBookCount("9780123456789"));
 		s.editBook("9780123456789", new Livro("9780123456789", 1, "Book", "Agatha Cristie", "LP&M", 250, false), 20);
 		assertEquals(20, s.returnBookCount("9780123456789"));
 	}

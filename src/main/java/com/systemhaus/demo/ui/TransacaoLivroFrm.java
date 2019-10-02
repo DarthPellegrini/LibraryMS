@@ -194,6 +194,12 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	protected boolean allFieldsAreFilled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 	
 	
 	

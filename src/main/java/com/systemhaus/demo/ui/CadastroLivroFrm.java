@@ -70,17 +70,12 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		//TODO transferir actionListeners para uma classe careTaker (possivelmente)
 		btnAdicionarLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				//TODO: criar método de validação na classe careTaker
 				//validação dos campos
-				if (!txtfIsbn.getText().isEmpty() && !txtfEdicao.getText().isEmpty() &&
-						!txtfTitulo.getText().isEmpty() && !txtfAutor.getText().isEmpty() &&
-						!txtfEditora.getText().isEmpty() && !txtfNPag.getText().isEmpty() && 
-						!txtfQuant.getText().isEmpty()) {
+				if (allFieldsAreFilled()) {
 					//TODO: criar mensagens de erro para cada tipo de erro diferente
 					trigger.triggerCommit();
 					if(server.addNewBookRoutine(livroBean.copy(), server.strToInt(txtfQuant.getText()))){
 						JOptionPane.showMessageDialog(null, "Livro(s) inserido(s) com sucesso!");
-						trigger.triggerFlush();
 						clearField();
 					}else
 						JOptionPane.showMessageDialog(null, "Ocorreu um erro na inserção do livro!");
@@ -91,20 +86,24 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		
 		btnPesquisarLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				//System.out.println("FIND antes trigger: " + livroBean.toString());
 				trigger.triggerCommit();
-				livroBean = server.findBook(livroBean).copy();
-				if	(livroBean == null)
+				//System.out.println("after trigger: " + livroBean.toString());
+				Livro livro = server.findBook(livroBean);
+				trigger.triggerFlush();
+				//System.out.println("after find: " + livro);
+				if	(livro == null) {
 					JOptionPane.showMessageDialog(null, "Nenhum livro encontrado!");
-				else {
+				} else {
+					livroBean = livro.copy();
 					livroISBN = livroBean.getISBN();
 					txtfIsbn.setText(livroBean.getISBN());
-					txtfEdicao.setText("" + livroBean.getEdicao());
+					txtfEdicao.setText(String.valueOf(livroBean.getEdicao()));
 					txtfTitulo.setText(livroBean.getTitulo());
 					txtfAutor.setText(livroBean.getAutor());
 					txtfEditora.setText(livroBean.getEditora());
-					txtfNPag.setText("" + livroBean.getNumeroPaginas());
-					txtfQuant.setText("" + server.returnBookCount(livroBean.getISBN()));
-					trigger.triggerCommit();
+					txtfNPag.setText(String.valueOf(livroBean.getNumeroPaginas()));
+					txtfQuant.setText(String.valueOf(server.returnBookCount(livroBean.getISBN())));
 					btnAdicionarLivro.setEnabled(false);
 					btnSalvarLivro.setEnabled(true);
 					btnDeletarLivro.setEnabled(true);
@@ -114,19 +113,19 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		
 		btnSalvarLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (!txtfIsbn.getText().isEmpty() || !txtfEdicao.getText().isEmpty() ||
-						!txtfTitulo.getText().isEmpty() || !txtfAutor.getText().isEmpty() ||
-						!txtfEditora.getText().isEmpty() || !txtfNPag.getText().isEmpty() || 
-						!txtfQuant.getText().isEmpty()) {
-					if(server.editBook(livroISBN,livroBean.copy(),server.strToInt(txtfQuant.getText()))){
-						trigger.triggerCommit();
+				if (allFieldsAreFilled()) {
+					System.out.println("EDIT antes trigger: " + livroBean.toString());
+					trigger.triggerCommit();
+					System.out.println("after trigger: " + livroBean.toString());
+					if(server.editBook(livroISBN,livroBean,server.strToInt(txtfQuant.getText()))){
 						JOptionPane.showMessageDialog(null, "Livro(s) modificado(s) com sucesso!");
 						btnAdicionarLivro.setEnabled(true);
 						btnSalvarLivro.setEnabled(false);
 						btnDeletarLivro.setEnabled(false);
-						livroISBN = txtfIsbn.getText();
-						trigger.triggerFlush();
+						livroISBN = "";
+						System.out.println("after op: " + livroBean.toString());
 						clearField();
+						System.out.println("after clear: " + livroBean.toString());
 					}else
 						JOptionPane.showMessageDialog(null, "Ocorreu um erro na modificação do(s) livro(s)!");
 				}else
@@ -136,17 +135,13 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		
 		btnDeletarLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (!txtfIsbn.getText().isEmpty() || !txtfEdicao.getText().isEmpty() ||
-						!txtfTitulo.getText().isEmpty() || !txtfAutor.getText().isEmpty() ||
-						!txtfEditora.getText().isEmpty() || !txtfNPag.getText().isEmpty() || 
-						!txtfQuant.getText().isEmpty()) 
+				if (allFieldsAreFilled()) 
 					if(server.deleteBook(livroISBN, 0)) {
-						trigger.triggerFlush();
 						JOptionPane.showMessageDialog(null, "Livro(s) deletado(s) com sucesso!");
 						btnAdicionarLivro.setEnabled(true);
 						btnSalvarLivro.setEnabled(false);
 						btnDeletarLivro.setEnabled(false);
-						clearField();
+						clearField(); 
 					}else
 						JOptionPane.showMessageDialog(null, "Ocorreu um erro na remoção do(s) livro(s)!");
 				else
@@ -225,6 +220,14 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		txtfEdicao.setText("");
 		txtfNPag.setText("");
 		txtfQuant.setText("");
+		trigger.triggerFlush();
+	}
+	
+	protected boolean allFieldsAreFilled() {
+		return (!txtfIsbn.getText().isEmpty() && !txtfEdicao.getText().isEmpty() &&
+				!txtfTitulo.getText().isEmpty() && !txtfAutor.getText().isEmpty() &&
+				!txtfEditora.getText().isEmpty() && !txtfNPag.getText().isEmpty() && 
+				!txtfQuant.getText().isEmpty());
 	}
 	
 }

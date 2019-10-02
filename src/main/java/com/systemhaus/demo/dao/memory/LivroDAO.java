@@ -24,18 +24,22 @@ public class LivroDAO implements LivroRepository {
 
 	@Override
 	public Livro findByExample(Livro example) {
-		return biblioteca.getEstantes().stream()
-			.flatMap(e -> e.getPrateleiras().stream())
-			.flatMap(p -> p.getLivros().stream())
-			.filter(l -> {
-					return (l.getISBN().equals(example.getISBN()) || example.getISBN().isEmpty()) 
-							&& (l.getEdicao() == example.getEdicao() || example.getEdicao() == 0) 
-							&& (l.getTitulo().equals(example.getTitulo()) || example.getTitulo().isEmpty()) 
-							&& (l.getAutor().equals(example.getAutor()) || example.getAutor().isEmpty()) 
-							&& (l.getEditora().equals(example.getEditora()) || example.getEditora().isEmpty()) 
-							&& (l.getNumeroPaginas() == example.getNumeroPaginas() || example.getNumeroPaginas() == 0);
-			})
-			.findFirst().orElse(null);
+		return (example.getISBN().isEmpty() && example.getTitulo().isEmpty()
+			&& example.getAutor().isEmpty() && example.getEditora().isEmpty() 
+			&& (example.getEdicao() == 0 || example.getNumeroPaginas() == 0)) 
+			? null : biblioteca.getEstantes().stream()
+					.flatMap(e -> e.getPrateleiras().stream())
+					.flatMap(p -> p.getLivros().stream())
+					.filter(l -> {
+							return (l.getISBN().equals(example.getISBN()) || example.getISBN().isEmpty()) 
+									&& (l.getEdicao() == example.getEdicao() || example.getEdicao() == 0) 
+									&& (l.getTitulo().equals(example.getTitulo()) || example.getTitulo().isEmpty()) 
+									&& (l.getAutor().equals(example.getAutor()) || example.getAutor().isEmpty()) 
+									&& (l.getEditora().equals(example.getEditora()) || example.getEditora().isEmpty()) 
+									&& (l.getNumeroPaginas() == example.getNumeroPaginas() || example.getNumeroPaginas() == 0);
+					})
+					.findFirst().orElse(null);
+	
 	}
 
 	@Override
