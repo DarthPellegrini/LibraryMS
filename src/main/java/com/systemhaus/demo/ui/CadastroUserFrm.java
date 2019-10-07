@@ -115,7 +115,7 @@ public class CadastroUserFrm extends SkeletonFrm{
 	}
 
 	@Override
-	protected void clearField() {
+	protected void clearFields() {
 		// TODO Auto-generated method stub
 		
 	}

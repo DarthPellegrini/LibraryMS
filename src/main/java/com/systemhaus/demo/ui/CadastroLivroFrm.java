@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
@@ -33,6 +34,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	private Server server;
 	private String livroISBN;
 	private PresentationModel<Livro> model;
+	private LivroSelectionDialog livroSelection;
 	
 	public JInternalFrame createForm(Server server) {
 		initComponents();
@@ -73,7 +75,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 					//TODO: criar mensagens de erro para cada tipo de erro diferente
 					if(server.addNewBookRoutine(model.getBean(), server.strToInt(txtfQuant.getText()))){
 						JOptionPane.showMessageDialog(null, "Livro(s) inserido(s) com sucesso!");
-						clearField();
+						clearFields();
 					}else
 						JOptionPane.showMessageDialog(null, "Ocorreu um erro na inserção do livro!");
 				}else
@@ -83,17 +85,23 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		
 		btnPesquisarLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				Livro livro = server.findBook(model.getBean());
-				if	(livro == null) {
+				List<Livro> livros = server.findSimilarBooks(model.getBean());
+				if (!livros.isEmpty()) {
+					livroSelection = new LivroSelectionDialog(livros);
+					int result = JOptionPane.showConfirmDialog(null, livroSelection,
+			                  "Selecionar Livro", JOptionPane.OK_CANCEL_OPTION,
+			                  JOptionPane.PLAIN_MESSAGE);
+					if (result == JOptionPane.OK_OPTION) {
+						model.setBean(livroSelection.getSelectedLivro().copy());
+						livroISBN = model.getBean().getISBN();
+						txtfQuant.setText(String.valueOf(server.returnBookCount(livroISBN)));
+						btnAdicionarLivro.setEnabled(false);
+						btnSalvarLivro.setEnabled(true);
+						btnDeletarLivro.setEnabled(true);
+					} else 
+						clearFields();
+				} else
 					JOptionPane.showMessageDialog(null, "Nenhum livro encontrado!");
-				} else {
-					model.setBean(livro.copy());
-					livroISBN = model.getBean().getISBN();
-					txtfQuant.setText(String.valueOf(server.returnBookCount(livro.getISBN())));
-					btnAdicionarLivro.setEnabled(false);
-					btnSalvarLivro.setEnabled(true);
-					btnDeletarLivro.setEnabled(true);
-				}
 			}
 		});
 		
@@ -107,7 +115,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 						btnSalvarLivro.setEnabled(false);
 						btnDeletarLivro.setEnabled(false);
 						livroISBN = "";
-						clearField();
+						clearFields();
 					}else
 						JOptionPane.showMessageDialog(null, "Ocorreu um erro na modificação do(s) livro(s)!");
 				}else
@@ -123,7 +131,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 						btnAdicionarLivro.setEnabled(true);
 						btnSalvarLivro.setEnabled(false);
 						btnDeletarLivro.setEnabled(false);
-						clearField(); 
+						clearFields(); 
 					}else
 						JOptionPane.showMessageDialog(null, "Ocorreu um erro na remoção do(s) livro(s)!");
 				else
@@ -192,7 +200,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		txtfQuant = new JTextField();
 	}
 
-	protected void clearField() {
+	protected void clearFields() {
 		model.setBean(new Livro());
 		txtfQuant.setText("");
 	}

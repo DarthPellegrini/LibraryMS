@@ -1,5 +1,6 @@
 package com.systemhaus.demo.dao.memory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -39,7 +40,46 @@ public class LivroDAO implements LivroRepository {
 									&& (l.getNumeroPaginas() == example.getNumeroPaginas() || example.getNumeroPaginas() == 0);
 					})
 					.findFirst().orElse(null);
+	}
 	
+	@Override
+	public List<Livro> findBySimilarExample(Livro example) {
+		List<String> ISBNs = new ArrayList<String>();
+		List<Livro> livros = new ArrayList<Livro>();
+		String[] dadosExemplo = {example.getTitulo().toLowerCase(), 
+				example.getAutor().toLowerCase(),
+				example.getEditora().toLowerCase()};
+		if ((example.getISBN().isEmpty() && example.getTitulo().isEmpty()
+			&& example.getAutor().isEmpty() && example.getEditora().isEmpty() 
+			&& (example.getEdicao() == 0 || example.getNumeroPaginas() == 0)) )
+			return livros;
+		for(ListIterator<Estante> eIt = biblioteca.getEstantes().listIterator();
+				eIt.hasNext();) {
+			Estante e = eIt.next();
+			for(ListIterator<Prateleira> pIt = e.getPrateleiras().listIterator();
+					pIt.hasNext();) {
+				Prateleira p = pIt.next();
+				for(ListIterator<Livro> lIt = p.getLivros().listIterator();
+						lIt.hasNext();) {
+					Livro l = lIt.next();
+					if ((l.getISBN().equals(example.getISBN()) || example.getISBN().isEmpty())
+						&& (l.getEdicao() == example.getEdicao() || example.getEdicao() == 0) 
+						&& (l.getTitulo().toLowerCase().contains(dadosExemplo[0]) 
+								|| example.getTitulo().isEmpty()) 
+						&& (l.getAutor().toLowerCase().contains(dadosExemplo[1]) 
+								|| example.getAutor().isEmpty()) 
+						&& (l.getEditora().toLowerCase().contains(dadosExemplo[2]) 
+								|| example.getEditora().isEmpty()) 
+						&& (l.getNumeroPaginas() == example.getNumeroPaginas() || example.getNumeroPaginas() == 0)) {
+						if (!ISBNs.contains(l.getISBN())) {
+							ISBNs.add(l.getISBN());
+							livros.add(l);
+						}
+					}
+				}
+			}
+		}
+		return livros;
 	}
 
 	@Override

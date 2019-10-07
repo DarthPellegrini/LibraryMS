@@ -61,6 +61,10 @@ public class Server {
 		return livroRepository.findByExample(l);
 	}
 	
+	public List<Livro> findSimilarBooks(Livro l){
+		return livroRepository.findBySimilarExample(l);
+	}
+	
 	public boolean editBook(String iSBNOriginal, Livro livro, int quantCopias) {
 		//caso o número de cópias final seja menor que o disponível, os livros que:
 		int quantNoAcervo = estanteRepository.returnBookCount(iSBNOriginal);
