@@ -15,7 +15,9 @@ import javax.swing.border.EmptyBorder;
 
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.BasicComponentFactory;
+import com.jgoodies.binding.list.SelectionInList;
 import com.jgoodies.binding.value.ValueModel;
+import com.jgoodies.common.collect.ArrayListModel;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 import com.systemhaus.demo.Server;
@@ -34,7 +36,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	private Server server;
 	private String livroISBN;
 	private PresentationModel<Livro> model;
-	private LivroSelectionDialog livroSelection;
+	private SelectionInList<Livro> livroSelection = new SelectionInList<>();
 	
 	public JInternalFrame createForm(Server server) {
 		initComponents();
@@ -87,12 +89,12 @@ public class CadastroLivroFrm extends SkeletonFrm{
 			public void actionPerformed(ActionEvent e) {
 				List<Livro> livros = server.findSimilarBooks(model.getBean());
 				if (!livros.isEmpty()) {
-					livroSelection = new LivroSelectionDialog(livros);
+					livroSelection.setList(new ArrayListModel<>(livros));
 					int result = JOptionPane.showConfirmDialog(null, livroSelection,
 			                  "Selecionar Livro", JOptionPane.OK_CANCEL_OPTION,
 			                  JOptionPane.PLAIN_MESSAGE);
 					if (result == JOptionPane.OK_OPTION) {
-						model.setBean(livroSelection.getSelectedLivro().copy());
+						model.setBean(livroSelection.getSelection().copy());
 						livroISBN = model.getBean().getISBN();
 						txtfQuant.setText(String.valueOf(server.returnBookCount(livroISBN)));
 						btnAdicionarLivro.setEnabled(false);
@@ -144,7 +146,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 
 	protected JPanel createMainPanel() {
 		DefaultFormBuilder builder = new DefaultFormBuilder(
-				new FormLayout("right:pref, 3dlu, pref:grow", "18dlu,18dlu,18dlu, 18dlu,18dlu,18dlu,18dlu"));
+				new FormLayout("right:pref, 3dlu, pref:grow", "18dlu,18dlu,18dlu, 18dlu,18dlu,18dlu,18dlu, 40dlu:grow"));
 		builder.border(new EmptyBorder(5, 5, 5, 5));
 
 		builder.append("ISBN:", txtfIsbn);
@@ -168,15 +170,17 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		builder.append("Quantidade:", txtfQuant);
 		builder.nextLine();
 		
+		builder.append(new LivroSelectionPanel(livroSelection), 3);
+		
 		return builder.build();
 	}
 
 	protected void initComponents() {
-		ifCadLivro = new JInternalFrame("Cadastro de Livros", false, true);
+		ifCadLivro = new JInternalFrame("Cadastro de Livros", true, true);
 		ifCadLivro.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 		ifCadLivro.setBounds(190, 35, 400, 320);
-		
-		model = new PresentationModel<Livro>(new Livro());
+
+		model = new PresentationModel<Livro>(livroSelection);
 		
 		ValueModel ISBNAdapter = model.getModel("ISBN");
 		ValueModel tituloAdapter = model.getModel("titulo");
