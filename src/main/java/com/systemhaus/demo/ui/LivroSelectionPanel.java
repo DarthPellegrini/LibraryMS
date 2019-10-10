@@ -1,6 +1,9 @@
 package com.systemhaus.demo.ui;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -19,26 +22,54 @@ public class LivroSelectionPanel extends JPanel{
 	private static final long serialVersionUID = 1L;
 	
 	private SelectionInList<Livro> selection;
+	private JButton ok;
+	private JButton cancel;
 	
 	public LivroSelectionPanel(SelectionInList<Livro> livroSelection) {
 		selection = livroSelection;
 		this.initializeTable();
+		this.initializeButtons();
 	}
 	
 	public Livro getSelectedLivro() {
 		return selection.getSelection();
 	}
 	
+	public List<Livro> getListFromSelection() {
+		return selection.getList();
+	}
+	
+	public void setSelectionToANewObject() {
+		selection.getList().add(new Livro());
+		selection.setSelectionIndex(selection.getList().size()-1);
+	}
+	
 	public void initializeTable() {
 		JTable jtable = new JTable(new LivroTableModel(selection));
 		jtable.setSelectionModel(new SingleListSelectionAdapter(selection.getSelectionIndexHolder()));
-		this.setLayout(new BorderLayout());
-	    this.add(new JScrollPane(jtable), BorderLayout.CENTER);
-	    JButton btn = new JButton();
-	    btn.addActionListener(e -> {
-	    	selection.getList().add(new Livro("9787896541230", 3, "1", "3", "3", 3, false));
-	    });
-	    this.add(btn, BorderLayout.SOUTH);
+		this.setSelectionToANewObject();
+		JScrollPane scrollPane = new JScrollPane(jtable);
+		scrollPane.setPreferredSize(
+                new Dimension(jtable.getPreferredSize().width,jtable.getRowHeight()*10));
+	    this.add(scrollPane, BorderLayout.CENTER);
+	}
+	
+	public void initializeButtons() {
+		JPanel buttonPanel = new JPanel();
+		cancel = new JButton("Cancelar");
+		ok = new JButton("Ok");
+		buttonPanel.setLayout(new FlowLayout());
+		buttonPanel.add(ok);
+		buttonPanel.add(cancel);
+		this.add(buttonPanel, BorderLayout.SOUTH);
+	}
+	
+	public JButton getConfirmButton() {
+		return this.ok;
+	}
+	
+	public JButton getCancelButton() {
+		return this.cancel;
 	}
 
 }

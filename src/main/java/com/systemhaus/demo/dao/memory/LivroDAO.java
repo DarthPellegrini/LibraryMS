@@ -46,9 +46,10 @@ public class LivroDAO implements LivroRepository {
 	public List<Livro> findBySimilarExample(Livro example) {
 		List<String> ISBNs = new ArrayList<String>();
 		List<Livro> livros = new ArrayList<Livro>();
-		String[] dadosExemplo = {example.getTitulo().toLowerCase(), 
-				example.getAutor().toLowerCase(),
-				example.getEditora().toLowerCase()};
+		String[] dadosExemplo = {
+				example.getTitulo().isEmpty() ? "" : example.getTitulo().toLowerCase(), 
+				example.getAutor().isEmpty() ? "" : example.getAutor().toLowerCase(),
+				example.getEditora().isEmpty() ? "" : example.getEditora().toLowerCase()};
 		if ((example.getISBN().isEmpty() && example.getTitulo().isEmpty()
 			&& example.getAutor().isEmpty() && example.getEditora().isEmpty() 
 			&& (example.getEdicao() == 0 || example.getNumeroPaginas() == 0)) )

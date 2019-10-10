@@ -17,20 +17,20 @@ public class Livro extends Model{
 	public static final String PROPERTY_RETIRADO = "retirado";
 	
 	private String ISBN; //pode ser repetido, para n volumes do mesmo livro
-	private int edicao; //edição do livro
 	private String titulo; //título do livro
 	private String autor; //autor do livro
 	private String editora; //editora do livro
+	private int edicao; //edição do livro
 	private int numeroPaginas; //número de páginas
 	private boolean retirado; //boolean que define se o livro está ou não retirado
 	
-	public Livro(String iSBN, int edicao, String titulo, String autor, String editora, int numeroPaginas, boolean retirado) {
+	public Livro(String iSBN, String titulo, String autor, String editora, int edicao, int numeroPaginas, boolean retirado) {
 		super();
 		setISBN(iSBN);
-		setEdicao(edicao);
 		setTitulo(titulo);
 		setAutor(autor);
 		setEditora(editora);
+		setEdicao(edicao);
 		setNumeroPaginas(numeroPaginas);
 		this.retirado = retirado;
 	}
@@ -48,18 +48,6 @@ public class Livro extends Model{
             this.ISBN= iSBN;
             firePropertyChange(PROPERTY_ISBN, oldValue, this.ISBN);
 		}
-	}
-	public int getEdicao() {
-		return edicao;
-	}
-	public void setEdicao(int edicao) {
-		int oldValue = this.edicao;
-		if (edicao > 0) {
-		    this.edicao = edicao;
-        }else {
-		    this.edicao = 1;
-        }
-        firePropertyChange(PROPERTY_EDICAO, oldValue, this.edicao);	
 	}
 	public String getTitulo() {
 		return titulo;
@@ -84,6 +72,18 @@ public class Livro extends Model{
 		String oldValue = this.editora;
         this.editora = editora;
         firePropertyChange(PROPERTY_EDITORA, oldValue, this.editora);
+	}
+	public int getEdicao() {
+		return edicao;
+	}
+	public void setEdicao(int edicao) {
+		int oldValue = this.edicao;
+		if (edicao > 0) {
+		    this.edicao = edicao;
+        }else {
+		    this.edicao = 1;
+        }
+        firePropertyChange(PROPERTY_EDICAO, oldValue, this.edicao);	
 	}
 	public int getNumeroPaginas() {
 		return numeroPaginas;
@@ -123,10 +123,10 @@ public class Livro extends Model{
 	 */
 	public final void setAllDataFrom(Livro l) {
 		setISBN(l.getISBN());
-		setEdicao(l.getEdicao());
 		setTitulo(l.getTitulo());
 		setAutor(l.getAutor());
 		setEditora(l.getEditora());
+		setEdicao(l.getEdicao());
 		setNumeroPaginas(l.getNumeroPaginas());
 	}
 	
@@ -134,15 +134,15 @@ public class Livro extends Model{
 	 * Cria uma cópia do livro
 	 */
 	public Livro copy() {
-		return new Livro(ISBN, edicao, titulo, autor, editora, numeroPaginas, retirado);
+		return new Livro(ISBN, titulo, autor, editora, edicao, numeroPaginas, retirado);
 	}
 	
 	public void clear() {
 		this.ISBN = "";
-		this.edicao = 0;
 		this.titulo = "";
 		this.autor = "";
 		this.editora = "";
+		this.edicao = 0;
 		this.numeroPaginas = 0;
 		this.retirado = false;
 	}
