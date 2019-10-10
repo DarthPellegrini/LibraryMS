@@ -118,13 +118,22 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		btnPesquisarLivro.addActionListener(l -> {
 			List<Livro> livros = server.findSimilarBooks(model.getBean());
 			if (!livros.isEmpty()) {
-				btnAdicionarLivro.setEnabled(false);
-				btnPesquisarLivro.setEnabled(false);
 				livroSelection.setList(new ArrayListModel<>(livros));
-				iFrameCadLivro.getContentPane().remove(dataPanel);
-				iFrameCadLivro.getContentPane().add(tablePanel, BorderLayout.CENTER);
-				iFrameCadLivro.revalidate();
-				iFrameCadLivro.repaint();
+				if(livros.size() == 1) {
+					this.tablePanel.setSelectionToLastObject();
+					livroISBN = model.getBean().getISBN();
+					txtfQuant.setText(String.valueOf(server.returnBookCount(livroISBN)));
+					this.clearDataAndSetButtons(false, btnAdicionarLivro, btnPesquisarLivro, btnSalvarLivro, 
+							btnDeletarLivro, btnCancelarLivro, 
+							false, false, true, true, true);
+				}else {
+					btnAdicionarLivro.setEnabled(false);
+					btnPesquisarLivro.setEnabled(false);
+					iFrameCadLivro.getContentPane().remove(dataPanel);
+					iFrameCadLivro.getContentPane().add(tablePanel, BorderLayout.CENTER);
+					iFrameCadLivro.revalidate();
+					iFrameCadLivro.repaint();
+				}
 			} else
 				JOptionPane.showMessageDialog(null, "Nenhum livro encontrado!");
 		});
@@ -218,11 +227,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		
 		txtfEditora = BasicComponentFactory.createTextField(editoraAdapter);
 		
-		//txtfEdicao = BasicComponentFactory.createTextField(edicaoAdapter);
-		
 		txtfEdicao = BasicComponentFactory.createIntegerField(edicaoAdapter, 0);
-		
-		//txtfEdicao = BasicComponentFactory.createIntegerField(edicaoAdapter, 0);
 		
 		txtfNPag = BasicComponentFactory.createIntegerField(numPagAdapter, 0);
 		

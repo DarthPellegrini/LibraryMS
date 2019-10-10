@@ -41,6 +41,10 @@ public class LivroSelectionPanel extends JPanel{
 	
 	public void setSelectionToANewObject() {
 		selection.getList().add(new Livro());
+		this.setSelectionToLastObject();
+	}
+	
+	public void setSelectionToLastObject() {
 		selection.setSelectionIndex(selection.getList().size()-1);
 	}
 	
