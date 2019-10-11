@@ -1,6 +1,7 @@
 package com.systemhaus.demo.ui;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +34,8 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	private JTextField txtfEditora;
 	private String livroISBN;
 	private Server server;
+	private JPanel contentPanel;
+	private CardLayout layout;
 	private JPanel dataPanel;
 	private JInternalFrame iFrameCadLivro;
 	private LivroSelectionPanel tablePanel;
@@ -48,9 +51,10 @@ public class CadastroLivroFrm extends SkeletonFrm{
 
 	protected void initLayout() {
 		iFrameCadLivro.getContentPane().setLayout(new BorderLayout());
-		iFrameCadLivro.getContentPane().add(dataPanel, BorderLayout.CENTER);
+		iFrameCadLivro.getContentPane().add(contentPanel, BorderLayout.CENTER);
 		iFrameCadLivro.getContentPane().add(createButtonBar(), BorderLayout.SOUTH);
 	}
+
 
 	protected JPanel createButtonBar() {
 		JPanel panelLivroButtonBar = new JPanel();
@@ -79,10 +83,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 
 		//TODO transferir actionListeners para uma classe careTaker (possivelmente)
 		btnTableConfirm.addActionListener(l -> {
-			iFrameCadLivro.getContentPane().remove(tablePanel);
-			iFrameCadLivro.getContentPane().add(dataPanel, BorderLayout.CENTER);
-			iFrameCadLivro.revalidate();
-			iFrameCadLivro.repaint();
+			changePanel("data");
 			livroISBN = model.getBean().getISBN();
 			txtfQuant.setText(String.valueOf(server.returnBookCount(livroISBN)));
 			this.clearDataAndSetButtons(false, btnAdicionarLivro, btnPesquisarLivro, btnSalvarLivro, 
@@ -91,10 +92,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		});
 		
 		btnTableCancel.addActionListener(l -> {
-			iFrameCadLivro.getContentPane().remove(tablePanel);
-			iFrameCadLivro.getContentPane().add(dataPanel, BorderLayout.CENTER);
-			iFrameCadLivro.revalidate();
-			iFrameCadLivro.repaint();
+			changePanel("data");
 			this.clearDataAndSetButtons(true, btnAdicionarLivro, btnPesquisarLivro, btnSalvarLivro, 
 					btnDeletarLivro, btnCancelarLivro, 
 					true, true, false, false, false);
@@ -129,10 +127,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 				}else {
 					btnAdicionarLivro.setEnabled(false);
 					btnPesquisarLivro.setEnabled(false);
-					iFrameCadLivro.getContentPane().remove(dataPanel);
-					iFrameCadLivro.getContentPane().add(tablePanel, BorderLayout.CENTER);
-					iFrameCadLivro.revalidate();
-					iFrameCadLivro.repaint();
+					changePanel("table");
 				}
 			} else
 				JOptionPane.showMessageDialog(null, "Nenhum livro encontrado!");
@@ -234,6 +229,12 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		txtfQuant = new JTextField();
 		
 		dataPanel = createMainPanel();
+		
+		contentPanel = new JPanel();
+		layout = new CardLayout();
+		contentPanel.setLayout(layout);
+		contentPanel.add(dataPanel, "data");
+		contentPanel.add(tablePanel, "table");
 	}
 
 	protected void clearDataAndSetButtons(boolean clearData,
@@ -249,6 +250,10 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		btnSave.setEnabled(boolSave);
 		btnDel.setEnabled(boolDel);
 		btnCancel.setEnabled(boolCancel);
+	}
+	
+	protected void changePanel(String name) {
+		layout.show(contentPanel, name);
 	}
 	
 	/*
