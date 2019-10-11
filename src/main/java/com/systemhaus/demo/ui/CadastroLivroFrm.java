@@ -162,7 +162,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 
 	protected JPanel createMainPanel() {
 		DefaultFormBuilder builder = new DefaultFormBuilder(
-				new FormLayout("right:pref, 3dlu, pref:grow", "18dlu,18dlu,18dlu, 18dlu,18dlu,18dlu,18dlu"));
+				new FormLayout("right:pref, 3dlu, pref:grow","18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,"));
 		builder.border(new EmptyBorder(5, 5, 5, 5));
 
 		builder.append("ISBN:", txtfIsbn);
@@ -190,7 +190,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	}
 
 	protected void initComponents() {
-		iFrameCadLivro = new JInternalFrame("Cadastro de Livros", false, true);
+		iFrameCadLivro = new JInternalFrame("Cadastro de Livros", true, true);
 		iFrameCadLivro.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 		iFrameCadLivro.setBounds(190, 35, 480, 300);
 		
@@ -230,7 +230,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	protected void clearDataAndSetButtons(boolean clearData, JButton[] btnArray, boolean[] modeList) {
 		if (clearData) {
 			livroSelection.setList(new ArrayListModel<>(new ArrayList<Livro>()));
-			this.tablePanel.setSelectionToANewObject();
+			this.tablePanel.setSelectionToANewObject(new Livro());
 			txtfQuant.setText("");
 		}
 		btnArray[0].setEnabled(modeList[0]);

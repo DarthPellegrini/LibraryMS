@@ -8,9 +8,13 @@ import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+
+import com.jgoodies.binding.PresentationModel;
+import com.jgoodies.binding.list.SelectionInList;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 import com.systemhaus.demo.Server;
+import com.systemhaus.demo.domain.Cliente;
 public class CadastroUserFrm extends SkeletonFrm{
 
 	private JTextField txtfNome;
@@ -21,21 +25,22 @@ public class CadastroUserFrm extends SkeletonFrm{
 	private JTextField txtfRua;
 	private JTextField txtfNumero;
 	private JTextField txtfCodCartao;
-	private JInternalFrame ifCadUser;
-	private Server fakeServer;
+	private JInternalFrame iFrameCadUser;
+	private Server server;
+	private PresentationModel<Cliente> model;
+	private SelectionInList<Cliente> userSelection = new SelectionInList<>();
 	
-	public JInternalFrame createForm(Server fakeServer) {
+	public JInternalFrame createForm(Server server) {
 		initComponents();
 		initLayout();
-		this.fakeServer = fakeServer;
-		
-		return ifCadUser;
+		this.server = server;
+		return iFrameCadUser;
 	}
 
 	protected void initLayout() {
-		ifCadUser.getContentPane().setLayout(new BorderLayout());
-		ifCadUser.getContentPane().add(createMainPanel(), BorderLayout.CENTER);
-		ifCadUser.getContentPane().add(createButtonBar(), BorderLayout.SOUTH);
+		iFrameCadUser.getContentPane().setLayout(new BorderLayout());
+		iFrameCadUser.getContentPane().add(createMainPanel(), BorderLayout.CENTER);
+		iFrameCadUser.getContentPane().add(createButtonBar(), BorderLayout.SOUTH);
 	}
 	
 	protected JPanel createButtonBar() {
@@ -55,6 +60,9 @@ public class CadastroUserFrm extends SkeletonFrm{
 		JButton btnExcluirUser = new JButton("Excluir");
 		btnExcluirUser.setEnabled(false);
 		panelUser.add(btnExcluirUser);
+		
+		
+		
 		return panelUser;
 	}
 	
@@ -91,9 +99,9 @@ public class CadastroUserFrm extends SkeletonFrm{
 	}
 
 	protected void initComponents() {
-		ifCadUser = new JInternalFrame("Cadastro de Clientes",false, true);
-		ifCadUser.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-		ifCadUser.setBounds(190, 35, 535, 345);
+		iFrameCadUser = new JInternalFrame("Cadastro de Clientes",false, true);
+		iFrameCadUser.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+		iFrameCadUser.setBounds(190, 35, 535, 345);
 		
 		txtfNome = new JTextField();
 		
@@ -111,7 +119,7 @@ public class CadastroUserFrm extends SkeletonFrm{
 		
 		txtfCodCartao = new JTextField();
 		txtfCodCartao.setText("Código gerado automaticamente");
-		txtfCodCartao.setEnabled(false);
+		txtfCodCartao.setEditable(false);
 	}
 
 	@Override
