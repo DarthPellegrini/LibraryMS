@@ -1,9 +1,8 @@
 package com.systemhaus.demo.ui;
-import com.systemhaus.demo.Server;
 
 public abstract class SkeletonFrm {
 	
-	protected abstract javax.swing.JInternalFrame createForm(Server fakeserver);
+	protected abstract javax.swing.JInternalFrame createForm(com.systemhaus.demo.Server fakeserver);
 	
 	protected abstract java.awt.Component createMainPanel();
 
@@ -11,6 +10,7 @@ public abstract class SkeletonFrm {
 	
 	protected abstract void initComponents();
 	protected abstract void initLayout();
-	protected abstract void clearFields();
+	protected abstract void changePanel(String name);
 	protected abstract boolean allFieldsAreFilled();
+	protected abstract void clearDataAndSetButtons(boolean clearData, javax.swing.JButton[] btnArray, boolean[] modeList);
 }

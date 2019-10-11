@@ -190,17 +190,21 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	}
 
 	@Override
-	protected void clearFields() {
+	protected boolean allFieldsAreFilled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	protected void changePanel(String name) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	protected boolean allFieldsAreFilled() {
+	protected void clearDataAndSetButtons(boolean clearData, JButton[] btnArray, boolean[] modeList) {
 		// TODO Auto-generated method stub
-		return false;
+		
 	}
-	
-	
 	
 }

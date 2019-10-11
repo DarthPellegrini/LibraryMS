@@ -80,22 +80,22 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		
 		JButton btnTableConfirm = tablePanel.getConfirmButton();
 		JButton btnTableCancel = tablePanel.getCancelButton();
+		
+		JButton[] btnArray = {btnAdicionarLivro, btnPesquisarLivro, btnSalvarLivro, 
+				btnDeletarLivro, btnCancelarLivro};
+		boolean[] addMode = {true, true, false, false, false};
+		boolean[] editMode = {false, false, true, true, true};
 
-		//TODO transferir actionListeners para uma classe careTaker (possivelmente)
 		btnTableConfirm.addActionListener(l -> {
 			changePanel("data");
 			livroISBN = model.getBean().getISBN();
 			txtfQuant.setText(String.valueOf(server.returnBookCount(livroISBN)));
-			this.clearDataAndSetButtons(false, btnAdicionarLivro, btnPesquisarLivro, btnSalvarLivro, 
-					btnDeletarLivro, btnCancelarLivro, 
-					false, false, true, true, true);
+			this.clearDataAndSetButtons(false, btnArray, editMode);
 		});
 		
 		btnTableCancel.addActionListener(l -> {
 			changePanel("data");
-			this.clearDataAndSetButtons(true, btnAdicionarLivro, btnPesquisarLivro, btnSalvarLivro, 
-					btnDeletarLivro, btnCancelarLivro, 
-					true, true, false, false, false);
+			this.clearDataAndSetButtons(true, btnArray, addMode);
 		});
 		
 		btnAdicionarLivro.addActionListener(l -> {
@@ -104,9 +104,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 				//TODO: criar mensagens de erro para cada tipo de erro diferente
 				if(server.addNewBookRoutine(model.getBean(), server.strToInt(txtfQuant.getText()))){
 					JOptionPane.showMessageDialog(null, "Livro(s) inserido(s) com sucesso!");
-					this.clearDataAndSetButtons(true, btnAdicionarLivro, btnPesquisarLivro, btnSalvarLivro, 
-							btnDeletarLivro, btnCancelarLivro, 
-							true, true, false, false, false);
+					this.clearDataAndSetButtons(true, btnArray, addMode);
 				}else
 					JOptionPane.showMessageDialog(null, "Ocorreu um erro na inserção do livro!");
 			}else
@@ -121,9 +119,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 					this.tablePanel.setSelectionToLastObject();
 					livroISBN = model.getBean().getISBN();
 					txtfQuant.setText(String.valueOf(server.returnBookCount(livroISBN)));
-					this.clearDataAndSetButtons(false, btnAdicionarLivro, btnPesquisarLivro, btnSalvarLivro, 
-							btnDeletarLivro, btnCancelarLivro, 
-							false, false, true, true, true);
+					this.clearDataAndSetButtons(false, btnArray, editMode);
 				}else {
 					btnAdicionarLivro.setEnabled(false);
 					btnPesquisarLivro.setEnabled(false);
@@ -138,9 +134,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 			if (allFieldsAreFilled()) {
 				if(server.editBook(livroISBN,livroBean,server.strToInt(txtfQuant.getText()))){
 					JOptionPane.showMessageDialog(null, "Livro(s) modificado(s) com sucesso!");
-					this.clearDataAndSetButtons(true, btnAdicionarLivro, btnPesquisarLivro, btnSalvarLivro, 
-							btnDeletarLivro, btnCancelarLivro, 
-							true, true, false, false, false);
+					this.clearDataAndSetButtons(true, btnArray, addMode);
 					livroISBN = "";
 				}else
 					JOptionPane.showMessageDialog(null, "Ocorreu um erro na modificação do(s) livro(s)!");
@@ -152,9 +146,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 			if (allFieldsAreFilled()) 
 				if(server.deleteBook(livroISBN, 0)) {
 					JOptionPane.showMessageDialog(null, "Livro(s) deletado(s) com sucesso!");
-					this.clearDataAndSetButtons(true, btnAdicionarLivro, btnPesquisarLivro, btnSalvarLivro, 
-							btnDeletarLivro, btnCancelarLivro, 
-							true, true, false, false, false);
+					this.clearDataAndSetButtons(true, btnArray, addMode);
 				}else
 					JOptionPane.showMessageDialog(null, "Ocorreu um erro na remoção do(s) livro(s)!");
 			else
@@ -162,9 +154,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		});
 		
 		btnCancelarLivro.addActionListener(l -> {
-			this.clearDataAndSetButtons(true, btnAdicionarLivro, btnPesquisarLivro, btnSalvarLivro, 
-										btnDeletarLivro, btnCancelarLivro, 
-										true, true, false, false, false);
+			this.clearDataAndSetButtons(true, btnArray, addMode);
 		});
 		
 		return panelLivroButtonBar;
@@ -200,7 +190,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	}
 
 	protected void initComponents() {
-		iFrameCadLivro = new JInternalFrame("Cadastro de Livros", true, true);
+		iFrameCadLivro = new JInternalFrame("Cadastro de Livros", false, true);
 		iFrameCadLivro.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 		iFrameCadLivro.setBounds(190, 35, 480, 300);
 		
@@ -237,31 +227,21 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		contentPanel.add(tablePanel, "table");
 	}
 
-	protected void clearDataAndSetButtons(boolean clearData,
-			JButton btnAdd, JButton btnSeek, JButton btnSave, JButton btnDel, JButton btnCancel,
-			boolean boolAdd, boolean boolSeek, boolean boolSave, boolean boolDel, boolean boolCancel) {
+	protected void clearDataAndSetButtons(boolean clearData, JButton[] btnArray, boolean[] modeList) {
 		if (clearData) {
 			livroSelection.setList(new ArrayListModel<>(new ArrayList<Livro>()));
 			this.tablePanel.setSelectionToANewObject();
 			txtfQuant.setText("");
 		}
-		btnAdd.setEnabled(boolAdd);
-		btnSeek.setEnabled(boolSeek);
-		btnSave.setEnabled(boolSave);
-		btnDel.setEnabled(boolDel);
-		btnCancel.setEnabled(boolCancel);
+		btnArray[0].setEnabled(modeList[0]);
+		btnArray[1].setEnabled(modeList[1]);
+		btnArray[2].setEnabled(modeList[2]);
+		btnArray[3].setEnabled(modeList[3]);
+		btnArray[4].setEnabled(modeList[4]);
 	}
 	
 	protected void changePanel(String name) {
 		layout.show(contentPanel, name);
-	}
-	
-	/*
-	 * Deprecated: usar clearDataAndSetButtons.
-	 */
-	protected void clearFields() {
-		model.setBean(new Livro());
-		txtfQuant.setText("");
 	}
 	
 	protected boolean allFieldsAreFilled() {
