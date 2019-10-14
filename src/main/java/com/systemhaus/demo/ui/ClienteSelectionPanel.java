@@ -2,6 +2,7 @@ package com.systemhaus.demo.ui;
 
 import com.jgoodies.binding.list.SelectionInList;
 import com.systemhaus.demo.domain.Cliente;
+import com.systemhaus.demo.domain.Livro;
 
 public class ClienteSelectionPanel extends SkeletonSelectionPanel<Cliente>{
 
@@ -12,5 +13,8 @@ public class ClienteSelectionPanel extends SkeletonSelectionPanel<Cliente>{
 	public ClienteSelectionPanel(SelectionInList<Cliente> selection) {
 		super(selection, new Cliente(), new ClienteTableModel(selection));
 	}
-
+	
+	public final void setSelectionToANewObject() {
+		super.setSelectionToANewObject(new Cliente());
+	}
 }

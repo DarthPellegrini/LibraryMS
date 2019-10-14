@@ -13,4 +13,7 @@ public class LivroSelectionPanel extends SkeletonSelectionPanel<Livro>{
 		super(livroSelection, new Livro(), new LivroTableModel(livroSelection));
 	}
 
+	public final void setSelectionToANewObject() {
+		super.setSelectionToANewObject(new Livro());
+	}
 }

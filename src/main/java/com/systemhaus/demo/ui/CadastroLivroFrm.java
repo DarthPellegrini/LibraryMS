@@ -230,14 +230,11 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	protected void clearDataAndSetButtons(boolean clearData, JButton[] btnArray, boolean[] modeList) {
 		if (clearData) {
 			livroSelection.setList(new ArrayListModel<>(new ArrayList<Livro>()));
-			this.tablePanel.setSelectionToANewObject(new Livro());
+			this.tablePanel.setSelectionToANewObject();
 			txtfQuant.setText("");
 		}
-		btnArray[0].setEnabled(modeList[0]);
-		btnArray[1].setEnabled(modeList[1]);
-		btnArray[2].setEnabled(modeList[2]);
-		btnArray[3].setEnabled(modeList[3]);
-		btnArray[4].setEnabled(modeList[4]);
+		for(int i = 0; i < btnArray.length; i++)
+			btnArray[i].setEnabled(modeList[i]);
 	}
 	
 	protected void changePanel(String name) {

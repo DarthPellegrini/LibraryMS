@@ -40,7 +40,7 @@ public abstract class SkeletonSelectionPanel<Bean> extends JPanel{
 		return selection.getList();
 	}
 	
-	public void setSelectionToANewObject(Bean bean) {
+	protected void setSelectionToANewObject(Bean bean) {
 		selection.getList().add(bean);
 		this.setSelectionToLastObject();
 	}

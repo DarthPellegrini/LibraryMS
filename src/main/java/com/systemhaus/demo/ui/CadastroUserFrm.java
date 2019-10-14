@@ -1,16 +1,21 @@
 package com.systemhaus.demo.ui;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.FlowLayout;
+import java.text.SimpleDateFormat;
 
 import javax.swing.JButton;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.DateFormatter;
 
 import com.jgoodies.binding.PresentationModel;
+import com.jgoodies.binding.adapter.BasicComponentFactory;
 import com.jgoodies.binding.list.SelectionInList;
+import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 import com.systemhaus.demo.Server;
@@ -25,10 +30,15 @@ public class CadastroUserFrm extends SkeletonFrm{
 	private JTextField txtfRua;
 	private JTextField txtfNumero;
 	private JTextField txtfCodCartao;
+	private JTextField txtfValidade;
 	private JInternalFrame iFrameCadUser;
+	private JPanel contentPanel;
+	private CardLayout layout;
+	private JPanel dataPanel;
 	private Server server;
+	private ClienteSelectionPanel tablePanel;
 	private PresentationModel<Cliente> model;
-	private SelectionInList<Cliente> userSelection = new SelectionInList<>();
+	private SelectionInList<Cliente> clienteSelection = new SelectionInList<>();
 	
 	public JInternalFrame createForm(Server server) {
 		initComponents();
@@ -95,6 +105,9 @@ public class CadastroUserFrm extends SkeletonFrm{
 		builder.append("Cód. do Cartão:",txtfCodCartao);
 		builder.nextLine();
 		
+		builder.append("Data de Validade:",txtfValidade);
+		builder.nextLine();
+		
 		return builder.build();
 	}
 
@@ -103,23 +116,42 @@ public class CadastroUserFrm extends SkeletonFrm{
 		iFrameCadUser.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 		iFrameCadUser.setBounds(190, 35, 535, 345);
 		
-		txtfNome = new JTextField();
+		model = new PresentationModel<Cliente>(clienteSelection);
+		tablePanel = new ClienteSelectionPanel(clienteSelection);
 		
-		txtfCpf = new JTextField();
+		ValueModel NomeAdapter = model.getModel("nome");
+		ValueModel CPFAdapter = model.getModel("CPF");
+		ValueModel TelefoneAdapter = model.getModel("telefone");
+		ValueModel CidadeAdapter = model.getModel("cidade");
+		ValueModel BairroAdapter = model.getModel("bairro");
+		ValueModel RuaAdapter = model.getModel("rua");
+		ValueModel NumeroAdapter = model.getModel("numero");
+		ValueModel CodCartaoAdapter = model.getModel("codCartao");
+		ValueModel ValidadeAdapter = model.getModel("validade");
 		
-		txtfTelefone = new JTextField();
+		txtfNome = BasicComponentFactory.createTextField(NomeAdapter);
 		
-		txtfCidade = new JTextField();
+		txtfCpf = BasicComponentFactory.createTextField(CPFAdapter);
 		
-		txtfBairro = new JTextField();
+		txtfTelefone = BasicComponentFactory.createTextField(TelefoneAdapter);
 		
-		txtfRua = new JTextField();
+		txtfCidade = BasicComponentFactory.createTextField(CidadeAdapter);
 		
-		txtfNumero = new JTextField();
+		txtfBairro = BasicComponentFactory.createTextField(BairroAdapter);
 		
-		txtfCodCartao = new JTextField();
-		txtfCodCartao.setText("Código gerado automaticamente");
+		txtfRua = BasicComponentFactory.createTextField(RuaAdapter);
+		
+		txtfNumero = BasicComponentFactory.createIntegerField(NumeroAdapter, 0);
+		
+		txtfCodCartao = BasicComponentFactory.createTextField(CodCartaoAdapter);
+		txtfCodCartao.setText("Cartão gerado automaticamente");
 		txtfCodCartao.setEditable(false);
+		
+		txtfValidade = BasicComponentFactory.createFormattedTextField(ValidadeAdapter, 
+				new DateFormatter(new SimpleDateFormat("dd/mm/yyyy")));
+		txtfValidade.setText("Cartão gerado automaticamente");
+		txtfValidade.setEditable(false);
+		
 	}
 
 	@Override

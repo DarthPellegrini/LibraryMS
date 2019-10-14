@@ -1,6 +1,6 @@
 package com.systemhaus.demo.domain;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 import com.jgoodies.binding.beans.Model;
 
@@ -9,15 +9,19 @@ public class Cliente extends Model{
 	/*
 	 * Serial e Bindings
 	 */
+	
+	/**
+	 * 
+	 */
 	private static final long serialVersionUID = 1L;
 	private static final String PROPERTY_NOME = "nome";
-	private static final String PROPERTY_CPF = "cpf";
+	private static final String PROPERTY_CPF = "CPF";
 	private static final String PROPERTY_TELEFONE = "telefone";
 	private static final String PROPERTY_CIDADE = "cidade";
 	private static final String PROPERTY_BAIRRO = "bairro";
 	private static final String PROPERTY_RUA = "rua";
 	private static final String PROPERTY_NUMERO = "numero";
-	private static final String PROPERTY_CARTAO = "cartao";
+	private static final String PROPERTY_CODCARTAO = "codCartao";
 	private static final String PROPERTY_VALIDADE = "validade";
 	
 	private String nome;
@@ -28,10 +32,12 @@ public class Cliente extends Model{
 	
 	public Cliente(String nome, String cpf, String telefone, 
 			String cidade, String bairro, String rua, int numero, 
-			String codigo, LocalDate validade) {
+			String codigo, Date validade) {
 		super();
+		this.endereco = new Endereco();
+		this.cartao = new Cartao();
 		this.setNome(nome);
-		this.setCpf(cpf);
+		this.setCPF(cpf);
 		this.setTelefone(telefone);
 		this.getEndereco().setCidade(cidade);
 		this.getEndereco().setBairro(bairro);
@@ -43,7 +49,7 @@ public class Cliente extends Model{
 	public Cliente(String nome, String cpf, String telefone, Endereco endereco, Cartao cartao) {
 		super();
 		this.setNome(nome);
-		this.setCpf(cpf);
+		this.setCPF(cpf);
 		this.setTelefone(telefone);
 		this.setEndereco(endereco);
 		this.setCartao(cartao);
@@ -51,6 +57,8 @@ public class Cliente extends Model{
 	
 	public Cliente() {
 		super();
+		this.endereco = new Endereco();
+		this.cartao = new Cartao();
 		this.clear();
 	}
 	
@@ -62,10 +70,10 @@ public class Cliente extends Model{
 		this.nome = nome;
 		firePropertyChange(PROPERTY_NOME, oldValue, this.nome);
 	}
-	public String getCpf() {
+	public String getCPF() {
 		return cpf;
 	}
-	public void setCpf(String cpf) {
+	public void setCPF(String cpf) {
 		if(cpf.matches("([0-9]{3}\\.){2}[0-9]{3}\\-[0-9]{2}")) {
 			String oldValue = this.cpf;
 			this.cpf = cpf;
@@ -126,19 +134,19 @@ public class Cliente extends Model{
 	public void setCartao(Cartao cartao) {
 		this.cartao = cartao;
 	}
-	public String getCodigo() {
+	public String getCodCartao() {
 		return cartao.getCodigo();
 	}
-	public void setCodigo(String codigo) {
-		String oldValue = this.getCodigo();
-		cartao.setCodigo(codigo);
-		firePropertyChange(PROPERTY_CARTAO, oldValue, codigo);
+	public void setCodCartao(String codCartao) {
+		String oldValue = this.getCodCartao();
+		cartao.setCodigo(codCartao);
+		firePropertyChange(PROPERTY_CODCARTAO, oldValue, codCartao);
 	}
-	public LocalDate getValidade() {
+	public Date getValidade() {
 		return cartao.getValidade();
 	}
-	public void setValidade(LocalDate validade) {
-		LocalDate oldValue = this.getValidade();
+	public void setValidade(Date validade) {
+		Date oldValue = this.getValidade();
 		cartao.setValidade(validade);
 		firePropertyChange(PROPERTY_VALIDADE, oldValue, validade);
 	}
