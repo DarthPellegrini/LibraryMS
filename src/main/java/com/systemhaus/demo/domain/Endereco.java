@@ -37,7 +37,14 @@ public class Endereco {
 		return numero;
 	}
 	public void setNumero(int numero) {
-		this.numero = numero;
+		this.numero = (numero > 0) ? numero : 0;
+	}
+
+	public void clear() {
+		this.cidade = "";
+		this.bairro = "";
+		this.rua = "";
+		this.numero = 0;
 	}
 	
 	
