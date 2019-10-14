@@ -49,7 +49,7 @@ public abstract class SkeletonSelectionPanel<Bean> extends JPanel{
 		selection.setSelectionIndex(selection.getList().size()-1);
 	}
 	
-	public void initializeTable(Bean bean) {
+	private void initializeTable(Bean bean) {
 		JTable jtable = new JTable(adapter);
 		jtable.setSelectionModel(new SingleListSelectionAdapter(selection.getSelectionIndexHolder()));
 		this.setSelectionToANewObject(bean);
@@ -59,7 +59,7 @@ public abstract class SkeletonSelectionPanel<Bean> extends JPanel{
 	    this.add(scrollPane, BorderLayout.CENTER);
 	}
 	
-	public void initializeButtons() {
+	private void initializeButtons() {
 		JPanel buttonPanel = new JPanel();
 		cancel = new JButton("Cancelar");
 		ok = new JButton("Ok");
