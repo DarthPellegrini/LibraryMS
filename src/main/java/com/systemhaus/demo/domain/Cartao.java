@@ -1,15 +1,18 @@
 package com.systemhaus.demo.domain;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
 public class Cartao {
 
 	private String codigo; //codigo unico do cartao
-	private Date validade; //validade do cartao
+	private LocalDate validade; //validade do cartao
 	private ArrayList<LivroRetirado> livrosRetirados; //lista de livros retirados pelo cliente
 	
-	public Cartao(String codigo, Date validade) {
+	public Cartao(String codigo, LocalDate validade) {
 		this.codigo = codigo;
 		this.validade = validade;
 		livrosRetirados = new ArrayList<LivroRetirado>();
@@ -27,11 +30,12 @@ public class Cartao {
 			this.codigo = codigo;
 	}
 	public Date getValidade() {
-		return validade;
+		return Date.from(this.validade.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
 	}
 	public void setValidade(Date validade) {
-		//if(validade.matches("([0-9]{2}/){2}2[0-9]{3}")) 
-			this.validade = validade;
+		this.validade = Instant.ofEpochMilli(validade.getTime())
+				        .atZone(ZoneId.systemDefault())
+				        .toLocalDate();
 	}
 	public ArrayList<LivroRetirado> getLivrosRetirados() {
 		return livrosRetirados;
@@ -42,8 +46,7 @@ public class Cartao {
 
 	public void clear() {
 		this.codigo = "";
-		this.validade = new Date();
-		//this.validade = "00/00/0000";
+		this.validade = LocalDate.now();
 	}
 	
 	

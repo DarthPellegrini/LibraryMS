@@ -24,6 +24,7 @@ public class Server {
 	}
 	
 	public Server(EstanteRepository estanteRepository, LivroRepository livroRepository) {
+		biblioteca = new Biblioteca();
 		this.estanteRepository = estanteRepository;
 		this.livroRepository = livroRepository;
 	}
@@ -111,6 +112,10 @@ public class Server {
 		return estanteRepository.needsReorganization();
 	}
 	
+	public int getCountOfEstantes() {
+		return estanteRepository.getCountOfEstantes();
+	}
+	
 	/**
 	 * Exibe o estado atual da biblioteca
 	 * somente é usada para testes
@@ -131,20 +136,17 @@ public class Server {
 	
 	/**
 	 * Converte String para Inteiro com retorno automático de um 0 no caso de caracteres inválidos
-	 * @param s
-	 * @return
+	 * @param s inteiro a ser convertido
+	 * @return inteiro resultando
 	 */
 	public int strToInt(String s) {
 		int i = 0;
 		try {
 			i = Integer.parseInt(s);
 		}catch(Exception e){
-			//do nothing, will return one either way
+			//do nothing, will return zero either way
 		}
 		return i;
 	}
 	
-	public int getCountOfEstantes() {
-		return estanteRepository.getCountOfEstantes();
-	}
 }
