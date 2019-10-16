@@ -3,7 +3,6 @@ package com.systemhaus.demo.ui;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -229,7 +228,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 
 	protected void clearDataAndSetButtons(boolean clearData, JButton[] btnArray, boolean[] modeList) {
 		if (clearData) {
-			livroSelection.setList(new ArrayListModel<>(new ArrayList<Livro>()));
+			this.tablePanel.clearList();
 			this.tablePanel.setSelectionToANewObject();
 			txtfQuant.setText("");
 		}

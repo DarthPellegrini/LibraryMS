@@ -39,6 +39,9 @@ public class CadastroUserFrm extends SkeletonFrm{
 	private ClienteSelectionPanel tablePanel;
 	private PresentationModel<Cliente> model;
 	private SelectionInList<Cliente> clienteSelection = new SelectionInList<>();
+	private final boolean[] addMode = {true, true, false, false, false};
+	private final boolean[] editMode = {false, false, true, true, true};
+	
 	
 	public JInternalFrame createForm(Server server) {
 		initComponents();
@@ -49,31 +52,51 @@ public class CadastroUserFrm extends SkeletonFrm{
 
 	protected void initLayout() {
 		iFrameCadUser.getContentPane().setLayout(new BorderLayout());
-		iFrameCadUser.getContentPane().add(createMainPanel(), BorderLayout.CENTER);
+		iFrameCadUser.getContentPane().add(contentPanel, BorderLayout.CENTER);
 		iFrameCadUser.getContentPane().add(createButtonBar(), BorderLayout.SOUTH);
 	}
 	
 	protected JPanel createButtonBar() {
-		JPanel panelUser = new JPanel();
-		panelUser.setLayout(new FlowLayout());
+		JPanel panelCliente = new JPanel();
+		panelCliente.setLayout(new FlowLayout());
 		
-		JButton btnAdicionarUser = new JButton("Adicionar");
-		panelUser.add(btnAdicionarUser);
+		JButton btnAdicionarCliente = new JButton("Adicionar");
+		panelCliente.add(btnAdicionarCliente);
 		
-		JButton btnPesquisarUser = new JButton("Pesquisar");
-		panelUser.add(btnPesquisarUser);
+		JButton btnPesquisarCliente = new JButton("Pesquisar");
+		panelCliente.add(btnPesquisarCliente);
 		
-		JButton btnSalvarUser = new JButton("Salvar");
-		btnSalvarUser.setEnabled(false);
-		panelUser.add(btnSalvarUser);
+		JButton btnSalvarCliente = new JButton("Salvar");
+		btnSalvarCliente.setEnabled(false);
+		panelCliente.add(btnSalvarCliente);
 		
-		JButton btnExcluirUser = new JButton("Excluir");
-		btnExcluirUser.setEnabled(false);
-		panelUser.add(btnExcluirUser);
+		JButton btnDeletarCliente = new JButton("Excluir");
+		btnDeletarCliente.setEnabled(false);
+		panelCliente.add(btnDeletarCliente);
+		
+		JButton btnCancelarCliente = new JButton("Cancelar");
+		btnCancelarCliente.setEnabled(false);
+		panelCliente.add(btnCancelarCliente);
+		
+		JButton btnTableConfirm = tablePanel.getConfirmButton();
+		JButton btnTableCancel = tablePanel.getCancelButton();
+		
+		JButton[] btnArray = {btnAdicionarCliente, btnPesquisarCliente, btnSalvarCliente, 
+				btnDeletarCliente, btnCancelarCliente};
+		
+		btnTableConfirm.addActionListener(l -> {
+			changePanel("data");
+			//TODO: set cpf as default search
+			this.clearDataAndSetButtons(false, btnArray, editMode);
+		});
+		
+		btnTableCancel.addActionListener(l -> {
+			changePanel("data");
+			this.clearDataAndSetButtons(true, btnArray, addMode);
+		});
 		
 		
-		
-		return panelUser;
+		return panelCliente;
 	}
 	
 	protected JPanel createMainPanel() {
@@ -148,9 +171,16 @@ public class CadastroUserFrm extends SkeletonFrm{
 		txtfCodCartao.setEditable(false);
 		
 		txtfValidade = BasicComponentFactory.createFormattedTextField(ValidadeAdapter, 
-				new DateFormatter(new SimpleDateFormat("dd/mm/yyyy")));
-		txtfValidade.setText("Cartão gerado automaticamente");
+				new DateFormatter(new SimpleDateFormat("MM/yy")));
 		txtfValidade.setEditable(false);
+		
+		dataPanel = createMainPanel();
+		
+		contentPanel = new JPanel();
+		layout = new CardLayout();
+		contentPanel.setLayout(layout);
+		contentPanel.add(dataPanel, "data");
+		contentPanel.add(tablePanel, "table");
 		
 	}
 
@@ -162,13 +192,16 @@ public class CadastroUserFrm extends SkeletonFrm{
 
 	@Override
 	protected void changePanel(String name) {
-		// TODO Auto-generated method stub
-		
+		layout.show(contentPanel, name);
 	}
 
 	@Override
 	protected void clearDataAndSetButtons(boolean clearData, JButton[] btnArray, boolean[] modeList) {
-		// TODO Auto-generated method stub
-		
+		if (clearData) {
+			this.tablePanel.clearList();
+			this.tablePanel.setSelectionToANewObject();
+		}
+		for(int i = 0; i < btnArray.length; i++)
+			btnArray[i].setEnabled(modeList[i]);
 	}
 }

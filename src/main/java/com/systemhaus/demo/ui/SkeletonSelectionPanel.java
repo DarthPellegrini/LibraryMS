@@ -3,6 +3,7 @@ package com.systemhaus.demo.ui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.JButton;
@@ -13,6 +14,8 @@ import javax.swing.JTable;
 import com.jgoodies.binding.adapter.AbstractTableAdapter;
 import com.jgoodies.binding.adapter.SingleListSelectionAdapter;
 import com.jgoodies.binding.list.SelectionInList;
+import com.jgoodies.common.collect.ArrayListModel;
+import com.systemhaus.demo.domain.Livro;
 
 public abstract class SkeletonSelectionPanel<Bean> extends JPanel{
 
@@ -67,6 +70,10 @@ public abstract class SkeletonSelectionPanel<Bean> extends JPanel{
 		buttonPanel.add(ok);
 		buttonPanel.add(cancel);
 		this.add(buttonPanel, BorderLayout.SOUTH);
+	}
+	
+	protected void clearList() {
+		selection.setList(new ArrayListModel<>(new ArrayList<Bean>()));
 	}
 	
 	public JButton getConfirmButton() {

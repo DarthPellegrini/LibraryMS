@@ -9,10 +9,12 @@ public class Biblioteca {
 	
 	//a biblioteca terá um número n de estantes, dependendo somente da quantidade de livros
 	private List<Estante> estantes;
+	private List<Cliente> clientes;
 	private Map<String,int[]> regLivros;
 
 	public Biblioteca() {
 		estantes = new ArrayList<Estante>();
+		clientes = new ArrayList<Cliente>();
 		regLivros = new HashMap<String,int[]>();
 		this.addEstante();
 	}
@@ -25,30 +27,49 @@ public class Biblioteca {
 		this.estantes = estantes;
 	}
 	
+	public List<Cliente> getClientes() {
+		return clientes;
+	}
+
+	public void setClientes(List<Cliente> clientes) {
+		this.clientes = clientes;
+	}
+
 	public void addEstante() {
 		estantes.add(new Estante());
 	}
 	
-	//retorna a última estante adicionada
+	/*
+	 * retorna a última estante adicionada
+	 */
 	public Estante getLastEstante() { 
 		return this.getEstantes().get(this.getEstantes().size()-1);
 	}
 	
-	//retorna a última prateleira da última estante adicionada
+	/*
+	 * retorna a última prateleira da última estante adicionada
+	 */
 	public Prateleira getLastPrateleira() {
 		return this.getLastEstante().getPrateleiras().get(getLastEstante().getPrateleiras().size()-1);
 	}
 	
-	//retorna os livros da última prateleira adicionadas
+	/*
+	 * retorna os livros da última prateleira adicionadas
+	 */
 	public List<Livro> getLastLivros(){
 		return this.getLastPrateleira().getLivros();
 	}
 	
-	//retorna o hashmap de todos os livros registrados
+	/*
+	 * retorna o hashmap de todos os livros registrados
+	 */
 	public Map<String,int[]> getRegistroDeLivros(){
 		return this.regLivros;
 	}
 	
+	/*
+	 * Verifica se todos os livros de um mesmo ISBN estão disponíveis para retirada
+	 */
 	public boolean allTheBooksAreAvailable(String key) {
 		return this.regLivros.get(key)[0] == this.regLivros.get(key)[1];
 	}
@@ -107,5 +128,4 @@ public class Biblioteca {
 		return null;
 	}
 	
-	//TODO: métodos de retorno de todas as prateleiras e todos os livros (opcional)
 }
