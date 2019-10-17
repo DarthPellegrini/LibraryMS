@@ -86,7 +86,7 @@ public class CadastroUserFrm extends SkeletonFrm{
 		
 		btnTableConfirm.addActionListener(l -> {
 			changePanel("data");
-			//TODO: set cpf as default search
+			//TODO: use cpf as default search attribute
 			this.clearDataAndSetButtons(false, btnArray, editMode);
 		});
 		
@@ -95,6 +95,9 @@ public class CadastroUserFrm extends SkeletonFrm{
 			this.clearDataAndSetButtons(true, btnArray, addMode);
 		});
 		
+		btnCancelarCliente.addActionListener(l -> {
+			this.clearDataAndSetButtons(true, btnArray, addMode);
+		});
 		
 		return panelCliente;
 	}
@@ -130,6 +133,8 @@ public class CadastroUserFrm extends SkeletonFrm{
 		
 		builder.append("Data de Validade:",txtfValidade);
 		builder.nextLine();
+		
+		builder.append(new JButton("gerar novo cartão"), 3);
 		
 		return builder.build();
 	}
@@ -181,13 +186,14 @@ public class CadastroUserFrm extends SkeletonFrm{
 		contentPanel.setLayout(layout);
 		contentPanel.add(dataPanel, "data");
 		contentPanel.add(tablePanel, "table");
-		
 	}
 
 	@Override
 	protected boolean allFieldsAreFilled() {
-		// TODO Auto-generated method stub
-		return false;
+		return (!txtfNome.getText().isEmpty() && !txtfCpf.getText().isEmpty() 
+				&& !txtfTelefone.getText().isEmpty() && !txtfCidade.getText().isEmpty() 
+				&& !txtfBairro.getText().isEmpty() && !txtfRua.getText().isEmpty() 
+				&& !txtfNumero.getText().isEmpty());
 	}
 
 	@Override

@@ -85,18 +85,6 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		boolean[] addMode = {true, true, false, false, false};
 		boolean[] editMode = {false, false, true, true, true};
 
-		btnTableConfirm.addActionListener(l -> {
-			changePanel("data");
-			livroISBN = model.getBean().getISBN();
-			txtfQuant.setText(String.valueOf(server.returnBookCount(livroISBN)));
-			this.clearDataAndSetButtons(false, btnArray, editMode);
-		});
-		
-		btnTableCancel.addActionListener(l -> {
-			changePanel("data");
-			this.clearDataAndSetButtons(true, btnArray, addMode);
-		});
-		
 		btnAdicionarLivro.addActionListener(l -> {
 			//validação dos campos
 			if (allFieldsAreFilled()) {
@@ -153,6 +141,18 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		});
 		
 		btnCancelarLivro.addActionListener(l -> {
+			this.clearDataAndSetButtons(true, btnArray, addMode);
+		});
+		
+		btnTableConfirm.addActionListener(l -> {
+			changePanel("data");
+			livroISBN = model.getBean().getISBN();
+			txtfQuant.setText(String.valueOf(server.returnBookCount(livroISBN)));
+			this.clearDataAndSetButtons(false, btnArray, editMode);
+		});
+		
+		btnTableCancel.addActionListener(l -> {
+			changePanel("data");
 			this.clearDataAndSetButtons(true, btnArray, addMode);
 		});
 		

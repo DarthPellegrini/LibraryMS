@@ -15,7 +15,6 @@ import com.jgoodies.binding.adapter.AbstractTableAdapter;
 import com.jgoodies.binding.adapter.SingleListSelectionAdapter;
 import com.jgoodies.binding.list.SelectionInList;
 import com.jgoodies.common.collect.ArrayListModel;
-import com.systemhaus.demo.domain.Livro;
 
 public abstract class SkeletonSelectionPanel<Bean> extends JPanel{
 

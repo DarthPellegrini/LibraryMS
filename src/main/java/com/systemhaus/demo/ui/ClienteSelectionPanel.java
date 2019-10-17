@@ -2,7 +2,6 @@ package com.systemhaus.demo.ui;
 
 import com.jgoodies.binding.list.SelectionInList;
 import com.systemhaus.demo.domain.Cliente;
-import com.systemhaus.demo.domain.Livro;
 
 public class ClienteSelectionPanel extends SkeletonSelectionPanel<Cliente>{
 
