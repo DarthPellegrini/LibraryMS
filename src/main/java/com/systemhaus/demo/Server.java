@@ -4,30 +4,45 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.systemhaus.demo.dao.memory.LivroDAO;
+import com.systemhaus.demo.dao.memory.ClienteDAO;
+import com.systemhaus.demo.dao.memory.EnderecoDAO;
 import com.systemhaus.demo.dao.memory.EstanteDAO;
 import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.EstanteRepository;
 import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.LivroRepository;
 import com.systemhaus.demo.domain.Prateleira;
+import com.systemhaus.demo.domain.Cliente;
+import com.systemhaus.demo.domain.ClienteRepository;
+import com.systemhaus.demo.domain.EnderecoRepository;
 
 public class Server {
 
-	private Biblioteca biblioteca;
 	private EstanteRepository estanteRepository;
 	private LivroRepository livroRepository;
+	private ClienteRepository clienteRepository;
+	private EnderecoRepository enderecoRepository;
 	
 	public Server () {
-		biblioteca = new Biblioteca();
+		Biblioteca biblioteca = new Biblioteca();
 		this.estanteRepository = new EstanteDAO(biblioteca);
 		this.livroRepository = new LivroDAO(biblioteca);
+		this.clienteRepository = new ClienteDAO(biblioteca);
+		this.enderecoRepository = new EnderecoDAO(biblioteca);
 	}
 	
-	public Server(EstanteRepository estanteRepository, LivroRepository livroRepository) {
-		biblioteca = new Biblioteca();
+	public Server(EstanteRepository estanteRepository, LivroRepository livroRepository, 
+			ClienteRepository clienteRepository, EnderecoRepository enderecoRepository) {
 		this.estanteRepository = estanteRepository;
 		this.livroRepository = livroRepository;
+		this.clienteRepository = clienteRepository;
+		this.enderecoRepository = enderecoRepository;
 	}
+	
+	/*
+	 * PARTE 1
+	 * Métodos relacionados à Inserção de Livros
+	 */
 	
 	/**
 	 * Método recursivo infalível de inserção de livros
@@ -49,6 +64,7 @@ public class Server {
 		return true; 
 	}
 	
+	//TODO: addLivro como método no estante repository
 	public boolean addBook(Livro livro) {
 		Prateleira p = estanteRepository.getPrateleiraWithEmptySpace();
 		return p == null ? false : p.addLivro(livro);
@@ -108,31 +124,75 @@ public class Server {
 		estanteRepository.organizeLibrary();	
 	}
 	
+	/*
+	 * Método que verifica se a biblioteca precisa ser reorganizada
+	 */
 	public boolean needsReorganization() {
 		return estanteRepository.needsReorganization();
 	}
 	
+	/*
+	 * Método que retorna a quantidade de estantes na biblioteca
+	 */
 	public int getCountOfEstantes() {
 		return estanteRepository.getCountOfEstantes();
 	}
 	
-	/**
-	 * Exibe o estado atual da biblioteca
-	 * somente é usada para testes
+	/*
+	 * PARTE 2
+	 * Métodos relacionados à inserção de Clientes
 	 */
-//	public void showLibrary() {
-//		for (com.systemhaus.demo.domain.Estante e : biblioteca.getEstantes()) {
-//			System.out.println("------Estante------");
-//			for (Prateleira p : e.getPrateleiras()) {
-//				System.out.println("---Prateleira");
-//				if(p.getLivros().size() == 0)
-//					System.out.println("vazia");
-//				else
-//					for (Livro l : p.getLivros())
-//						System.out.println(l.toString());
-//			}
-//		}
-//	}
+	
+	/*
+	 * Método de adição de clientes
+	 */
+	public int addClienteRoutine(Cliente cliente) {
+		if(!clienteRepository.thisCpfAlreadyExists(cliente.getCPF()))
+			return this.addCliente(cliente.copy());
+		return 3; //erro de cpf
+	}
+	
+	public int addCliente(Cliente cliente) {
+		if(cliente.validade()) {
+			if(!enderecoRepository.thereAreTooManySimilarAddresses(cliente.getEndereco())) {
+				clienteRepository.save(cliente);
+				return 0; //sucesso
+			}else return 2; //erro de muitos endereços
+		}else return 1; //erro de validação
+	}
+	
+	/*
+	 * Método de busca de clientes
+	 */
+	public List<Cliente> findSimilarClients(Cliente cliente){
+		return clienteRepository.findSimilarClients(cliente);
+	}
+	
+	/*
+	 * Método de edição do cliente
+	 */
+	public boolean editClient(String CPF, Cliente cliente) {
+		if(!clienteRepository.thisCpfAlreadyExists(cliente.getCPF()) 
+			|| (cliente.getCPF().equals(CPF) && clienteRepository.thisCpfAlreadyExists(cliente.getCPF()))) {
+			clienteRepository.edit(CPF, cliente.copy());
+			return true;
+		}
+		return false;
+	}
+	
+	/*
+	 * Método de exclusão do cliente
+	 */
+	public void deleteClient(String CPF) {
+		clienteRepository.delete(CPF);
+	}
+	
+	/*
+	 * Gera um novo código para o cartão do cliente
+	 */
+	public void generateNewCodigoCartao(Cliente cliente) {
+		clienteRepository.createValidCode(cliente);
+	}
 	
 	/**
 	 * Converte String para Inteiro com retorno automático de um 0 no caso de caracteres inválidos

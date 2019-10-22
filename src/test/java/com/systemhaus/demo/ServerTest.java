@@ -2,10 +2,16 @@ package com.systemhaus.demo;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 
 import org.junit.Test;
 
+import com.systemhaus.demo.domain.Cliente;
 import com.systemhaus.demo.domain.Livro;
 
 public class ServerTest {
@@ -25,7 +31,6 @@ public class ServerTest {
 		Livro l = s.findBook(new Livro("9780123456790", "Livro Novo", "Agatha Cristie", "LP&M", 1, 250, false));
 		Livro livro = l.copy();
 		livro.clear();
-		//assertFalse(l == null ? false : true);
 		livro.setISBN("9780123456790");
 		assertTrue(l == null ? false : true);
 	}
@@ -56,13 +61,6 @@ public class ServerTest {
 	public void testAddNewBookRoutine() {
 		Server s = new Server();
 		boolean result = s.addNewBookRoutine(new Livro("9780123456789", "Livro", "Agatha Cristie", "LP&M", 1, 250, false), 1);
-		assertTrue(result);
-	}
-
-	@Test
-	public void testErrorAddingNewBookRoutineWithWrongISBN() {
-		Server s = new Server();
-		boolean result = s.addNewBookRoutine(new Livro("8780123456789", "Livro", "Agatha Cristie", "LP&M", 1, 250, false), 1);
 		assertTrue(result);
 	}
 	
@@ -99,7 +97,7 @@ public class ServerTest {
 		Livro l = new Livro();
 		l.setTitulo("espinhos");
 		java.util.List<Livro> list = s.findSimilarBooks(l);
-		assertEquals(list.size(), 3);
+		assertEquals(3, list.size());
 	}
 	
 	@Test
@@ -113,7 +111,7 @@ public class ServerTest {
 		Livro l = new Livro();
 		l.setTitulo("Xing chang chong");
 		java.util.List<Livro> list = s.findSimilarBooks(l);
-		assertEquals(list.size(), 1);
+		assertEquals(1, list.size());
 	}
 	
 	@Test
@@ -121,7 +119,7 @@ public class ServerTest {
 		Server s = new Server();
 		s.addNewBookRoutine(new Livro("9780123456789", "Livro", "Agatha Cristie", "LP&M", 1, 250, false), 2);
 		s.addNewBookRoutine(new Livro("9780123456789", "Livro", "Agatha Cristie", "LP&M", 1, 250, true), 8);
-		boolean result = s.editBook("9780123456789", new Livro("9780123456789", "Book", "Agatha Cristie", "LP&M", 1, 250, false), 8);
+		boolean result = s.editBook("9780123456789", new Livro("9780123456788", "Book", "Agatha Cristie", "LP&M", 1, 250, false), 8);
 		assertTrue(result);
 	}
 	
@@ -176,5 +174,114 @@ public class ServerTest {
 		s.deleteBook("9780123456790", 0);
 		boolean result2 = s.needsReorganization();
 		assertEquals(result1, result2);
+	}
+	
+	@Test
+	public void testAddClient() {
+		Server s = new Server();
+		int result = s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		assertEquals(0,result);
+	}
+	
+	@Test
+	public void testErrorAddClient() {
+		Server s = new Server();
+		s.addCliente(new Cliente("Leonardo","02789345275","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Leonardo","02789345276","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448878",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Leonardo","02789345277","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448879",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Leonardo","02789345278","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448880",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Leonardo","02789345279","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448881",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		int result = s.addCliente(new Cliente("Leonardo","02789345274","5551997359979","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		assertEquals(0,result);
+	}
+	
+	@Test
+	public void testFindSimilarClients() {
+		Server s = new Server();
+		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		Cliente c = new Cliente();
+		c.setCidade("Porto");
+		java.util.List<Cliente> list = s.findSimilarClients(c);
+		assertEquals(2, list.size());
+	}
+	
+	@Test
+	public void testErrorFindSimilarClients() {
+		Server s = new Server();
+		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		Cliente c = new Cliente();
+		c.setCidade("Porta");
+		java.util.List<Cliente> list = s.findSimilarClients(c);
+		assertEquals(2, list.size());
+	}
+	
+	@Test
+	public void testEditClient() {
+		Server s = new Server();
+		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		Cliente c = new Cliente();
+		c.setCPF("02789345280");
+		java.util.List<Cliente> list = s.findSimilarClients(c);
+		Cliente beforeEdit = list.get(0);
+		s.editClient("02789345280",new Cliente("Leo Pellegrini","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		list = s.findSimilarClients(c);
+		Cliente afterEdit = list.get(0);
+		assertEquals(beforeEdit.getNome(),afterEdit.getNome());
+	}
+	
+	@Test
+	public void testErrorEditClientWithExistingCPF() {
+		Server s = new Server();
+		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		Cliente c = new Cliente();
+		c.setNome("Leonardo");
+		java.util.List<Cliente> list = s.findSimilarClients(c);
+		Cliente beforeEdit = list.get(0);
+		s.editClient("02789345280",new Cliente("Leonardo","02789345281","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		list = s.findSimilarClients(c);
+		Cliente afterEdit = list.get(0);
+		assertNotEquals(beforeEdit.getCPF(),afterEdit.getCPF());
+	}
+	
+	@Test
+	public void testErrorEditClientWithInvalidPhoneNumber() {
+		Server s = new Server();
+		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		Cliente c = new Cliente();
+		c.setNome("Leonardo");
+		java.util.List<Cliente> list = s.findSimilarClients(c);
+		Cliente beforeEdit = list.get(0);
+		s.editClient("02789345280",new Cliente("Leonardo","02789345278","555199999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		list = s.findSimilarClients(c);
+		Cliente afterEdit = list.get(0);
+		assertNotEquals(beforeEdit.getTelefone(),afterEdit.getTelefone());
+	}
+	
+	@Test
+	public void testDeleteClient() {
+		Server s = new Server();
+		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		Cliente c = new Cliente();
+		c.setCPF("02789345280");
+		java.util.List<Cliente> list = s.findSimilarClients(c);
+		int sizeBeforeDelete = list.size();
+		s.deleteClient("02789345280");
+		list = s.findSimilarClients(c);
+		int sizeAfterDelete = list.size();
+		assertNotEquals(sizeBeforeDelete,sizeAfterDelete);
 	}
 }

@@ -128,4 +128,8 @@ public class Biblioteca {
 		return null;
 	}
 	
+	public void addCliente(Cliente cliente) {
+		this.clientes.add(cliente.copy());
+	}
+	
 }

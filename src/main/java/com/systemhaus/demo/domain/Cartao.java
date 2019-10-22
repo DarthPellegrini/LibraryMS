@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 
 public class Cartao {
 
@@ -44,9 +45,24 @@ public class Cartao {
 		this.livrosRetirados = livrosRetirados;
 	}
 
+	public final String createNewValidCodCartao() {
+		String codigo = "";
+		for(int i = 0; i < 4; i++) {
+			String ranInt = "" + new Random().nextInt(10000);
+			for(int j = 0; j < (4-ranInt.length()); j++)
+				codigo += "";
+			codigo += ranInt;
+		}
+		return codigo;
+	}
+	
 	public void clear() {
 		this.codigo = "";
-		this.validade = LocalDate.now();
+		this.validade = LocalDate.now().plusYears(4);
+	}
+
+	public boolean validate() {
+		return (codigo.length() == 16 && validade.isAfter(LocalDate.now()));
 	}
 	
 	

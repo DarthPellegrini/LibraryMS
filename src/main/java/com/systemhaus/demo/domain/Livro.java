@@ -108,7 +108,7 @@ public class Livro extends Model{
 	
 	//valida os dados de um livro
 	public boolean validate() {
-		return (ISBN != null && edicao > 0 && numeroPaginas > 0) ? true: false;
+		return (!ISBN.equals("") && edicao > 0 && numeroPaginas > 0) ? true: false;
 	}
 	
 	@Override

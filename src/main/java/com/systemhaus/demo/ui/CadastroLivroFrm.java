@@ -40,6 +40,9 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	private LivroSelectionPanel tablePanel;
 	private PresentationModel<Livro> model;
 	private SelectionInList<Livro> livroSelection = new SelectionInList<>();
+	private final boolean[] addMode = {true, true, false, false, false};
+	private final boolean[] editMode = {false, false, true, true, true};
+	private final boolean[] searchMode = {false, false, false, false, true};
 	
 	public JInternalFrame createForm(Server server) {
 		initComponents();
@@ -82,9 +85,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		
 		JButton[] btnArray = {btnAdicionarLivro, btnPesquisarLivro, btnSalvarLivro, 
 				btnDeletarLivro, btnCancelarLivro};
-		boolean[] addMode = {true, true, false, false, false};
-		boolean[] editMode = {false, false, true, true, true};
-
+		
 		btnAdicionarLivro.addActionListener(l -> {
 			//validação dos campos
 			if (allFieldsAreFilled()) {
@@ -108,8 +109,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 					txtfQuant.setText(String.valueOf(server.returnBookCount(livroISBN)));
 					this.clearDataAndSetButtons(false, btnArray, editMode);
 				}else {
-					btnAdicionarLivro.setEnabled(false);
-					btnPesquisarLivro.setEnabled(false);
+					this.clearDataAndSetButtons(false, btnArray, searchMode);
 					changePanel("table");
 				}
 			} else

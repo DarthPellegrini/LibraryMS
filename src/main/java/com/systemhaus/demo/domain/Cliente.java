@@ -30,14 +30,14 @@ public class Cliente extends Model{
 			String cidade, String bairro, String rua, int numero, 
 			String codigo, Date validade) {
 		super();
-		this.endereco = new Endereco();
-		this.cartao = new Cartao();
 		this.setNome(nome);
 		this.setCPF(cpf);
 		this.setTelefone(telefone);
+		this.endereco = new Endereco();
 		this.getEndereco().setCidade(cidade);
 		this.getEndereco().setBairro(bairro);
 		this.getEndereco().setRua(rua);
+		this.cartao = new Cartao();
 		this.getEndereco().setNumero(numero);
 		this.getCartao().setCodigo(codigo);
 	}
@@ -70,21 +70,23 @@ public class Cliente extends Model{
 		return cpf;
 	}
 	public void setCPF(String cpf) {
-		if(cpf.matches("([0-9]{3}\\.){2}[0-9]{3}\\-[0-9]{2}")) {
+		if(cpf.matches("[0-9]{11}")) {
 			String oldValue = this.cpf;
 			this.cpf = cpf;
 			firePropertyChange(PROPERTY_CPF, oldValue, this.cpf);
-		}
+		}else
+			this.cpf = "";
 	}
 	public String getTelefone() {
 		return telefone;
 	}
 	public void setTelefone(String telefone) {
-		if(telefone.matches("55[0-9]{2}9[0-9]{11}")) {
+		if(telefone.matches("55[0-9]{2}9[0-9]{8}")) {
 			String oldValue = this.telefone;
 			this.telefone = telefone;
 			firePropertyChange(PROPERTY_TELEFONE, oldValue, this.telefone);
-		}
+		}else
+			this.telefone = "";
 	}
 	public Endereco getEndereco() {
 		return endereco;
@@ -147,16 +149,32 @@ public class Cliente extends Model{
 		firePropertyChange(PROPERTY_VALIDADE, oldValue, validade);
 	}
 	
+	public void setAllDataFrom(Cliente from) {
+		this.setNome(from.getNome());
+		this.setCPF(from.getCPF());
+		this.setTelefone(from.getTelefone());
+		this.setCidade(from.getCidade());
+		this.setBairro(from.getBairro());
+		this.setRua(from.getRua());
+		this.setNumero(from.getNumero());
+		this.setCodCartao(from.getCodCartao());
+		this.setValidade(from.getValidade());
+	}
+	
 	public Cliente copy() {
 		return new Cliente(nome,cpf,telefone,endereco,cartao);
+	}
+	
+	public boolean validade() {
+		return (!cpf.equals("") && !telefone.equals("") && endereco.validade() && cartao.validate());
 	}
 	
 	public void clear() {
 		this.nome = "";
 		this.cpf = "";
 		this.telefone = "";
-		endereco.clear();
-		cartao.clear();
+		this.endereco = new Endereco();
+		this.cartao = new Cartao();
 	}
 	
 }

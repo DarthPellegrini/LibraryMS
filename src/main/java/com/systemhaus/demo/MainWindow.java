@@ -16,7 +16,7 @@ import java.awt.Cursor;
 import javax.swing.JInternalFrame;
 
 import com.systemhaus.demo.ui.CadastroLivroFrm;
-import com.systemhaus.demo.ui.CadastroUserFrm;
+import com.systemhaus.demo.ui.CadastroClienteFrm;
 import com.systemhaus.demo.ui.TransacaoLivroFrm;
 
 import java.awt.event.ActionListener;
@@ -143,7 +143,7 @@ public class MainWindow {
 		});
 		btnUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JInternalFrame cadastroUser = new CadastroUserFrm().createForm(fakeServer);
+				JInternalFrame cadastroUser = new CadastroClienteFrm().createForm(fakeServer);
 				desktopPane.add(cadastroUser);
 				cadastroUser.setVisible(true);
 			}
