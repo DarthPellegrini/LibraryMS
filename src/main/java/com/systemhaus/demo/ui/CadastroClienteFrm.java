@@ -92,11 +92,11 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		JButton[] btnArray = {btnAdicionarCliente, btnPesquisarCliente, btnSalvarCliente, 
 				btnDeletarCliente, btnCancelarCliente};
 		
-		this.clearDataAndSetButtons(true, btnArray, addMode);
+		//this.clearDataAndSetButtons(true, btnArray, addMode);
 		
 		btnTableConfirm.addActionListener(l -> {
 			changePanel("data");
-			//TODO: use cpf as default search attribute
+			clienteCPF = model.getBean().getCPF();
 			this.clearDataAndSetButtons(false, btnArray, editMode);
 		});
 		
@@ -133,9 +133,10 @@ public class CadastroClienteFrm extends SkeletonFrm{
 					this.tablePanel.setSelectionToLastObject();
 					clienteCPF = model.getBean().getCPF();
 					this.clearDataAndSetButtons(false, btnArray, editMode);
+				}else {
+					this.clearDataAndSetButtons(false, btnArray, searchMode);
+					changePanel("table");
 				}
-				this.clearDataAndSetButtons(false, btnArray, searchMode);
-				changePanel("table");
 			}else
 				JOptionPane.showMessageDialog(null, "Nenhum cliente encontrado!");
 		});
@@ -245,10 +246,12 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		
 		txtfCodCartao = BasicComponentFactory.createTextField(CodCartaoAdapter);
 		txtfCodCartao.setEditable(false);
+		txtfCodCartao.setToolTipText("Código gerado automaticamente pelo botão 'Gerar novo cartão'");
 		
 		txtfValidade = BasicComponentFactory.createFormattedTextField(ValidadeAdapter, 
 				new DateFormatter(new SimpleDateFormat("MM/yy")));
 		txtfValidade.setEditable(false);
+		txtfValidade.setToolTipText("Data gerada automaticamente pelo botão 'Gerar novo cartão'");
 		
 		dataPanel = createMainPanel();
 		
@@ -264,7 +267,7 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		return (!txtfNome.getText().isEmpty() && !txtfCpf.getText().isEmpty() 
 				&& !txtfTelefone.getText().isEmpty() && !txtfCidade.getText().isEmpty() 
 				&& !txtfBairro.getText().isEmpty() && !txtfRua.getText().isEmpty() 
-				&& !txtfNumero.getText().isEmpty());
+				&& !txtfNumero.getText().isEmpty() && !txtfCodCartao.getText().isEmpty());
 	}
 
 	@Override
@@ -277,7 +280,6 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		if (clearData) {
 			this.tablePanel.clearList();
 			this.tablePanel.setSelectionToANewObject();
-			//this.server.generateNewCodigoCartao(model.getBean());
 		}
 		for(int i = 0; i < btnArray.length; i++)
 			btnArray[i].setEnabled(modeList[i]);

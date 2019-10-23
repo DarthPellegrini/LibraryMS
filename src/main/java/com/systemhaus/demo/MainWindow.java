@@ -112,7 +112,7 @@ public class MainWindow {
 		btnUser.setBounds(60, 115, 45, 45);
 		desktopPane.add(btnUser);
 		
-		JLabel lblCadastroDeUsurios = new JLabel("Cadastro de Usuários");
+		JLabel lblCadastroDeUsurios = new JLabel("Cadastro de Clientes");
 		lblCadastroDeUsurios.setForeground(Color.WHITE);
 		lblCadastroDeUsurios.setBounds(14, 168, 136, 15);
 		desktopPane.add(lblCadastroDeUsurios);

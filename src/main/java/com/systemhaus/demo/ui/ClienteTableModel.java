@@ -26,7 +26,7 @@ public class ClienteTableModel extends AbstractTableAdapter<Cliente>{
 		case 4: return cliente.getBairro();
 		case 5: return cliente.getRua();
 		case 6: return cliente.getNumero();
-		case 7: return cliente.getCartao();
+		case 7: return cliente.getCodCartao();
 		case 8: return cliente.getValidade();
 		}
 		return null;

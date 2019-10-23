@@ -1,6 +1,6 @@
 package com.systemhaus.demo.domain;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 public class RegistroDeEvento {
 	
@@ -8,17 +8,17 @@ public class RegistroDeEvento {
 	
 	private Livro livro; //referência ao livro que foi modificado
 	private Evento evento; //tipo de evento relacionado ao livro
-	private LocalDate data; //data do evento
+	private LocalDateTime data; //data do evento
 	private Cliente cliente; //opcional, caso um cliente envolvido em um evento (retirada/devolucao)
 	
-	public RegistroDeEvento(Livro livro, Evento evento, LocalDate data) {
+	public RegistroDeEvento(Livro livro, Evento evento, LocalDateTime data) {
 		super();
 		this.livro = livro;
 		this.setEvento(evento);
 		this.data = data;
 	}
 	
-	public RegistroDeEvento(Livro livro, Evento evento, LocalDate data, Cliente cliente) {
+	public RegistroDeEvento(Livro livro, Evento evento, LocalDateTime data, Cliente cliente) {
 		super();
 		this.livro = livro;
 		this.setEvento(evento);
@@ -32,10 +32,10 @@ public class RegistroDeEvento {
 	public void setLivro(Livro livro) {
 		this.livro = livro;
 	}
-	public LocalDate getData() {
+	public LocalDateTime getData() {
 		return data;
 	}
-	public void setData(LocalDate data) {
+	public void setData(LocalDateTime data) {
 		this.data = data;
 	}
 	public Evento getEvento() {

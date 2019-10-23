@@ -57,7 +57,7 @@ public class Cartao {
 	}
 	
 	public void clear() {
-		this.codigo = "";
+		this.codigo = createNewValidCodCartao();
 		this.validade = LocalDate.now().plusYears(4);
 	}
 
