@@ -37,12 +37,12 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	private JTextField txtfRua;
 	private JTextField txtfNumero;
 	private JTextField txtfCodCartao;
-	private Server fakeServer;
+	private Server server;
 	
-	public JInternalFrame createForm(Server fakeServer) {
+	public JInternalFrame createForm(Server server) {
 		initComponents();
 		initLayout();
-		this.fakeServer = fakeServer;
+		this.server = server;
 		
 		return ifTranBook;
 	}
@@ -79,7 +79,6 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		cbEscolhaLivro.addItem("Editora");
 		cbEscolhaLivro.addItem("Edição");
 		cbEscolhaLivro.addItem("Nº de Páginas");
-		cbEscolhaLivro.addItem("Quantidade");
 		txtfEscolhaLivro = new JTextField();
 		btnPesquisaLivro = new JButton("Pesquisar");
 		
@@ -108,7 +107,6 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		cbEscolhaUser.addItem("Bairro");
 		cbEscolhaUser.addItem("Rua");
 		cbEscolhaUser.addItem("Número");
-		cbEscolhaUser.addItem("Cód. Cartão");
 		txtfEscolhaUser = new JTextField();
 		btnPesquisaUser = new JButton("Pesquisar");
 		

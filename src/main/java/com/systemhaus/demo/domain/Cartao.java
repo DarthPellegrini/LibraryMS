@@ -1,7 +1,7 @@
 package com.systemhaus.demo.domain;
 
 import java.time.Instant;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
@@ -10,10 +10,10 @@ import java.util.Random;
 public class Cartao {
 
 	private String codigo; //codigo unico do cartao
-	private LocalDate validade; //validade do cartao
+	private LocalDateTime validade; //validade do cartao
 	private ArrayList<LivroRetirado> livrosRetirados; //lista de livros retirados pelo cliente
 	
-	public Cartao(String codigo, LocalDate validade) {
+	public Cartao(String codigo, LocalDateTime validade) {
 		this.codigo = codigo;
 		this.validade = validade;
 		livrosRetirados = new ArrayList<LivroRetirado>();
@@ -31,12 +31,12 @@ public class Cartao {
 			this.codigo = codigo;
 	}
 	public Date getValidade() {
-		return Date.from(this.validade.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+		return Date.from(this.validade.atZone(ZoneId.systemDefault()).toInstant());
 	}
 	public void setValidade(Date validade) {
 		this.validade = Instant.ofEpochMilli(validade.getTime())
 				        .atZone(ZoneId.systemDefault())
-				        .toLocalDate();
+				        .toLocalDateTime();
 	}
 	public ArrayList<LivroRetirado> getLivrosRetirados() {
 		return livrosRetirados;
@@ -58,11 +58,11 @@ public class Cartao {
 	
 	public void clear() {
 		this.codigo = createNewValidCodCartao();
-		this.validade = LocalDate.now().plusYears(4);
+		this.validade = LocalDateTime.now().plusYears(4);
 	}
 
 	public boolean validate() {
-		return (codigo.length() == 16 && validade.isAfter(LocalDate.now()));
+		return (codigo.length() == 16 && validade.isAfter(LocalDateTime.now()));
 	}
 	
 	
