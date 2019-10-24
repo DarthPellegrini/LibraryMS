@@ -214,7 +214,7 @@ public class CadastroClienteFrm extends SkeletonFrm{
 	protected void initComponents() {
 		iFrameCadUser = new JInternalFrame("Cadastro de Clientes",false, true);
 		iFrameCadUser.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-		iFrameCadUser.setBounds(190, 35, 535, 380);
+		iFrameCadUser.setBounds(190, 35, 735, 380);
 		
 		model = new PresentationModel<Cliente>(clienteSelection);
 		tablePanel = new ClienteSelectionPanel(clienteSelection);
