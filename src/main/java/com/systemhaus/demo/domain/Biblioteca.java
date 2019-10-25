@@ -11,11 +11,13 @@ public class Biblioteca {
 	private List<Estante> estantes;
 	private List<Cliente> clientes;
 	private Map<String,int[]> regLivros;
+	private List<LivroRetirado> livrosRetirados;
 
 	public Biblioteca() {
 		estantes = new ArrayList<Estante>();
 		clientes = new ArrayList<Cliente>();
 		regLivros = new HashMap<String,int[]>();
+		setLivrosRetirados(new ArrayList<LivroRetirado>());
 		this.addEstante();
 	}
 	
@@ -33,6 +35,14 @@ public class Biblioteca {
 
 	public void setClientes(List<Cliente> clientes) {
 		this.clientes = clientes;
+	}
+
+	public List<LivroRetirado> getLivrosRetirados() {
+		return livrosRetirados;
+	}
+
+	public void setLivrosRetirados(List<LivroRetirado> livrosRetirados) {
+		this.livrosRetirados = livrosRetirados;
 	}
 
 	public void addEstante() {

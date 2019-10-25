@@ -6,30 +6,21 @@ public class RegistroDeEvento {
 	
 	//registro de eventos
 	
-	private Livro livro; //referência ao livro que foi modificado
+	private LivroRetirado livro; //referência ao livro que foi modificado
 	private Evento evento; //tipo de evento relacionado ao livro
 	private LocalDateTime data; //data do evento
-	private Cliente cliente; //opcional, caso um cliente envolvido em um evento (retirada/devolucao)
 	
-	public RegistroDeEvento(Livro livro, Evento evento, LocalDateTime data) {
-		super();
+	public RegistroDeEvento(LivroRetirado livro, Evento evento, LocalDateTime data) {
 		this.livro = livro;
 		this.setEvento(evento);
 		this.data = data;
 	}
+	  
 	
-	public RegistroDeEvento(Livro livro, Evento evento, LocalDateTime data, Cliente cliente) {
-		super();
-		this.livro = livro;
-		this.setEvento(evento);
-		this.data = data;
-		this.setCliente(cliente);
-	}
-	
-	public Livro getLivro() {
+	public LivroRetirado getLivro() {
 		return livro;
 	}
-	public void setLivro(Livro livro) {
+	public void setLivro(LivroRetirado livro) {
 		this.livro = livro;
 	}
 	public LocalDateTime getData() {
@@ -44,12 +35,5 @@ public class RegistroDeEvento {
 	public void setEvento(Evento evento) {
 		this.evento = evento;
 	}
-	public Cliente getCliente() {
-		return cliente;
-	}
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
-	
 	
 }

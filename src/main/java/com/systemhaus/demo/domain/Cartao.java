@@ -3,7 +3,6 @@ package com.systemhaus.demo.domain;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
@@ -11,12 +10,10 @@ public class Cartao {
 
 	private String codigo; //codigo unico do cartao
 	private LocalDateTime validade; //validade do cartao
-	private ArrayList<LivroRetirado> livrosRetirados; //lista de livros retirados pelo cliente
 	
 	public Cartao(String codigo, LocalDateTime validade) {
 		this.codigo = codigo;
 		this.validade = validade;
-		livrosRetirados = new ArrayList<LivroRetirado>();
 	}
 	
 	public Cartao() {
@@ -37,12 +34,6 @@ public class Cartao {
 		this.validade = Instant.ofEpochMilli(validade.getTime())
 				        .atZone(ZoneId.systemDefault())
 				        .toLocalDateTime();
-	}
-	public ArrayList<LivroRetirado> getLivrosRetirados() {
-		return livrosRetirados;
-	}
-	public void setLivrosRetirados(ArrayList<LivroRetirado> livrosRetirados) {
-		this.livrosRetirados = livrosRetirados;
 	}
 
 	public final String createNewValidCodCartao() {
