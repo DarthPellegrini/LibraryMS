@@ -1,28 +1,46 @@
 package com.systemhaus.demo.domain;
 
+import java.time.LocalDateTime;
+
 public class Evento {
 	
-	private String evento; //Nome do evento
-	private String descr; //Descrição do evento
+	//registro de eventos
+	private Livro livro; //referência ao livro
+	private Cartao cartao; //referência ao cartão do cliente
+	private TipoEvento tipoEvento; //tipo de evento relacionado ao livro
+	private LocalDateTime data; //data do evento
 	
-	public Evento(String evento, String descr) {
+	public Evento(Livro livro, Cartao cartao, TipoEvento tipoEvento) {
 		super();
-		this.evento = evento;
-		this.descr = descr;
+		this.livro = livro;
+		this.cartao = cartao;
+		this.tipoEvento = tipoEvento;
+		data = LocalDateTime.now();
 	}
 	
-	public String getEvento() {
-		return evento;
+	public Livro getLivro() {
+		return livro;
 	}
-	public void setEvento(String evento) {
-		this.evento = evento;
+	public void setLivro(Livro livro) {
+		this.livro = livro;
 	}
-	public String getDescr() {
-		return descr;
+	public Cartao getCartao() {
+		return cartao;
 	}
-	public void setDescr(String descr) {
-		this.descr = descr;
+	public void setCartao(Cartao cartao) {
+		this.cartao = cartao;
 	}
-	
+	public TipoEvento getTipoEvento() {
+		return tipoEvento;
+	}
+	public void setTipoEvento(TipoEvento tipoEvento) {
+		this.tipoEvento = tipoEvento;
+	}
+	public LocalDateTime getData() {
+		return data;
+	}
+	public void setData(LocalDateTime data) {
+		this.data = data;
+	}
 	
 }
