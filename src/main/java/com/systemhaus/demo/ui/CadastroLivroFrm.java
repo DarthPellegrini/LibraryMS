@@ -34,7 +34,6 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	private String livroISBN;
 	private Server server;
 	private JPanel contentPanel;
-	private CardLayout layout;
 	private JPanel dataPanel;
 	private JInternalFrame iFrameCadLivro;
 	private LivroSelectionPanel tablePanel;
@@ -110,7 +109,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 					this.clearDataAndSetButtons(false, btnArray, editMode);
 				}else {
 					this.clearDataAndSetButtons(false, btnArray, searchMode);
-					changePanel("table");
+					changePanel(contentPanel,"table");
 				}
 			} else
 				JOptionPane.showMessageDialog(null, "Nenhum livro encontrado!");
@@ -145,14 +144,14 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		});
 		
 		btnTableConfirm.addActionListener(l -> {
-			changePanel("data");
+			changePanel(contentPanel,"data");
 			livroISBN = model.getBean().getISBN();
 			txtfQuant.setText(String.valueOf(server.returnBookCount(livroISBN)));
 			this.clearDataAndSetButtons(false, btnArray, editMode);
 		});
 		
 		btnTableCancel.addActionListener(l -> {
-			changePanel("data");
+			changePanel(contentPanel,"data");
 			this.clearDataAndSetButtons(true, btnArray, addMode);
 		});
 		
@@ -220,8 +219,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		dataPanel = createMainPanel();
 		
 		contentPanel = new JPanel();
-		layout = new CardLayout();
-		contentPanel.setLayout(layout);
+		contentPanel.setLayout(new CardLayout());
 		contentPanel.add(dataPanel, "data");
 		contentPanel.add(tablePanel, "table");
 	}
@@ -236,8 +234,9 @@ public class CadastroLivroFrm extends SkeletonFrm{
 			btnArray[i].setEnabled(modeList[i]);
 	}
 	
-	protected void changePanel(String name) {
-		layout.show(contentPanel, name);
+	@Override
+	protected void changePanel(JPanel panel, String name) {
+		((CardLayout)panel.getLayout()).show(panel, name);
 	}
 	
 	protected boolean allFieldsAreFilled() {

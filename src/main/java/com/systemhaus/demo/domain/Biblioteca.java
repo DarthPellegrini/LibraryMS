@@ -11,13 +11,13 @@ public class Biblioteca {
 	private List<Estante> estantes;
 	private List<Cliente> clientes;
 	private Map<String,int[]> regLivros;
-	private List<LivroRetirado> livrosRetirados;
+	private List<Evento> eventos;
 
 	public Biblioteca() {
 		estantes = new ArrayList<Estante>();
 		clientes = new ArrayList<Cliente>();
 		regLivros = new HashMap<String,int[]>();
-		setLivrosRetirados(new ArrayList<LivroRetirado>());
+		setEventos(new ArrayList<Evento>());
 		this.addEstante();
 	}
 	
@@ -37,12 +37,12 @@ public class Biblioteca {
 		this.clientes = clientes;
 	}
 
-	public List<LivroRetirado> getLivrosRetirados() {
-		return livrosRetirados;
+	public List<Evento> getEventos() {
+		return eventos;
 	}
 
-	public void setLivrosRetirados(List<LivroRetirado> livrosRetirados) {
-		this.livrosRetirados = livrosRetirados;
+	public void setEventos(List<Evento> eventos) {
+		this.eventos = eventos;
 	}
 
 	public void addEstante() {

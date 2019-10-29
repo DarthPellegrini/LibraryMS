@@ -1,16 +1,27 @@
 package com.systemhaus.demo.ui;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.FlowLayout;
+import java.text.SimpleDateFormat;
+
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JInternalFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import javax.swing.text.DateFormatter;
+
+import com.jgoodies.binding.PresentationModel;
+import com.jgoodies.binding.adapter.BasicComponentFactory;
+import com.jgoodies.binding.list.SelectionInList;
+import com.jgoodies.binding.value.ValueModel;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 import com.systemhaus.demo.Server;
+import com.systemhaus.demo.domain.Cliente;
+import com.systemhaus.demo.domain.Livro;
 
 public class TransacaoLivroFrm extends SkeletonFrm{
 
@@ -26,6 +37,11 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	private JTextField txtfQuantDisp;
 	private JTextField txtfAutor;
 	private JTextField txtfEditora;
+	private JTextField txtfRetirado;
+	private JPanel livroPanel;
+	private LivroSelectionPanel livroTablePanel;
+	private PresentationModel<Livro> livroModel;
+	private SelectionInList<Livro> livroSelection = new SelectionInList<>();
 	private JComboBox<String> cbEscolhaUser;
 	private JTextField txtfEscolhaUser;
 	private JButton btnPesquisaUser;
@@ -37,13 +53,18 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	private JTextField txtfRua;
 	private JTextField txtfNumero;
 	private JTextField txtfCodCartao;
+	private JTextField txtfValidade;
+	private JPanel clientePanel;
+	private ClienteSelectionPanel clienteTablePanel;
+	private PresentationModel<Cliente> clienteModel;
+	private SelectionInList<Cliente> clienteSelection = new SelectionInList<>();
+	private JPanel contentPanel;
 	private Server server;
 	
 	public JInternalFrame createForm(Server server) {
 		initComponents();
 		initLayout();
 		this.server = server;
-		
 		return ifTranBook;
 	}
 
@@ -66,11 +87,16 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		return panelTran;
 	}
 	
-	
 	protected void initComponents() {
 		ifTranBook = new JInternalFrame("Retiradas & Devoluções",false, true);
 		ifTranBook.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-		ifTranBook.setBounds(190, 35, 900, 375);
+		ifTranBook.setBounds(190, 35, 900, 400);
+		
+		contentPanel = new JPanel(new BorderLayout());
+		
+		/*
+		 * LIVRO
+		 */
 		
 		cbEscolhaLivro = new JComboBox<String>();
 		cbEscolhaLivro.addItem("ISBN");
@@ -82,22 +108,53 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		txtfEscolhaLivro = new JTextField();
 		btnPesquisaLivro = new JButton("Pesquisar");
 		
-		txtfIsbn = new JTextField();
+		livroModel = new PresentationModel<Livro>(livroSelection);
+		livroTablePanel = new LivroSelectionPanel(livroSelection);
+		
+		ValueModel ISBNAdapter = livroModel.getModel("ISBN");
+		ValueModel tituloAdapter = livroModel.getModel("titulo");
+		ValueModel autorAdapter = livroModel.getModel("autor");
+		ValueModel editoraAdapter = livroModel.getModel("editora");
+		ValueModel edicaoAdapter = livroModel.getModel("edicao");
+		ValueModel numPagAdapter = livroModel.getModel("numeroPaginas");
+		ValueModel retiradoAdapter = livroModel.getModel("retirado");
+		
+		txtfIsbn = BasicComponentFactory.createTextField(ISBNAdapter);
 		txtfIsbn.setEditable(false);
-		txtfTitulo = new JTextField();
+		
+		txtfTitulo = BasicComponentFactory.createTextField(tituloAdapter);
 		txtfTitulo.setEditable(false);
-		txtfAutor = new JTextField();
+		
+		txtfAutor = BasicComponentFactory.createTextField(autorAdapter);
 		txtfAutor.setEditable(false);
-		txtfEditora = new JTextField();
+		
+		txtfEditora = BasicComponentFactory.createTextField(editoraAdapter);
 		txtfEditora.setEditable(false);
-		txtfEdicao = new JTextField();
+		
+		txtfEdicao = BasicComponentFactory.createIntegerField(edicaoAdapter, 0);
 		txtfEdicao.setEditable(false);
-		txtfNPag = new JTextField();
+		
+		txtfNPag = BasicComponentFactory.createIntegerField(numPagAdapter, 0);
 		txtfNPag.setEditable(false);
+		
+		txtfRetirado = new JTextField(); //BasicComponentFactory.createTextField(retiradoAdapter);
+		txtfRetirado.setEditable(false);
+		
 		txtfQuant = new JTextField();
 		txtfQuant.setEditable(false);
+		
 		txtfQuantDisp = new JTextField();
 		txtfQuantDisp.setEditable(false);
+		
+		livroPanel = new JPanel();
+		livroPanel.setLayout(new CardLayout());
+		livroPanel.add(createLivroPanel(), "data");
+		livroPanel.add(livroTablePanel, "table");
+		contentPanel.add(livroPanel, BorderLayout.WEST);
+		
+		/*
+		 * CLIENTE
+		 */
 		
 		cbEscolhaUser = new JComboBox<String>();
 		cbEscolhaUser.addItem("Nome");
@@ -110,28 +167,130 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		txtfEscolhaUser = new JTextField();
 		btnPesquisaUser = new JButton("Pesquisar");
 		
-		txtfNome = new JTextField();
+		clienteModel = new PresentationModel<Cliente>(clienteSelection);
+		clienteTablePanel = new ClienteSelectionPanel(clienteSelection);
+		
+		ValueModel NomeAdapter = clienteModel.getModel("nome");
+		ValueModel CPFAdapter = clienteModel.getModel("CPF");
+		ValueModel TelefoneAdapter = clienteModel.getModel("telefone");
+		ValueModel CidadeAdapter = clienteModel.getModel("cidade");
+		ValueModel BairroAdapter = clienteModel.getModel("bairro");
+		ValueModel RuaAdapter = clienteModel.getModel("rua");
+		ValueModel NumeroAdapter = clienteModel.getModel("numero");
+		ValueModel CodCartaoAdapter = clienteModel.getModel("codCartao");
+		ValueModel ValidadeAdapter = clienteModel.getModel("validade");
+		
+		txtfNome = BasicComponentFactory.createTextField(NomeAdapter);
 		txtfNome.setEditable(false);
-		txtfCpf = new JTextField();
+		
+		txtfCpf = BasicComponentFactory.createTextField(CPFAdapter);
 		txtfCpf.setEditable(false);
-		txtfTelefone = new JTextField();
+		
+		txtfTelefone = BasicComponentFactory.createTextField(TelefoneAdapter);
 		txtfTelefone.setEditable(false);
-		txtfCidade = new JTextField();
+		
+		txtfCidade = BasicComponentFactory.createTextField(CidadeAdapter);
 		txtfCidade.setEditable(false);
-		txtfBairro = new JTextField();
+		
+		txtfBairro = BasicComponentFactory.createTextField(BairroAdapter);
 		txtfBairro.setEditable(false);
-		txtfRua = new JTextField();
+		
+		txtfRua = BasicComponentFactory.createTextField(RuaAdapter);
 		txtfRua.setEditable(false);
-		txtfNumero = new JTextField();
+		
+		txtfNumero = BasicComponentFactory.createIntegerField(NumeroAdapter, 0);
 		txtfNumero.setEditable(false);
-		txtfCodCartao = new JTextField();
+		
+		txtfCodCartao = BasicComponentFactory.createTextField(CodCartaoAdapter);
 		txtfCodCartao.setEditable(false);
+		
+		txtfValidade = BasicComponentFactory.createFormattedTextField(ValidadeAdapter, 
+				new DateFormatter(new SimpleDateFormat("MM/yy")));
+		txtfValidade.setEditable(false);
+		
+		clientePanel = new JPanel();
+		clientePanel.setLayout(new CardLayout());
+		clientePanel.add(createClientePanel(), "data");
+		clientePanel.add(clienteTablePanel, "table");
+		contentPanel.add(clientePanel, BorderLayout.EAST);
+	}
+	
+	private JPanel createLivroPanel() {
+		DefaultFormBuilder builder = new DefaultFormBuilder(
+				new FormLayout("right:pref, 3dlu, 127dlu, 3dlu, pref", 
+								"18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu"));
+		builder.border(new EmptyBorder(5, 5, 5, 5));
+		
+		builder.append("ISBN:",txtfIsbn);
+		builder.nextLine();
+		
+		builder.append("Título:", txtfTitulo);
+		builder.nextLine();
+		
+		builder.append("Autor:", txtfAutor);
+		builder.nextLine();
+		
+		builder.append("Editora:", txtfEditora);
+		builder.nextLine();
+		
+		builder.append("Edicao:", txtfEdicao);
+		builder.nextLine();
+		
+		builder.append("Nº de Páginas:", txtfNPag);
+		builder.nextLine();
+		
+		builder.append("Retirado", txtfRetirado);
+		builder.nextLine();
+		
+		builder.append("Quantidade:", txtfQuant);
+		builder.nextLine();
+		
+		builder.append("Quant. Disponível:", txtfQuantDisp);
+		builder.nextLine();
+		
+		return builder.build();
+	}
+	
+	private JPanel createClientePanel() {
+		DefaultFormBuilder builder = new DefaultFormBuilder(
+				new FormLayout("right:pref, 3dlu, 127dlu, 3dlu, pref", 
+								"18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu"));
+		builder.border(new EmptyBorder(5, 5, 5, 5));
+		
+		builder.append("Nome:", txtfNome);
+		builder.nextLine();
+		
+		builder.append("CPF:", txtfCpf);
+		builder.nextLine();
+		
+		builder.append("Telefone:", txtfTelefone);
+		builder.nextLine();
+		
+		builder.append("Cidade:", txtfCidade);
+		builder.nextLine();
+		
+		builder.append("Bairro:", txtfBairro);
+		builder.nextLine();
+		
+		builder.append("Rua:", txtfRua);
+		builder.nextLine();
+		
+		builder.append("Número:", txtfNumero);
+		builder.nextLine();
+		
+		builder.append("Cód. Cartão:", txtfCodCartao);
+		builder.nextLine();
+		
+		builder.append("Validade:", txtfValidade);
+		builder.nextLine();
+		
+		return builder.build();
 	}
 	
 	protected JPanel createMainPanel(){
 		DefaultFormBuilder builder = new DefaultFormBuilder(
 				new FormLayout("right:pref, 3dlu, pref:grow, 3dlu, pref, 9dlu, right:pref, 3dlu, pref:grow, 3dlu, pref", 
-								"18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu"));
+								"18dlu,18dlu,162dlu"));
 		builder.border(new EmptyBorder(5, 5, 5, 5));
 		
 		// Search Bars
@@ -143,47 +302,9 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		builder.append(btnPesquisaUser);
 		builder.nextLine(2);
 		
-		// Results from Search
-		builder.append("ISBN:",txtfIsbn);
-		builder.nextColumn(2);
-		builder.append("Nome:", txtfNome);
-		builder.nextLine();
+		// panel que contém
+		builder.append(contentPanel,11);
 		
-		builder.append("Título:", txtfTitulo);
-		builder.nextColumn(2);
-		builder.append("CPF:", txtfCpf);
-		builder.nextLine();
-		
-		builder.append("Autor:", txtfAutor);
-		builder.nextColumn(2);
-		builder.append("Telefone:", txtfTelefone);
-		builder.nextLine();
-		
-		builder.append("Editora:", txtfEditora);
-		builder.nextColumn(2);
-		builder.append("Cidade:", txtfCidade);
-		builder.nextLine();
-		
-		builder.append("Edicao:", txtfEdicao);
-		builder.nextColumn(2);
-		builder.append("Bairro:", txtfBairro);
-		builder.nextLine();
-		
-		builder.append("Nº de Páginas:", txtfNPag);
-		builder.nextColumn(2);
-		builder.append("Rua:", txtfRua);
-		builder.nextLine();
-		
-		builder.append("Quantidade:", txtfQuant);
-		builder.nextColumn(2);
-		builder.append("Número:", txtfNumero);
-		builder.nextLine();
-		
-		builder.append("Quant. Disponível:", txtfQuantDisp);
-		builder.nextColumn(2);
-		builder.append("Cód. Cartão:", txtfCodCartao);
-		builder.nextLine();
-			
 		return builder.build();
 	}
 
@@ -194,9 +315,8 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	}
 
 	@Override
-	protected void changePanel(String name) {
-		// TODO Auto-generated method stub
-		
+	protected void changePanel(JPanel panel, String name) {
+		((CardLayout)panel.getLayout()).show(panel, name);
 	}
 
 	@Override

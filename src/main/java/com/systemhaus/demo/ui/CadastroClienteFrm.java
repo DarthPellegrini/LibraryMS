@@ -36,7 +36,6 @@ public class CadastroClienteFrm extends SkeletonFrm{
 	private JTextField txtfValidade;
 	private JInternalFrame iFrameCadUser;
 	private JPanel contentPanel;
-	private CardLayout layout;
 	private JPanel dataPanel;
 	private JPanel cardPanel;
 	private Server server;
@@ -95,13 +94,13 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		//this.clearDataAndSetButtons(true, btnArray, addMode);
 		
 		btnTableConfirm.addActionListener(l -> {
-			changePanel("data");
+			changePanel(contentPanel, "data");
 			clienteCPF = model.getBean().getCPF();
 			this.clearDataAndSetButtons(false, btnArray, editMode);
 		});
 		
 		btnTableCancel.addActionListener(l -> {
-			changePanel("data");
+			changePanel(contentPanel, "data");
 			this.clearDataAndSetButtons(true, btnArray, addMode);
 		});
 		
@@ -135,7 +134,7 @@ public class CadastroClienteFrm extends SkeletonFrm{
 					this.clearDataAndSetButtons(false, btnArray, editMode);
 				}else {
 					this.clearDataAndSetButtons(false, btnArray, searchMode);
-					changePanel("table");
+					changePanel(contentPanel, "table");
 				}
 			}else
 				JOptionPane.showMessageDialog(null, "Nenhum cliente encontrado!");
@@ -256,8 +255,7 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		dataPanel = createMainPanel();
 		
 		contentPanel = new JPanel();
-		layout = new CardLayout();
-		contentPanel.setLayout(layout);
+		contentPanel.setLayout(new CardLayout());
 		contentPanel.add(dataPanel, "data");
 		contentPanel.add(tablePanel, "table");
 	}
@@ -271,8 +269,8 @@ public class CadastroClienteFrm extends SkeletonFrm{
 	}
 
 	@Override
-	protected void changePanel(String name) {
-		layout.show(contentPanel, name);
+	protected void changePanel(JPanel panel, String name) {
+		((CardLayout)panel.getLayout()).show(panel, name);
 	}
 
 	@Override
