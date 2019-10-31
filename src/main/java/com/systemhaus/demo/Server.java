@@ -74,6 +74,10 @@ public class Server {
 		return estanteRepository.returnBookCount(iSBN);
 	}
 	
+	public int returnAvailableBookCount(String iSBN) {
+		return estanteRepository.returnAvailableBookCount(iSBN);
+	}
+	
 	public Livro findBook(Livro l) {
 		return livroRepository.findByExample(l);
 	}

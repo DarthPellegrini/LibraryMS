@@ -92,7 +92,7 @@ public class Biblioteca {
 	public boolean havingOnlyThisAmountOfCopiesWontCauseProblems(String key, int quant) {
 		return this.allTheBooksAreAvailable(key) ? true : quant >= this.regLivros.get(key)[1];
 	}
-	
+
 	public void addDisponivel(String key) {
 		int value[] = new int[2];
 		if(!this.regLivros.containsKey(key)) {

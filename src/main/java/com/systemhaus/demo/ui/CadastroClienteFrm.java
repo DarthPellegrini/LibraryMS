@@ -91,8 +91,6 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		JButton[] btnArray = {btnAdicionarCliente, btnPesquisarCliente, btnSalvarCliente, 
 				btnDeletarCliente, btnCancelarCliente};
 		
-		//this.clearDataAndSetButtons(true, btnArray, addMode);
-		
 		btnTableConfirm.addActionListener(l -> {
 			changePanel(contentPanel, "data");
 			clienteCPF = model.getBean().getCPF();

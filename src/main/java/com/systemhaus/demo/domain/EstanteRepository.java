@@ -10,4 +10,5 @@ public interface EstanteRepository {
 	public boolean needsReorganization();
 	public void organizeLibrary();
 	public boolean havingOnlyThisAmountOfCopiesWontCauseProblems(String iSBN, int quantCopias);
+	public int returnAvailableBookCount(String iSBN);
 }

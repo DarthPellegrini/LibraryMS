@@ -4,10 +4,12 @@ import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.FlowLayout;
 import java.text.SimpleDateFormat;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
@@ -17,6 +19,7 @@ import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.BasicComponentFactory;
 import com.jgoodies.binding.list.SelectionInList;
 import com.jgoodies.binding.value.ValueModel;
+import com.jgoodies.common.collect.ArrayListModel;
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 import com.jgoodies.forms.layout.FormLayout;
 import com.systemhaus.demo.Server;
@@ -42,9 +45,9 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	private LivroSelectionPanel livroTablePanel;
 	private PresentationModel<Livro> livroModel;
 	private SelectionInList<Livro> livroSelection = new SelectionInList<>();
-	private JComboBox<String> cbEscolhaUser;
-	private JTextField txtfEscolhaUser;
-	private JButton btnPesquisaUser;
+	private JComboBox<String> cbEscolhaCliente;
+	private JTextField txtfEscolhaCliente;
+	private JButton btnPesquisaCliente;
 	private JTextField txtfNome;
 	private JTextField txtfCpf;
 	private JTextField txtfTelefone;
@@ -58,7 +61,6 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	private ClienteSelectionPanel clienteTablePanel;
 	private PresentationModel<Cliente> clienteModel;
 	private SelectionInList<Cliente> clienteSelection = new SelectionInList<>();
-	private JPanel contentPanel;
 	private Server server;
 	
 	public JInternalFrame createForm(Server server) {
@@ -84,6 +86,123 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		JButton btnDevolver = new JButton("Devolver");
 		panelTran.add(btnDevolver);
 		
+		JButton btnLivroTableConfirm = livroTablePanel.getConfirmButton();
+		JButton btnLivroTableCancel = livroTablePanel.getCancelButton();
+		
+		JButton btnClienteTableConfirm = clienteTablePanel.getConfirmButton();
+		JButton btnClienteTableCancel = clienteTablePanel.getCancelButton();
+		
+		btnPesquisaLivro.addActionListener(l -> {
+			txtfQuant.setText("");
+			txtfQuantDisp.setText("");
+			txtfRetirado.setText("");
+			livroTablePanel.clearList();
+			livroTablePanel.setSelectionToANewObject();
+			switch(((String)cbEscolhaLivro.getSelectedItem()).toString()) {
+				case "ISBN":
+					livroModel.getBean().setISBN(txtfEscolhaLivro.getText());
+					break;
+				case "Título":
+					livroModel.getBean().setTitulo(txtfEscolhaLivro.getText());
+					break;
+				case "Autor":
+					livroModel.getBean().setAutor(txtfEscolhaLivro.getText());
+					break;
+				case "Editora":
+					livroModel.getBean().setEditora(txtfEscolhaLivro.getText());
+					break;
+				case "Edição":
+					livroModel.getBean().setEdicao(server.strToInt(txtfEscolhaLivro.getText()));
+					break;
+				case "Nº de Páginas":
+					livroModel.getBean().setNumeroPaginas(server.strToInt(txtfEscolhaLivro.getText()));
+					break;
+			}
+			List<Livro> livros = server.findSimilarBooks(livroModel.getBean());
+			if (!livros.isEmpty()) {
+				livroSelection.setList(new ArrayListModel<>(livros));
+				if(livros.size() == 1) {
+					this.livroTablePanel.setSelectionToLastObject();
+					txtfQuant.setText(String.valueOf(server.returnBookCount(livroModel.getBean().getISBN())));
+					txtfQuantDisp.setText(String.valueOf(server.returnAvailableBookCount(livroModel.getBean().getISBN())));
+					txtfRetirado.setText(livroModel.getBean().isRetirado() ? "Retirado" : "Disponível");
+				}else {
+					changePanel(livroPanel,"table");
+				}
+			} else	JOptionPane.showMessageDialog(null, "Nenhum livro encontrado!");
+		});
+		
+		btnPesquisaCliente.addActionListener(l -> {
+			clienteTablePanel.clearList();
+			clienteTablePanel.setSelectionToANewObject();
+			switch(((String)cbEscolhaCliente.getSelectedItem()).toString()) {
+				case "Nome":
+					clienteModel.getBean().setNome(txtfEscolhaCliente.getText());
+					break;
+				case "CPF":
+					clienteModel.getBean().setCPF(txtfEscolhaCliente.getText());
+					break;
+				case "Telefone":
+					clienteModel.getBean().setTelefone(txtfEscolhaCliente.getText());
+					break;
+				case "Cidade":
+					clienteModel.getBean().setCidade(txtfEscolhaCliente.getText());
+					break;
+				case "Bairro":
+					clienteModel.getBean().setBairro(txtfEscolhaCliente.getText());
+					break;
+				case "Rua":
+					clienteModel.getBean().setRua(txtfEscolhaCliente.getText());
+					break;
+				case "Número":
+					clienteModel.getBean().setNumero(server.strToInt(txtfEscolhaCliente.getText()));
+					break;
+			}
+			List<Cliente> clientes = server.findSimilarClients(clienteModel.getBean());
+			if(!clientes.isEmpty()){
+				clienteSelection.setList(new ArrayListModel<>(clientes));
+				if(clientes.size() == 1) {
+					this.clienteTablePanel.setSelectionToLastObject();
+				}else {
+					changePanel(clientePanel, "table");
+				}
+			}else
+				JOptionPane.showMessageDialog(null, "Nenhum cliente encontrado!");
+		});
+		
+		btnRetirar.addActionListener(l -> {
+			//realiza a retirada
+			
+		});
+		
+		btnDevolver.addActionListener(l -> {
+			//realiza a devolução
+			
+		});
+		
+		btnLivroTableConfirm.addActionListener(l -> {
+			txtfQuant.setText(String.valueOf(server.returnBookCount(livroModel.getBean().getISBN())));
+			txtfQuantDisp.setText(String.valueOf(server.returnAvailableBookCount(livroModel.getBean().getISBN())));
+			txtfRetirado.setText(livroModel.getBean().isRetirado() ? "Retirado" : "Disponível");
+			changePanel(livroPanel, "data");
+		});
+		
+		btnLivroTableCancel.addActionListener(l -> {
+			livroTablePanel.clearList();
+			livroTablePanel.setSelectionToANewObject();
+			changePanel(livroPanel, "data");
+		});
+		
+		btnClienteTableConfirm.addActionListener(l -> {
+			changePanel(clientePanel, "data");
+		});
+		
+		btnClienteTableCancel.addActionListener(l -> {
+			changePanel(clientePanel, "data");
+			clienteTablePanel.clearList();
+			clienteTablePanel.setSelectionToANewObject();
+		});
+		
 		return panelTran;
 	}
 	
@@ -91,8 +210,6 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		ifTranBook = new JInternalFrame("Retiradas & Devoluções",false, true);
 		ifTranBook.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 		ifTranBook.setBounds(190, 35, 900, 400);
-		
-		contentPanel = new JPanel(new BorderLayout());
 		
 		/*
 		 * LIVRO
@@ -117,7 +234,6 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		ValueModel editoraAdapter = livroModel.getModel("editora");
 		ValueModel edicaoAdapter = livroModel.getModel("edicao");
 		ValueModel numPagAdapter = livroModel.getModel("numeroPaginas");
-		ValueModel retiradoAdapter = livroModel.getModel("retirado");
 		
 		txtfIsbn = BasicComponentFactory.createTextField(ISBNAdapter);
 		txtfIsbn.setEditable(false);
@@ -137,7 +253,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		txtfNPag = BasicComponentFactory.createIntegerField(numPagAdapter, 0);
 		txtfNPag.setEditable(false);
 		
-		txtfRetirado = new JTextField(); //BasicComponentFactory.createTextField(retiradoAdapter);
+		txtfRetirado = new JTextField(); 
 		txtfRetirado.setEditable(false);
 		
 		txtfQuant = new JTextField();
@@ -150,22 +266,21 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		livroPanel.setLayout(new CardLayout());
 		livroPanel.add(createLivroPanel(), "data");
 		livroPanel.add(livroTablePanel, "table");
-		contentPanel.add(livroPanel, BorderLayout.WEST);
 		
 		/*
 		 * CLIENTE
 		 */
 		
-		cbEscolhaUser = new JComboBox<String>();
-		cbEscolhaUser.addItem("Nome");
-		cbEscolhaUser.addItem("CPF");
-		cbEscolhaUser.addItem("Telefone");
-		cbEscolhaUser.addItem("Cidade");
-		cbEscolhaUser.addItem("Bairro");
-		cbEscolhaUser.addItem("Rua");
-		cbEscolhaUser.addItem("Número");
-		txtfEscolhaUser = new JTextField();
-		btnPesquisaUser = new JButton("Pesquisar");
+		cbEscolhaCliente = new JComboBox<String>();
+		cbEscolhaCliente.addItem("Nome");
+		cbEscolhaCliente.addItem("CPF");
+		cbEscolhaCliente.addItem("Telefone");
+		cbEscolhaCliente.addItem("Cidade");
+		cbEscolhaCliente.addItem("Bairro");
+		cbEscolhaCliente.addItem("Rua");
+		cbEscolhaCliente.addItem("Número");
+		txtfEscolhaCliente = new JTextField();
+		btnPesquisaCliente = new JButton("Pesquisar");
 		
 		clienteModel = new PresentationModel<Cliente>(clienteSelection);
 		clienteTablePanel = new ClienteSelectionPanel(clienteSelection);
@@ -212,7 +327,6 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		clientePanel.setLayout(new CardLayout());
 		clientePanel.add(createClientePanel(), "data");
 		clientePanel.add(clienteTablePanel, "table");
-		contentPanel.add(clientePanel, BorderLayout.EAST);
 	}
 	
 	private JPanel createLivroPanel() {
@@ -289,28 +403,28 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	
 	protected JPanel createMainPanel(){
 		DefaultFormBuilder builder = new DefaultFormBuilder(
-				new FormLayout("right:pref, 3dlu, pref:grow, 3dlu, pref, 9dlu, right:pref, 3dlu, pref:grow, 3dlu, pref", 
+				new FormLayout("pref, 3dlu, pref:grow, 3dlu, pref, 9dlu, pref, 3dlu, pref:grow, 3dlu, pref", 
 								"18dlu,18dlu,162dlu"));
-		builder.border(new EmptyBorder(5, 5, 5, 5));
+		builder.border(new EmptyBorder(5, 5, 10, 5));
 		
 		// Search Bars
 		builder.append(cbEscolhaLivro);
 		builder.append(txtfEscolhaLivro);
 		builder.append(btnPesquisaLivro);
-		builder.append(cbEscolhaUser);
-		builder.append(txtfEscolhaUser);
-		builder.append(btnPesquisaUser);
+		builder.append(cbEscolhaCliente);
+		builder.append(txtfEscolhaCliente);
+		builder.append(btnPesquisaCliente);
 		builder.nextLine(2);
 		
-		// panel que contém
-		builder.append(contentPanel,11);
+		builder.append(livroPanel,5);
+		builder.append(clientePanel,4);
 		
 		return builder.build();
 	}
 
 	@Override
 	protected boolean allFieldsAreFilled() {
-		// TODO Auto-generated method stub
+		// TODO verificar se ambos os panels estão preenchidos
 		return false;
 	}
 
@@ -321,8 +435,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 
 	@Override
 	protected void clearDataAndSetButtons(boolean clearData, JButton[] btnArray, boolean[] modeList) {
-		// TODO Auto-generated method stub
-		
+		//não é usado nesse form
 	}
 	
 }

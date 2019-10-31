@@ -35,6 +35,14 @@ public class EstanteDAO implements EstanteRepository {
 	}
 	
 	@Override
+	public int returnAvailableBookCount(String iSBN) {
+		if(biblioteca.getRegistroDeLivros().isEmpty())
+			return 0;
+		else
+			return biblioteca.getRegistroDeLivros().get(iSBN)[1];
+	}
+	
+	@Override
 	public int getCountOfEstantes() {
 		return biblioteca.getEstantes().size();
 	}
