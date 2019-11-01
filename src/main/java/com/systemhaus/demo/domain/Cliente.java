@@ -165,8 +165,8 @@ public class Cliente extends Model{
 		return new Cliente(nome,cpf,telefone,endereco,cartao);
 	}
 	
-	public boolean validade() {
-		return (!cpf.equals("") && !telefone.equals("") && endereco.validade() && cartao.validate());
+	public boolean validate() {
+		return (!cpf.equals("") && !telefone.equals("") && endereco.validate() && cartao.validate());
 	}
 	
 	public void clear() {

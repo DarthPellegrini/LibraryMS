@@ -7,8 +7,11 @@ import com.systemhaus.demo.dao.memory.LivroDAO;
 import com.systemhaus.demo.dao.memory.ClienteDAO;
 import com.systemhaus.demo.dao.memory.EnderecoDAO;
 import com.systemhaus.demo.dao.memory.EstanteDAO;
+import com.systemhaus.demo.dao.memory.EventoDAO;
 import com.systemhaus.demo.domain.Biblioteca;
+import com.systemhaus.demo.domain.Cartao;
 import com.systemhaus.demo.domain.EstanteRepository;
+import com.systemhaus.demo.domain.EventoRepository;
 import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.LivroRepository;
 import com.systemhaus.demo.domain.Prateleira;
@@ -22,6 +25,7 @@ public class Server {
 	private LivroRepository livroRepository;
 	private ClienteRepository clienteRepository;
 	private EnderecoRepository enderecoRepository;
+	private EventoRepository eventoRepository;
 	
 	public Server () {
 		Biblioteca biblioteca = new Biblioteca();
@@ -29,14 +33,17 @@ public class Server {
 		this.livroRepository = new LivroDAO(biblioteca);
 		this.clienteRepository = new ClienteDAO(biblioteca);
 		this.enderecoRepository = new EnderecoDAO(biblioteca);
+		this.eventoRepository = new EventoDAO(biblioteca);
 	}
 	
 	public Server(EstanteRepository estanteRepository, LivroRepository livroRepository, 
-			ClienteRepository clienteRepository, EnderecoRepository enderecoRepository) {
+			ClienteRepository clienteRepository, EnderecoRepository enderecoRepository,
+			EventoRepository eventoRepository) {
 		this.estanteRepository = estanteRepository;
 		this.livroRepository = livroRepository;
 		this.clienteRepository = clienteRepository;
 		this.enderecoRepository = enderecoRepository;
+		this.eventoRepository = eventoRepository;
 	}
 	
 	/*
@@ -78,12 +85,8 @@ public class Server {
 		return estanteRepository.returnAvailableBookCount(iSBN);
 	}
 	
-	public Livro findBook(Livro l) {
-		return livroRepository.findByExample(l);
-	}
-	
 	public List<Livro> findSimilarBooks(Livro l){
-		return livroRepository.findBySimilarExample(l);
+		return livroRepository.findBySimilarExample(l,false);
 	}
 	
 	public boolean editBook(String iSBNOriginal, Livro livro, int quantCopias) {
@@ -157,7 +160,7 @@ public class Server {
 	}
 	
 	public int addCliente(Cliente cliente) {
-		if(cliente.validade()) {
+		if(cliente.validate()) {
 			if(!enderecoRepository.thereAreTooManySimilarAddresses(cliente.getEndereco())) {
 				clienteRepository.save(cliente);
 				return 0; //sucesso
@@ -198,8 +201,28 @@ public class Server {
 		clienteRepository.createValidCode(cliente);
 	}
 	
+	/*
+	 * PARTE 3
+	 * Métodos relacionados às inserções
+	 */
+	
+	public List<Livro> findAvailableBooks(Livro l){
+		return livroRepository.findBySimilarExample(l,true);
+	}
+	
+	public int retirada(Livro livro, Cartao cartao) {
+		if (livro.validate()) {
+			if (cartao.validate()) {
+				if(!livro.isRetirado()) {
+					eventoRepository.save(livro, cartao, "R");
+					return 0; //sucesso
+				} else return 3; //erro todos os exemplares retirados
+			} else return 2; //erro cliente não preenchido
+		} else return 1; //erro livro não preenchido
+	}
+	
 	/**
-	 * Converte String para Inteiro com retorno automático de um 0 no caso de caracteres inválidos
+	 * Converte String para Inteiro com retorno automático de 0 no caso de caracteres inválidos
 	 * @param s inteiro a ser convertido
 	 * @return inteiro resultando
 	 */

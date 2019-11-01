@@ -22,28 +22,9 @@ public class LivroDAO implements LivroRepository {
 	public void save(Livro livro) {
 		biblioteca.addDisponivel(livro.getISBN());
 	}
-
-	@Override
-	public Livro findByExample(Livro example) {
-		return (example.getISBN().isEmpty() && example.getTitulo().isEmpty()
-			&& example.getAutor().isEmpty() && example.getEditora().isEmpty() 
-			&& (example.getEdicao() == 0 || example.getNumeroPaginas() == 0)) 
-			? null : biblioteca.getEstantes().stream()
-					.flatMap(e -> e.getPrateleiras().stream())
-					.flatMap(p -> p.getLivros().stream())
-					.filter(l -> {
-							return (l.getISBN().equals(example.getISBN()) || example.getISBN().isEmpty()) 
-									&& (l.getEdicao() == example.getEdicao() || example.getEdicao() == 0) 
-									&& (l.getTitulo().equals(example.getTitulo()) || example.getTitulo().isEmpty()) 
-									&& (l.getAutor().equals(example.getAutor()) || example.getAutor().isEmpty()) 
-									&& (l.getEditora().equals(example.getEditora()) || example.getEditora().isEmpty()) 
-									&& (l.getNumeroPaginas() == example.getNumeroPaginas() || example.getNumeroPaginas() == 0);
-					})
-					.findFirst().orElse(null);
-	}
 	
 	@Override
-	public List<Livro> findBySimilarExample(Livro example) {
+	public List<Livro> findBySimilarExample(Livro example, boolean findAvailable) {
 		List<String> ISBNs = new ArrayList<String>();
 		List<Livro> livros = new ArrayList<Livro>();
 		String[] dadosExemplo = {
@@ -73,8 +54,15 @@ public class LivroDAO implements LivroRepository {
 								|| example.getEditora().isEmpty()) 
 						&& (l.getNumeroPaginas() == example.getNumeroPaginas() || example.getNumeroPaginas() == 0)) {
 						if (!ISBNs.contains(l.getISBN())) {
-							ISBNs.add(l.getISBN());
-							livros.add(l);
+							if(findAvailable) {
+								if(!l.isRetirado()) {
+									ISBNs.add(l.getISBN());
+									livros.add(l);
+								}
+							} else {
+								ISBNs.add(l.getISBN());
+								livros.add(l);
+							}
 						}
 					}
 				}

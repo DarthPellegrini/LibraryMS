@@ -24,30 +24,6 @@ public class ServerTest {
 	}
 	
 	@Test
-	public void testFindBook() {
-		Server s = new Server();
-		s.addNewBookRoutine(new Livro("9780123456789", "Livro", "Agatha Cristie", "LP&M", 1, 250, false), 10);
-		s.addNewBookRoutine(new Livro("9780123456790", "Livro Novo", "Agatha Cristie", "LP&M", 1, 250, false), 7);
-		Livro l = s.findBook(new Livro("9780123456790", "Livro Novo", "Agatha Cristie", "LP&M", 1, 250, false));
-		Livro livro = l.copy();
-		livro.clear();
-		livro.setISBN("9780123456790");
-		assertTrue(l == null ? false : true);
-	}
-	
-	@Test
-	public void testErrorFindBook() {
-		Server s = new Server();
-		s.addNewBookRoutine(new Livro("9780123456789", "Livro", "Agatha Cristie", "LP&M", 1, 250, false), 10);
-		s.addNewBookRoutine(new Livro("9780123456790", "Livro Novo", "Agatha Cristie", "LP&M", 1, 250, false), 7);
-		s.addNewBookRoutine(new Livro("9780123456791", "Novo Livro Novo", "Agatha Cristie", "LP&M", 1, 250, false), 3);
-		Livro l = s.findBook(new Livro("9780123456790", "Livro Novo", "Agatha Cristie", "LP&M", 1, 250, false));
-		Livro livro = l.copy();
-		livro.clear();
-		assertFalse(l == null ? false : true);
-	}
-	
-	@Test
 	public void testErrorAddingBookNoEmptySpaceAvailable() {
 		Server s = new Server();
 		for(int i = 0; i <= 100; i++) {

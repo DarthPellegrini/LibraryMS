@@ -6,8 +6,6 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.Random;
 
-import org.hibernate.type.LocalDateTimeType;
-
 public class Cartao {
 
 	private String codigo; //codigo unico do cartao

@@ -51,7 +51,7 @@ public class Endereco {
 		this.numero = 0;
 	}
 	
-	public boolean validade() {
+	public boolean validate() {
 		return (numero > 0);
 	}
 	

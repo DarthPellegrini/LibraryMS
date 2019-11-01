@@ -18,6 +18,14 @@ public class Evento {
 		data = LocalDateTime.now();
 	}
 	
+	private Evento(Livro livro, Cartao cartao, TipoEvento tipoEvento, LocalDateTime data) {
+		super();
+		this.livro = livro;
+		this.cartao = cartao;
+		this.tipoEvento = tipoEvento;
+		this.data = data;
+	}
+	
 	public Livro getLivro() {
 		return livro;
 	}
@@ -41,6 +49,10 @@ public class Evento {
 	}
 	public void setData(LocalDateTime data) {
 		this.data = data;
+	}
+
+	public Evento copy() {
+		return new Evento(this.livro, this.cartao, this.tipoEvento, this.data);
 	}
 	
 }

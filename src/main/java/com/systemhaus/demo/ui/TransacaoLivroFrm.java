@@ -118,18 +118,18 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 					livroModel.getBean().setNumeroPaginas(server.strToInt(txtfEscolhaLivro.getText()));
 					break;
 			}
-			List<Livro> livros = server.findSimilarBooks(livroModel.getBean());
+			List<Livro> livros = server.findAvailableBooks(livroModel.getBean());
 			if (!livros.isEmpty()) {
-				livroSelection.setList(new ArrayListModel<>(livros));
-				if(livros.size() == 1) {
-					this.livroTablePanel.setSelectionToLastObject();
-					txtfQuant.setText(String.valueOf(server.returnBookCount(livroModel.getBean().getISBN())));
-					txtfQuantDisp.setText(String.valueOf(server.returnAvailableBookCount(livroModel.getBean().getISBN())));
-					txtfRetirado.setText(livroModel.getBean().isRetirado() ? "Retirado" : "Disponível");
-				}else {
-					changePanel(livroPanel,"table");
+				setDataFromGivenBookList(livros);
+			} else {
+				JOptionPane.showMessageDialog(null, "Nenhum livro buscado está disponível para retirada, somente devolução!");
+				livros = server.findSimilarBooks(livroModel.getBean());
+				if (!livros.isEmpty()) {
+					setDataFromGivenBookList(livros);
+				} else {
+					JOptionPane.showMessageDialog(null, "Nenhum livro encontrado!");
 				}
-			} else	JOptionPane.showMessageDialog(null, "Nenhum livro encontrado!");
+			}
 		});
 		
 		btnPesquisaCliente.addActionListener(l -> {
@@ -171,8 +171,24 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		});
 		
 		btnRetirar.addActionListener(l -> {
-			//realiza a retirada
-			
+			switch(server.retirada(livroModel.getBean(), clienteModel.getBean().getCartao())) {
+				case 0:
+					JOptionPane.showMessageDialog(null, "");
+					livroTablePanel.clearList();
+					clienteTablePanel.clearList();
+					livroTablePanel.setSelectionToANewObject();
+					clienteTablePanel.setSelectionToANewObject();
+					break;
+				case 1:
+					JOptionPane.showMessageDialog(null, "");
+					break;
+				case 2:
+					JOptionPane.showMessageDialog(null, "");
+					break;
+				case 3:
+					JOptionPane.showMessageDialog(null, "Os exemplares deste livro não estão disponíveis para retirada, somente devolução!");
+					break;
+			}
 		});
 		
 		btnDevolver.addActionListener(l -> {
@@ -198,9 +214,9 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		});
 		
 		btnClienteTableCancel.addActionListener(l -> {
-			changePanel(clientePanel, "data");
 			clienteTablePanel.clearList();
 			clienteTablePanel.setSelectionToANewObject();
+			changePanel(clientePanel, "data");
 		});
 		
 		return panelTran;
@@ -422,6 +438,18 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		return builder.build();
 	}
 
+	private void setDataFromGivenBookList(List<Livro> livros) {
+		livroSelection.setList(new ArrayListModel<>(livros));
+		if(livros.size() == 1) {
+			this.livroTablePanel.setSelectionToLastObject();
+			txtfQuant.setText(String.valueOf(server.returnBookCount(livroModel.getBean().getISBN())));
+			txtfQuantDisp.setText(String.valueOf(server.returnAvailableBookCount(livroModel.getBean().getISBN())));
+			txtfRetirado.setText(livroModel.getBean().isRetirado() ? "Retirado" : "Disponível");
+		}else {
+			changePanel(livroPanel,"table");
+		}
+	}
+	
 	@Override
 	protected boolean allFieldsAreFilled() {
 		// TODO verificar se ambos os panels estão preenchidos
