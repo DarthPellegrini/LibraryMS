@@ -38,13 +38,20 @@ public class Cartao {
 
 	public final String createNewValidCodCartao() {
 		String codigo = "";
-		for(int i = 0; i < 4; i++) {
-			String ranInt = "" + new Random().nextInt(10000);
-			for(int j = 0; j < (4-ranInt.length()); j++)
-				codigo += "";
-			codigo += ranInt;
+		while(codigo.length() < 16) {
+			codigo = "";
+			for(int i = 0; i < 4; i++) {
+				String ranInt = "" + new Random().nextInt(10000);
+				for(int j = 0; j < (4-ranInt.length()); j++)
+					codigo += "0";
+				codigo += ranInt;
+			}
 		}
 		return codigo;
+	}
+	
+	public boolean isEqual(Cartao cartao) {
+		return (this.codigo.equals(cartao.getCodigo()) && this.getValidade() == cartao.getValidade());
 	}
 	
 	public void clear() {

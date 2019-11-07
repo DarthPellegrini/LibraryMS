@@ -11,14 +11,14 @@ public class Biblioteca {
 	private List<Estante> estantes;
 	private List<Cliente> clientes;
 	private Map<String,int[]> regLivros;
-	private List<Evento> eventos;
+	private List<LivroRetirado> livrosRetirados;
 	private Map <String,TipoEvento> tipoEventos;
 
 	public Biblioteca() {
 		estantes = new ArrayList<Estante>();
 		clientes = new ArrayList<Cliente>();
 		regLivros = new HashMap<String,int[]>();
-		setEventos(new ArrayList<Evento>());
+		setLivrosRetirados(new ArrayList<LivroRetirado>());
 		setTipoEventos(new HashMap<String,TipoEvento>());
 		this.addEstante();
 	}
@@ -39,12 +39,12 @@ public class Biblioteca {
 		this.clientes = clientes;
 	}
 
-	public List<Evento> getEventos() {
-		return eventos;
+	public List<LivroRetirado> getLivrosRetirados() {
+		return livrosRetirados;
 	}
 
-	public void setEventos(List<Evento> eventos) {
-		this.eventos = eventos;
+	public void setLivrosRetirados(List<LivroRetirado> livrosRetirados) {
+		this.livrosRetirados = livrosRetirados;
 	}
 
 	public TipoEvento getTipoEvento(String key){
@@ -56,6 +56,7 @@ public class Biblioteca {
 	 */
 	private void setTipoEventos(Map<String,TipoEvento> tipoEventos) {
 		tipoEventos.put("R", new TipoEvento("Retirada","Evento de retirada de um livro por um cliente."));
+		tipoEventos.put("E", new TipoEvento("Renovação","Evento de estensão da retirada de um livro."));
 		tipoEventos.put("D", new TipoEvento("Devolução","Evento de devolução de um livro por um cliente."));
 		this.tipoEventos = tipoEventos;
 	}
@@ -124,19 +125,19 @@ public class Biblioteca {
 				this.regLivros.get(key)[1]-=quant};
 		this.regLivros.put(key, value);
 	}
-	public boolean addRetirado(String key) {
+	public boolean remRetirado(String key) {
 		if(this.regLivros.get(key)[1] + 1 > this.regLivros.get(key)[0])
 			return false;
 		int value[] = {this.regLivros.get(key)[0]
-				,this.regLivros.get(key)[1]++};
+				,++this.regLivros.get(key)[1]};
 		this.regLivros.put(key, value);
 		return true;
 	}
-	public boolean remRetirado(String key) {
+	public boolean addRetirado(String key) {
 		if(this.regLivros.get(key)[1] - 1 < 0)
 			return false;
 		int value[] = {this.regLivros.get(key)[0]
-				,this.regLivros.get(key)[1]--};
+				,--this.regLivros.get(key)[1]};
 		this.regLivros.put(key, value);
 		return true;
 	}
@@ -157,8 +158,8 @@ public class Biblioteca {
 		this.clientes.add(cliente.copy());
 	}
 
-	public void addEvento(Evento evento) {
-		this.eventos.add(evento);
+	public void addLivroRetirado(LivroRetirado livroRetirado) {
+		this.livrosRetirados.add(livroRetirado);
 	}
 	
 }

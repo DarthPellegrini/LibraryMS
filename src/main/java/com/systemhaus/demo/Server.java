@@ -7,11 +7,11 @@ import com.systemhaus.demo.dao.memory.LivroDAO;
 import com.systemhaus.demo.dao.memory.ClienteDAO;
 import com.systemhaus.demo.dao.memory.EnderecoDAO;
 import com.systemhaus.demo.dao.memory.EstanteDAO;
-import com.systemhaus.demo.dao.memory.EventoDAO;
+import com.systemhaus.demo.dao.memory.LivroRetiradoDAO;
 import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.Cartao;
 import com.systemhaus.demo.domain.EstanteRepository;
-import com.systemhaus.demo.domain.EventoRepository;
+import com.systemhaus.demo.domain.LivroRetiradoRepository;
 import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.LivroRepository;
 import com.systemhaus.demo.domain.Prateleira;
@@ -25,7 +25,7 @@ public class Server {
 	private LivroRepository livroRepository;
 	private ClienteRepository clienteRepository;
 	private EnderecoRepository enderecoRepository;
-	private EventoRepository eventoRepository;
+	private LivroRetiradoRepository livroRetiradoRepository;
 	
 	public Server () {
 		Biblioteca biblioteca = new Biblioteca();
@@ -33,17 +33,17 @@ public class Server {
 		this.livroRepository = new LivroDAO(biblioteca);
 		this.clienteRepository = new ClienteDAO(biblioteca);
 		this.enderecoRepository = new EnderecoDAO(biblioteca);
-		this.eventoRepository = new EventoDAO(biblioteca);
+		this.livroRetiradoRepository = new LivroRetiradoDAO(biblioteca);
 	}
 	
 	public Server(EstanteRepository estanteRepository, LivroRepository livroRepository, 
 			ClienteRepository clienteRepository, EnderecoRepository enderecoRepository,
-			EventoRepository eventoRepository) {
+			LivroRetiradoRepository livroRetiradoRepository) {
 		this.estanteRepository = estanteRepository;
 		this.livroRepository = livroRepository;
 		this.clienteRepository = clienteRepository;
 		this.enderecoRepository = enderecoRepository;
-		this.eventoRepository = eventoRepository;
+		this.livroRetiradoRepository = livroRetiradoRepository;
 	}
 	
 	/*
@@ -214,11 +214,11 @@ public class Server {
 		if (livro.validate()) {
 			if (cartao.validate()) {
 				if(!livro.isRetirado()) {
-					eventoRepository.save(livro, cartao, "R");
-					return 0; //sucesso
-				} else return 3; //erro todos os exemplares retirados
-			} else return 2; //erro cliente não preenchido
-		} else return 1; //erro livro não preenchido
+					return livroRetiradoRepository.save(livro, cartao, "R") ? 0 : 1;
+					// 0 = sucesso | 1 = erro de quantidade insuficiente
+				} else return 4; //erro todos os exemplares retirados
+			} else return 3; //erro cliente não preenchido
+		} else return 2; //erro livro não preenchido
 	}
 	
 	/**

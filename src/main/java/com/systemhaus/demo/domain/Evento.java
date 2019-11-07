@@ -5,39 +5,21 @@ import java.time.LocalDateTime;
 public class Evento {
 	
 	//registro de eventos
-	private Livro livro; //referência ao livro
-	private Cartao cartao; //referência ao cartão do cliente
 	private TipoEvento tipoEvento; //tipo de evento relacionado ao livro
 	private LocalDateTime data; //data do evento
 	
-	public Evento(Livro livro, Cartao cartao, TipoEvento tipoEvento) {
+	public Evento(TipoEvento tipoEvento) {
 		super();
-		this.livro = livro;
-		this.cartao = cartao;
 		this.tipoEvento = tipoEvento;
-		data = LocalDateTime.now();
+		this.data = LocalDateTime.now();
 	}
 	
-	private Evento(Livro livro, Cartao cartao, TipoEvento tipoEvento, LocalDateTime data) {
+	private Evento(TipoEvento tipoEvento, LocalDateTime data) {
 		super();
-		this.livro = livro;
-		this.cartao = cartao;
 		this.tipoEvento = tipoEvento;
 		this.data = data;
 	}
 	
-	public Livro getLivro() {
-		return livro;
-	}
-	public void setLivro(Livro livro) {
-		this.livro = livro;
-	}
-	public Cartao getCartao() {
-		return cartao;
-	}
-	public void setCartao(Cartao cartao) {
-		this.cartao = cartao;
-	}
 	public TipoEvento getTipoEvento() {
 		return tipoEvento;
 	}
@@ -50,9 +32,8 @@ public class Evento {
 	public void setData(LocalDateTime data) {
 		this.data = data;
 	}
-
-	public Evento copy() {
-		return new Evento(this.livro, this.cartao, this.tipoEvento, this.data);
-	}
 	
+	public Evento copy() {
+		return new Evento(this.tipoEvento, this.data);
+	}
 }

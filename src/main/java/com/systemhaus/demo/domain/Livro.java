@@ -137,6 +137,11 @@ public class Livro extends Model{
 		return new Livro(ISBN, titulo, autor, editora, edicao, numeroPaginas, retirado);
 	}
 	
+	public boolean isEqual(Livro l) {
+		return (ISBN.equals(l.getISBN()) && titulo.equals(l.getTitulo()) && autor.equals(l.getAutor())
+				&& editora.equals(l.getEditora()) && edicao == l.getEdicao() && numeroPaginas == l.getNumeroPaginas() && retirado == l.isRetirado());
+	}
+	
 	public void clear() {
 		this.ISBN = "";
 		this.titulo = "";

@@ -61,6 +61,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	private ClienteSelectionPanel clienteTablePanel;
 	private PresentationModel<Cliente> clienteModel;
 	private SelectionInList<Cliente> clienteSelection = new SelectionInList<>();
+	private JPanel contentPanel;
 	private Server server;
 	
 	public JInternalFrame createForm(Server server) {
@@ -72,7 +73,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 
 	protected void initLayout() {
 		ifTranBook.getContentPane().setLayout(new BorderLayout());	
-		ifTranBook.getContentPane().add(createMainPanel(), BorderLayout.CENTER);
+		ifTranBook.getContentPane().add(contentPanel, BorderLayout.CENTER);
 		ifTranBook.getContentPane().add(createButtonBar(), BorderLayout.SOUTH);
 	}
 
@@ -82,6 +83,9 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		
 		JButton btnRetirar = new JButton("Retirar");
 		panelTran.add(btnRetirar);
+		
+		JButton btnRenovar = new JButton("Renovar");
+		panelTran.add(btnRenovar);
 		
 		JButton btnDevolver = new JButton("Devolver");
 		panelTran.add(btnDevolver);
@@ -122,10 +126,10 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 			if (!livros.isEmpty()) {
 				setDataFromGivenBookList(livros);
 			} else {
-				JOptionPane.showMessageDialog(null, "Nenhum livro buscado está disponível para retirada, somente devolução!");
 				livros = server.findSimilarBooks(livroModel.getBean());
 				if (!livros.isEmpty()) {
 					setDataFromGivenBookList(livros);
+					JOptionPane.showMessageDialog(null, "Nenhum livro buscado está disponível para retirada, somente devolução!");
 				} else {
 					JOptionPane.showMessageDialog(null, "Nenhum livro encontrado!");
 				}
@@ -173,27 +177,38 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		btnRetirar.addActionListener(l -> {
 			switch(server.retirada(livroModel.getBean(), clienteModel.getBean().getCartao())) {
 				case 0:
-					JOptionPane.showMessageDialog(null, "");
+					JOptionPane.showMessageDialog(null, "O livro foi retirado com sucesso!");
 					livroTablePanel.clearList();
 					clienteTablePanel.clearList();
 					livroTablePanel.setSelectionToANewObject();
 					clienteTablePanel.setSelectionToANewObject();
+					txtfRetirado.setText(""); txtfQuant.setText(""); txtfQuantDisp.setText("");
 					break;
 				case 1:
-					JOptionPane.showMessageDialog(null, "");
+					JOptionPane.showMessageDialog(null, "O livro buscado não possui cópias disponíveis.");
 					break;
 				case 2:
-					JOptionPane.showMessageDialog(null, "");
+					JOptionPane.showMessageDialog(null, "O livro buscado não foi encontrado.");
 					break;
 				case 3:
+					JOptionPane.showMessageDialog(null, "O cliente não foi selecionado, por favor, selecione-o.");
+					break;
+				case 4:
 					JOptionPane.showMessageDialog(null, "Os exemplares deste livro não estão disponíveis para retirada, somente devolução!");
 					break;
 			}
 		});
 		
+		btnRenovar.addActionListener(l -> {
+			//realiza a renovação
+			
+			//TODO: abrir tela de busca de renovação com o cliente e/ou o livro preenchido
+		});
+		
 		btnDevolver.addActionListener(l -> {
 			//realiza a devolução
 			
+			//TODO: abrir tela de busca de renovação com o cliente e/ou o livro preenchido
 		});
 		
 		btnLivroTableConfirm.addActionListener(l -> {
@@ -206,6 +221,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		btnLivroTableCancel.addActionListener(l -> {
 			livroTablePanel.clearList();
 			livroTablePanel.setSelectionToANewObject();
+			txtfRetirado.setText(""); txtfQuant.setText(""); txtfQuantDisp.setText("");
 			changePanel(livroPanel, "data");
 		});
 		
@@ -343,6 +359,8 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		clientePanel.setLayout(new CardLayout());
 		clientePanel.add(createClientePanel(), "data");
 		clientePanel.add(clienteTablePanel, "table");
+		
+		contentPanel = createMainPanel();
 	}
 	
 	private JPanel createLivroPanel() {
