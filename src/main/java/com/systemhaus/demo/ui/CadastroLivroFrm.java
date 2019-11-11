@@ -140,6 +140,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		});
 		
 		btnCancelarLivro.addActionListener(l -> {
+			changePanel(contentPanel,"data");
 			this.clearDataAndSetButtons(true, btnArray, addMode);
 		});
 		

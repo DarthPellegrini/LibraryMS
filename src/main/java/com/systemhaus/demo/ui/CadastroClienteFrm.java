@@ -160,6 +160,7 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		});
 		
 		btnCancelarCliente.addActionListener(l -> {
+			changePanel(contentPanel,"data");
 			this.clearDataAndSetButtons(true, btnArray, addMode);
 		});
 		
