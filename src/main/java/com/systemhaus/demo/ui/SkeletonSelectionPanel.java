@@ -26,11 +26,12 @@ public abstract class SkeletonSelectionPanel<Bean> extends JPanel{
 	private AbstractTableAdapter<Bean> adapter;
 	private JButton ok;
 	private JButton cancel;
+	private JScrollPane scrollPane;
 	
-	public SkeletonSelectionPanel(SelectionInList<Bean> selection, Bean bean, AbstractTableAdapter<Bean> adapter) { 
+	public SkeletonSelectionPanel(SelectionInList<Bean> selection, Bean bean, AbstractTableAdapter<Bean> adapter, int tableWidthModifier, int tableHeightModifier) { 
 		this.selection = selection;
 		this.adapter = adapter;
-		this.initializeTable(bean);
+		this.initializeTable(bean, tableWidthModifier, tableHeightModifier);
 		this.initializeButtons();
 	}
 	
@@ -51,13 +52,13 @@ public abstract class SkeletonSelectionPanel<Bean> extends JPanel{
 		selection.setSelectionIndex(selection.getList().size()-1);
 	}
 	
-	private void initializeTable(Bean bean) {
+	private void initializeTable(Bean bean, int tableWidthModifier, int tableHeightModifier) {
 		JTable jtable = new JTable(adapter);
 		jtable.setSelectionModel(new SingleListSelectionAdapter(selection.getSelectionIndexHolder()));
 		this.setSelectionToANewObject(bean);
-		JScrollPane scrollPane = new JScrollPane(jtable);
+		scrollPane = new JScrollPane(jtable);
 		scrollPane.setPreferredSize(
-                new Dimension(jtable.getPreferredSize().width,jtable.getRowHeight()*10));
+                new Dimension(jtable.getPreferredSize().width+(jtable.getPreferredSize().width/3*tableWidthModifier),jtable.getRowHeight()*tableHeightModifier));
 	    this.add(scrollPane, BorderLayout.CENTER);
 	}
 	

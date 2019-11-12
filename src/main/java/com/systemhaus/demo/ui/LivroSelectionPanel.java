@@ -10,7 +10,7 @@ public class LivroSelectionPanel extends SkeletonSelectionPanel<Livro>{
 	 */
 	private static final long serialVersionUID = 1L;
 	public LivroSelectionPanel(SelectionInList<Livro> livroSelection) {
-		super(livroSelection, new Livro(), new LivroTableModel(livroSelection));
+		super(livroSelection, new Livro(), new LivroTableModel(livroSelection),0,10);
 	}
 
 	public final void setSelectionToANewObject() {
