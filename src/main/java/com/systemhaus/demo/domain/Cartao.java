@@ -8,10 +8,12 @@ import java.util.Random;
 
 public class Cartao {
 
+	private String nome; //nome do cliente impresso no cartão
 	private String codigo; //codigo unico do cartao
 	private LocalDateTime validade; //validade do cartao
 	
-	public Cartao(String codigo, LocalDateTime validade) {
+	public Cartao(String nome, String codigo, LocalDateTime validade) {
+		this.nome = nome;
 		this.codigo = codigo;
 		this.validade = validade;
 	}
@@ -20,6 +22,14 @@ public class Cartao {
 		this.clear();
 	}
 	
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
 	public String getCodigo() {
 		return codigo;
 	}
@@ -51,10 +61,11 @@ public class Cartao {
 	}
 	
 	public boolean isEqual(Cartao cartao) {
-		return (this.codigo.equals(cartao.getCodigo()) && this.getValidade() == cartao.getValidade());
+		return (this.nome.equals(cartao.getNome()) && this.codigo.equals(cartao.getCodigo()) && this.getValidade() == cartao.getValidade());
 	}
 	
 	public void clear() {
+		this.nome = "";
 		this.codigo = "";
 		this.validade = LocalDateTime.now().plusYears(4);
 	}

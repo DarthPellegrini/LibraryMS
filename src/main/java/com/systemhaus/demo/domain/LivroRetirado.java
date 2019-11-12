@@ -1,11 +1,22 @@
 package com.systemhaus.demo.domain;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-public class LivroRetirado {
+import com.jgoodies.binding.beans.Model;
 
+public class LivroRetirado extends Model{
+
+	/*
+	 * Serial e Bindings
+	 */
+	private static final long serialVersionUID = 1L;
+	//private static final String PROPERTY_LIVRO = "livro";
+	
 	private Livro livro; //referência ao livro
 	private Cartao cartao; //referência ao cartão do cliente
 	private Evento retirada; //evento de retirada do livro
@@ -18,9 +29,20 @@ public class LivroRetirado {
 		this.cartao = cartao;
 		this.retirada = retirada;
 		this.renovacoes = new ArrayList<Evento>();
-		this.dataDevolucao = retirada.getData().plusDays(7);
+		this.dataDevolucao = retirada.getDataRaw().plusDays(7);
 	}
 	
+	public LivroRetirado() {
+		this.livro = new Livro();
+		this.cartao = new Cartao();
+		this.retirada = new Evento(new TipoEvento("",""));
+		this.renovacoes = new ArrayList<Evento>();
+		this.devolucao = new Evento(new TipoEvento("",""));
+		this.dataDevolucao = LocalDateTime.now();
+		livro.clear();
+		cartao.clear();
+	}
+
 	public Livro getLivro() {
 		return livro;
 	}
@@ -48,8 +70,8 @@ public class LivroRetirado {
 	public Evento getDevolucao() {
 		return devolucao;
 	}
-	public LocalDateTime getDataDevolucao() {
-		return dataDevolucao;
+	public Date getDataDevolucao() {
+		return Date.from(this.dataDevolucao.atZone(ZoneId.systemDefault()).toInstant());
 	}
 	
 	public void devolver(Evento evento) {
@@ -58,11 +80,15 @@ public class LivroRetirado {
 	
 	public void estenderRetirada(Evento evento) {
 		getRenovacoes().add(evento.copy());
-		setDataDevolucao(evento.getData().plusDays(7));
+		setDataDevolucao(
+				Date.from(evento.getDataRaw().plusDays(7)
+					.atZone(ZoneId.systemDefault()).toInstant()));
 	}
 
-	private void setDataDevolucao(LocalDateTime data) {
-		this.dataDevolucao = data;
+	private void setDataDevolucao(Date data) {
+		this.dataDevolucao = Instant.ofEpochMilli(data.getTime())
+		        .atZone(ZoneId.systemDefault())
+		        .toLocalDateTime();
 		
 	}
 	

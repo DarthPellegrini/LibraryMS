@@ -1,6 +1,9 @@
 package com.systemhaus.demo.domain;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class Evento {
 	
@@ -26,11 +29,17 @@ public class Evento {
 	public void setTipoEvento(TipoEvento tipoEvento) {
 		this.tipoEvento = tipoEvento;
 	}
-	public LocalDateTime getData() {
+	
+	public Date getData() {
+		return Date.from(this.data.atZone(ZoneId.systemDefault()).toInstant());
+	}
+	public LocalDateTime getDataRaw() {
 		return data;
 	}
-	public void setData(LocalDateTime data) {
-		this.data = data;
+	public void setData(Date data) {
+		this.data = Instant.ofEpochMilli(data.getTime())
+				        .atZone(ZoneId.systemDefault())
+				        .toLocalDateTime();
 	}
 	
 	public Evento copy() {

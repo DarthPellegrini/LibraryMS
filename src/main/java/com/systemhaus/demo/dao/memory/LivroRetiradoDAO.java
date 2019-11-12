@@ -34,9 +34,9 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 		if (livroRetirado.getRenovacoes().size() < 3) {
 			LocalDateTime dataRetirado = LocalDateTime.now();
 			if(livroRetirado.getRenovacoes().isEmpty())
-				dataRetirado = livroRetirado.getRetirada().getData();
+				dataRetirado = livroRetirado.getRetirada().getDataRaw();
 			else
-				dataRetirado = livroRetirado.getRenovacoes().get(livroRetirado.getRenovacoes().size()-1).getData();
+				dataRetirado = livroRetirado.getRenovacoes().get(livroRetirado.getRenovacoes().size()-1).getDataRaw();
 			if(dataRetirado.plusDays(2).isAfter(LocalDateTime.now())) {
 				livroRetirado.estenderRetirada(new Evento(biblioteca.getTipoEvento(key)));
 				return 0; //sucesso

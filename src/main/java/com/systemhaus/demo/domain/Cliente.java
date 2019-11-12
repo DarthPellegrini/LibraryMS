@@ -30,25 +30,25 @@ public class Cliente extends Model{
 			String cidade, String bairro, String rua, int numero, 
 			String codigo, Date validade) {
 		super();
+		this.endereco = new Endereco();
+		this.cartao = new Cartao();
 		this.setNome(nome);
 		this.setCPF(cpf);
 		this.setTelefone(telefone);
-		this.endereco = new Endereco();
 		this.getEndereco().setCidade(cidade);
 		this.getEndereco().setBairro(bairro);
 		this.getEndereco().setRua(rua);
-		this.cartao = new Cartao();
 		this.getEndereco().setNumero(numero);
 		this.getCartao().setCodigo(codigo);
 	}
 	
 	public Cliente(String nome, String cpf, String telefone, Endereco endereco, Cartao cartao) {
 		super();
+		this.setEndereco(endereco);
+		this.setCartao(cartao);
 		this.setNome(nome);
 		this.setCPF(cpf);
 		this.setTelefone(telefone);
-		this.setEndereco(endereco);
-		this.setCartao(cartao);
 	}
 	
 	public Cliente() {
@@ -64,6 +64,7 @@ public class Cliente extends Model{
 	public void setNome(String nome) {
 		String oldValue = this.nome;
 		this.nome = nome;
+		this.cartao.setNome(nome);
 		firePropertyChange(PROPERTY_NOME, oldValue, this.nome);
 	}
 	public String getCPF() {

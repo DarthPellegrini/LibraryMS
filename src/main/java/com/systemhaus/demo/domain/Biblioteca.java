@@ -52,11 +52,11 @@ public class Biblioteca {
 	}
 	
 	/*
-	 * instanciação dos tipo de eventos padrão, será substituído pelos dados já existentes no banco
+	 * instanciação dos tipo de eventos padrão, TODO:será substituído pelos dados já existentes no banco
 	 */
 	private void setTipoEventos(Map<String,TipoEvento> tipoEventos) {
 		tipoEventos.put("R", new TipoEvento("Retirada","Evento de retirada de um livro por um cliente."));
-		tipoEventos.put("E", new TipoEvento("Renovação","Evento de estensão da retirada de um livro."));
+		tipoEventos.put("E", new TipoEvento("Renovação","Evento de extensão da retirada de um livro."));
 		tipoEventos.put("D", new TipoEvento("Devolução","Evento de devolução de um livro por um cliente."));
 		this.tipoEventos = tipoEventos;
 	}
