@@ -168,7 +168,7 @@ public class ServerTest {
 		s.addCliente(new Cliente("Leonardo","02789345278","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448880",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		s.addCliente(new Cliente("Leonardo","02789345279","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448881",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448876",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		int result = s.addCliente(new Cliente("Leonardo","02789345274","5551997359979","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		assertEquals(0,result);
 	}
@@ -178,7 +178,7 @@ public class ServerTest {
 		Server s = new Server();
 		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448876",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		Cliente c = new Cliente();
 		c.setCidade("Porto");
 		java.util.List<Cliente> list = s.findSimilarClients(c);
@@ -190,7 +190,7 @@ public class ServerTest {
 		Server s = new Server();
 		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448876",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		Cliente c = new Cliente();
 		c.setCidade("Porta");
 		java.util.List<Cliente> list = s.findSimilarClients(c);
@@ -202,7 +202,7 @@ public class ServerTest {
 		Server s = new Server();
 		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448876",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		Cliente c = new Cliente();
 		c.setCPF("02789345280");
 		java.util.List<Cliente> list = s.findSimilarClients(c);
@@ -216,9 +216,9 @@ public class ServerTest {
 	@Test
 	public void testErrorEditClientWithExistingCPF() {
 		Server s = new Server();
-		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Rio Pardo","Higienópolis","Almirante Alexandrino",281,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Pellegrini","02789345280","5551999999998","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Eduarda","02789345281","5551999999997","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448876",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		Cliente c = new Cliente();
 		c.setNome("Leonardo");
 		java.util.List<Cliente> list = s.findSimilarClients(c);
@@ -234,7 +234,7 @@ public class ServerTest {
 		Server s = new Server();
 		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448878",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		Cliente c = new Cliente();
 		c.setNome("Leonardo");
 		java.util.List<Cliente> list = s.findSimilarClients(c);
@@ -250,7 +250,7 @@ public class ServerTest {
 		Server s = new Server();
 		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448878",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		Cliente c = new Cliente();
 		c.setCPF("02789345280");
 		java.util.List<Cliente> list = s.findSimilarClients(c);

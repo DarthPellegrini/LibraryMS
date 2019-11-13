@@ -215,7 +215,7 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		iFrameCadUser.setBounds(190, 35, 735, 380);
 		
 		model = new PresentationModel<Cliente>(clienteSelection);
-		tablePanel = new ClienteSelectionPanel(clienteSelection);
+		tablePanel = new ClienteSelectionPanel(clienteSelection, 1, 18);
 		cardPanel = new JPanel(new FlowLayout());
 		
 		ValueModel NomeAdapter = model.getModel("nome");

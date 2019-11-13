@@ -8,8 +8,8 @@ public class LivroRetiradoSelectionPanel extends SkeletonSelectionPanel<LivroRet
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public LivroRetiradoSelectionPanel(SelectionInList<LivroRetirado> livroRetiradoSelection) {
-		super(livroRetiradoSelection, new LivroRetirado(), new LivroRetiradoTableModel(livroRetiradoSelection), 1,18);
+	public LivroRetiradoSelectionPanel(SelectionInList<LivroRetirado> livroRetiradoSelection, double widthModifier, int heightModifier) {
+		super(livroRetiradoSelection, new LivroRetirado(), new LivroRetiradoTableModel(livroRetiradoSelection), widthModifier, heightModifier);
 	}
 
 	public final void setSelectionToANewObject() {

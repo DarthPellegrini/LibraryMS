@@ -31,12 +31,12 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 	//TODO: método de busca de livroRetirado e passar os dados de cliente/livro por parâmetro
 	@Override
 	public int estenderRetirada(LivroRetirado livroRetirado, String key) {
-		if (livroRetirado.getRenovacoes().size() < 3) {
+		if (livroRetirado.getTotalRenovacoes() < 3) {
 			LocalDateTime dataRetirado = LocalDateTime.now();
-			if(livroRetirado.getRenovacoes().isEmpty())
+			if(livroRetirado.getTotalRenovacoes() == 0)
 				dataRetirado = livroRetirado.getRetirada().getDataRaw();
 			else
-				dataRetirado = livroRetirado.getRenovacoes().get(livroRetirado.getRenovacoes().size()-1).getDataRaw();
+				dataRetirado = livroRetirado.getLastRenovacao().getDataRaw();
 			if(dataRetirado.plusDays(2).isAfter(LocalDateTime.now())) {
 				livroRetirado.estenderRetirada(new Evento(biblioteca.getTipoEvento(key)));
 				return 0; //sucesso

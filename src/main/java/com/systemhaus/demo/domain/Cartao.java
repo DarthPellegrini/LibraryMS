@@ -1,6 +1,7 @@
 package com.systemhaus.demo.domain;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -72,6 +73,10 @@ public class Cartao {
 
 	public boolean validate() {
 		return (codigo.length() == 16 && validade.isAfter(LocalDateTime.now()));
+	}
+
+	public LocalDate getValidadeAsLocalDate() {
+		return validade.toLocalDate();
 	}
 	
 	

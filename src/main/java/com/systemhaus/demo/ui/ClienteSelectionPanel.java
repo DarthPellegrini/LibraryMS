@@ -9,8 +9,8 @@ public class ClienteSelectionPanel extends SkeletonSelectionPanel<Cliente>{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public ClienteSelectionPanel(SelectionInList<Cliente> selection) {
-		super(selection, new Cliente(), new ClienteTableModel(selection),0,15);
+	public ClienteSelectionPanel(SelectionInList<Cliente> selection, double widthModifier, int heightModifier) {
+		super(selection, new Cliente(), new ClienteTableModel(selection), widthModifier, heightModifier);
 	}
 	
 	public final void setSelectionToANewObject() {

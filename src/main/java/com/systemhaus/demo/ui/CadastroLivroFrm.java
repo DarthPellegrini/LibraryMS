@@ -194,7 +194,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		iFrameCadLivro.setBounds(190, 35, 480, 300);
 		
 		model = new PresentationModel<Livro>(livroSelection);
-		tablePanel = new LivroSelectionPanel(livroSelection);
+		tablePanel = new LivroSelectionPanel(livroSelection, 1, 20);
 		
 		ValueModel ISBNAdapter = model.getModel("ISBN");
 		ValueModel tituloAdapter = model.getModel("titulo");

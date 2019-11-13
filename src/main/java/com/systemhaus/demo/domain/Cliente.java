@@ -1,5 +1,6 @@
 package com.systemhaus.demo.domain;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 import com.jgoodies.binding.beans.Model;
@@ -176,6 +177,10 @@ public class Cliente extends Model{
 		this.telefone = "";
 		this.endereco = new Endereco();
 		this.cartao = new Cartao();
+	}
+
+	public LocalDate getValidadeAsLocalDate() {
+		return cartao.getValidadeAsLocalDate();
 	}
 	
 }

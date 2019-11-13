@@ -25,6 +25,7 @@ import com.jgoodies.forms.layout.FormLayout;
 import com.systemhaus.demo.Server;
 import com.systemhaus.demo.domain.Cliente;
 import com.systemhaus.demo.domain.Livro;
+import com.systemhaus.demo.domain.LivroRetirado;
 
 public class TransacaoLivroFrm extends SkeletonFrm{
 
@@ -41,7 +42,6 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	private JTextField txtfAutor;
 	private JTextField txtfEditora;
 	private JTextField txtfRetirado;
-	private JPanel livroPanel;
 	private LivroSelectionPanel livroTablePanel;
 	private PresentationModel<Livro> livroModel;
 	private SelectionInList<Livro> livroSelection = new SelectionInList<>();
@@ -57,11 +57,13 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	private JTextField txtfNumero;
 	private JTextField txtfCodCartao;
 	private JTextField txtfValidade;
-	private JPanel clientePanel;
 	private ClienteSelectionPanel clienteTablePanel;
 	private PresentationModel<Cliente> clienteModel;
 	private SelectionInList<Cliente> clienteSelection = new SelectionInList<>();
 	private JPanel contentPanel;
+	private LivroRetiradoSelectionPanel livroRetiradoTablePanel;
+	//private PresentationModel<LivroRetirado> livroRetiradoModel;
+	private SelectionInList<LivroRetirado> livroRetiradoSelection = new SelectionInList<>();
 	private Server server;
 	
 	public JInternalFrame createForm(Server server) {
@@ -95,6 +97,9 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		
 		JButton btnClienteTableConfirm = clienteTablePanel.getConfirmButton();
 		JButton btnClienteTableCancel = clienteTablePanel.getCancelButton();
+		
+		JButton btnRetiradaTableConfirm = livroRetiradoTablePanel.getConfirmButton();
+		JButton btnRetiradaTableCancel = livroRetiradoTablePanel.getCancelButton();
 		
 		btnPesquisaLivro.addActionListener(l -> {
 			txtfQuant.setText("");
@@ -168,7 +173,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 				if(clientes.size() == 1) {
 					this.clienteTablePanel.setSelectionToLastObject();
 				}else {
-					changePanel(clientePanel, "table");
+					changePanel(contentPanel, "tableC");
 				}
 			}else
 				JOptionPane.showMessageDialog(null, "Nenhum cliente encontrado!");
@@ -201,7 +206,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		
 		btnRenovar.addActionListener(l -> {
 			//realiza a renovação
-			
+			changePanel(contentPanel,"tableLR");
 			//TODO: abrir tela de busca de renovação com o cliente e/ou o livro preenchido
 		});
 		
@@ -215,24 +220,34 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 			txtfQuant.setText(String.valueOf(server.returnBookCount(livroModel.getBean().getISBN())));
 			txtfQuantDisp.setText(String.valueOf(server.returnAvailableBookCount(livroModel.getBean().getISBN())));
 			txtfRetirado.setText(livroModel.getBean().isRetirado() ? "Retirado" : "Disponível");
-			changePanel(livroPanel, "data");
+			changePanel(contentPanel, "data");
 		});
 		
 		btnLivroTableCancel.addActionListener(l -> {
 			livroTablePanel.clearList();
 			livroTablePanel.setSelectionToANewObject();
 			txtfRetirado.setText(""); txtfQuant.setText(""); txtfQuantDisp.setText("");
-			changePanel(livroPanel, "data");
+			changePanel(contentPanel, "data");
 		});
 		
 		btnClienteTableConfirm.addActionListener(l -> {
-			changePanel(clientePanel, "data");
+			changePanel(contentPanel, "data");
 		});
 		
 		btnClienteTableCancel.addActionListener(l -> {
 			clienteTablePanel.clearList();
 			clienteTablePanel.setSelectionToANewObject();
-			changePanel(clientePanel, "data");
+			changePanel(contentPanel, "data");
+		});
+		
+		btnRetiradaTableConfirm.addActionListener(l -> {
+			changePanel(contentPanel, "data");
+		});
+		
+		btnRetiradaTableCancel.addActionListener(l -> {
+			livroRetiradoTablePanel.clearList();
+			livroRetiradoTablePanel.setSelectionToANewObject();
+			changePanel(contentPanel, "data");
 		});
 		
 		return panelTran;
@@ -241,7 +256,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	protected void initComponents() {
 		ifTranBook = new JInternalFrame("Retiradas & Devoluções",false, true);
 		ifTranBook.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-		ifTranBook.setBounds(190, 35, 900, 400);
+		ifTranBook.setBounds(190, 35, 900, 420);
 		
 		/*
 		 * LIVRO
@@ -258,7 +273,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		btnPesquisaLivro = new JButton("Pesquisar");
 		
 		livroModel = new PresentationModel<Livro>(livroSelection);
-		livroTablePanel = new LivroSelectionPanel(livroSelection);
+		livroTablePanel = new LivroSelectionPanel(livroSelection, 1.7, 18);
 		
 		ValueModel ISBNAdapter = livroModel.getModel("ISBN");
 		ValueModel tituloAdapter = livroModel.getModel("titulo");
@@ -294,10 +309,10 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		txtfQuantDisp = new JTextField();
 		txtfQuantDisp.setEditable(false);
 		
-		livroPanel = new JPanel();
-		livroPanel.setLayout(new CardLayout());
-		livroPanel.add(createLivroPanel(), "data");
-		livroPanel.add(livroTablePanel, "table");
+		//livroPanel = new JPanel();
+		//livroPanel.setLayout(new CardLayout());
+		//livroPanel.add(createLivroPanel(), "data");
+		//livroPanel.add(livroTablePanel, "table");
 		
 		/*
 		 * CLIENTE
@@ -315,7 +330,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		btnPesquisaCliente = new JButton("Pesquisar");
 		
 		clienteModel = new PresentationModel<Cliente>(clienteSelection);
-		clienteTablePanel = new ClienteSelectionPanel(clienteSelection);
+		clienteTablePanel = new ClienteSelectionPanel(clienteSelection, 1.2, 18);
 		
 		ValueModel NomeAdapter = clienteModel.getModel("nome");
 		ValueModel CPFAdapter = clienteModel.getModel("CPF");
@@ -354,13 +369,32 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		txtfValidade = BasicComponentFactory.createFormattedTextField(ValidadeAdapter, 
 				new DateFormatter(new SimpleDateFormat("MM/yy")));
 		txtfValidade.setEditable(false);
+
+//		clientePanel = new JPanel();
+//		clientePanel.setLayout(new CardLayout());
+//		clientePanel.add(createClientePanel(), "data");
+//		clientePanel.add(clienteTablePanel, "table");
 		
-		clientePanel = new JPanel();
-		clientePanel.setLayout(new CardLayout());
-		clientePanel.add(createClientePanel(), "data");
-		clientePanel.add(clienteTablePanel, "table");
+		/*
+		 * LIVRO RETIRADO
+		 */
 		
-		contentPanel = createMainPanel();
+		//livroRetiradoModel = new PresentationModel<LivroRetirado>(livroRetiradoSelection);
+		livroRetiradoTablePanel = new LivroRetiradoSelectionPanel(livroRetiradoSelection, 1.3, 18);
+		
+		livroRetiradoTablePanel.clearList();
+		livroRetiradoTablePanel.setSelectionToANewObject();
+		
+		/*
+		 * PAINEL DE DADOS
+		 */
+		
+		contentPanel = new JPanel();
+		contentPanel.setLayout(new CardLayout());
+		contentPanel.add(createMainPanel(), "data");
+		contentPanel.add(livroRetiradoTablePanel,"tableLR");
+		contentPanel.add(clienteTablePanel,"tableC");
+		contentPanel.add(livroTablePanel,"tableL");
 	}
 	
 	private JPanel createLivroPanel() {
@@ -438,7 +472,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	protected JPanel createMainPanel(){
 		DefaultFormBuilder builder = new DefaultFormBuilder(
 				new FormLayout("pref, 3dlu, pref:grow, 3dlu, pref, 9dlu, pref, 3dlu, pref:grow, 3dlu, pref", 
-								"18dlu,18dlu,162dlu"));
+								"18dlu,9dlu,200dlu"));
 		builder.border(new EmptyBorder(5, 5, 10, 5));
 		
 		// Search Bars
@@ -450,8 +484,8 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		builder.append(btnPesquisaCliente);
 		builder.nextLine(2);
 		
-		builder.append(livroPanel,5);
-		builder.append(clientePanel,4);
+		builder.append(createLivroPanel(),5);
+		builder.append(createClientePanel(),5);
 		
 		return builder.build();
 	}
@@ -464,7 +498,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 			txtfQuantDisp.setText(String.valueOf(server.returnAvailableBookCount(livroModel.getBean().getISBN())));
 			txtfRetirado.setText(livroModel.getBean().isRetirado() ? "Retirado" : "Disponível");
 		}else {
-			changePanel(livroPanel,"table");
+			changePanel(contentPanel,"tableL");
 		}
 	}
 	

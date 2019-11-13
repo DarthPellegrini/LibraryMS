@@ -1,6 +1,7 @@
 package com.systemhaus.demo.domain;
 
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -29,18 +30,17 @@ public class LivroRetirado extends Model{
 		this.cartao = cartao;
 		this.retirada = retirada;
 		this.renovacoes = new ArrayList<Evento>();
+		this.devolucao = null;
 		this.dataDevolucao = retirada.getDataRaw().plusDays(7);
 	}
 	
 	public LivroRetirado() {
 		this.livro = new Livro();
 		this.cartao = new Cartao();
-		this.retirada = new Evento(new TipoEvento("",""));
+		this.retirada = null;
 		this.renovacoes = new ArrayList<Evento>();
-		this.devolucao = new Evento(new TipoEvento("",""));
-		this.dataDevolucao = LocalDateTime.now();
-		livro.clear();
-		cartao.clear();
+		this.devolucao = null;
+		this.dataDevolucao = null;
 	}
 
 	public Livro getLivro() {
@@ -58,9 +58,21 @@ public class LivroRetirado extends Model{
 	public Evento getRetirada() {
 		return retirada;
 	}
-	public List<Evento> getRenovacoes() {
-		return renovacoes;
+	public LocalDate getDataRetiradaAsLocalDate() {
+		if (retirada == null)
+			return null;
+		else
+			return retirada.getDataRaw().toLocalDate();	
 	}
+
+	public int getTotalRenovacoes() {
+		return this.renovacoes.size();
+	}
+	
+	public Evento getLastRenovacao() {
+		return this.renovacoes.get(renovacoes.size()-1);
+	}
+	
 	public boolean addRenovacao(Evento evento) {
 		if (this.renovacoes.size() < 3) {
 			this.renovacoes.add(evento.copy());
@@ -70,8 +82,23 @@ public class LivroRetirado extends Model{
 	public Evento getDevolucao() {
 		return devolucao;
 	}
-	public Date getDataDevolucao() {
-		return Date.from(this.dataDevolucao.atZone(ZoneId.systemDefault()).toInstant());
+	
+	public LocalDate getDataDevolucaoAsLocalDate() {
+		if (devolucao == null)
+			return null;
+		else
+			return devolucao.getDataRaw().toLocalDate();	
+	}
+	
+	public LocalDateTime getDataDevolucao() {
+		return this.dataDevolucao;
+	}
+	
+	public LocalDate getDataDevolucaoRealAsLocalDate() {
+		if (dataDevolucao == null)
+			return null;
+		else 
+			return dataDevolucao.toLocalDate();
 	}
 	
 	public void devolver(Evento evento) {
@@ -79,7 +106,7 @@ public class LivroRetirado extends Model{
 	}
 	
 	public void estenderRetirada(Evento evento) {
-		getRenovacoes().add(evento.copy());
+		this.renovacoes.add(evento.copy());
 		setDataDevolucao(
 				Date.from(evento.getDataRaw().plusDays(7)
 					.atZone(ZoneId.systemDefault()).toInstant()));
@@ -91,7 +118,5 @@ public class LivroRetirado extends Model{
 		        .toLocalDateTime();
 		
 	}
-	
-	
 	
 }
