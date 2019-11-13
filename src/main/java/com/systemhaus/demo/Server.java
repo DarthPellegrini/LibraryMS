@@ -38,7 +38,7 @@ public class Server {
 		this.enderecoRepository = new EnderecoDAO(biblioteca);
 		this.livroRetiradoRepository = new LivroRetiradoDAO(biblioteca);
 		//facilitando os testes
-		this.addNewBookRoutine(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), 10);
+		this.addNewBookRoutine(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), 1);
 		this.addNewBookRoutine(new Livro("9780123456790", "Guerra de tronos: coroa espinhosa", "George Martinho", "Saraiva", 1, 250, false), 42);
 		this.addNewBookRoutine(new Livro("9780123456791", "Príncipe dos Espinhos", "Agatha Marinho", "LP&M", 1, 250, false), 3);
 		this.addNewBookRoutine(new Livro("9780123456792", "A arte da Guerra", "Xing crishong", "Saraiva", 1, 250, false), 12);
@@ -226,11 +226,17 @@ public class Server {
 		if (livro.validate()) {
 			if (cartao.validate()) {
 				if(!livro.isRetirado()) {
+					livro.setRetirado(true);
 					return livroRetiradoRepository.save(livro, cartao, "R") ? 0 : 1;
 					// 0 = sucesso | 1 = erro de quantidade insuficiente
 				} else return 4; //erro todos os exemplares retirados
 			} else return 3; //erro cliente não preenchido
 		} else return 2; //erro livro não preenchido
+	}
+	
+	public int devolucao(Livro livro, Cartao cartao) {
+		
+		return 0; //sucesso
 	}
 	
 	/**

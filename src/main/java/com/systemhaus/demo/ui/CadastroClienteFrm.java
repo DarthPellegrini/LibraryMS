@@ -43,9 +43,9 @@ public class CadastroClienteFrm extends SkeletonFrm{
 	private ClienteSelectionPanel tablePanel;
 	private PresentationModel<Cliente> model;
 	private SelectionInList<Cliente> clienteSelection = new SelectionInList<>();
-	private final boolean[] addMode = {true, true, false, false, false};
-	private final boolean[] editMode = {false, false, true, true, true};
-	private final boolean[] searchMode = {false, false, false, false, true};
+	private final boolean[] addMode = {true, true, false, false};
+	private final boolean[] editMode = {false, false, true, true};
+	private final boolean[] searchMode = {false, false, false, false};
 	
 	public JInternalFrame createForm(Server server) {
 		initComponents();
@@ -88,8 +88,7 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		JButton btnRedefinirCartao = new JButton("Gerar novo cartão");
 		cardPanel.add(btnRedefinirCartao);
 		
-		JButton[] btnArray = {btnAdicionarCliente, btnPesquisarCliente, btnSalvarCliente, 
-				btnDeletarCliente, btnCancelarCliente};
+		JButton[] btnArray = {btnAdicionarCliente, btnPesquisarCliente, btnSalvarCliente, btnDeletarCliente};
 		
 		btnTableConfirm.addActionListener(l -> {
 			changePanel(contentPanel, "data");

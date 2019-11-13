@@ -62,9 +62,13 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	private SelectionInList<Cliente> clienteSelection = new SelectionInList<>();
 	private JPanel contentPanel;
 	private LivroRetiradoSelectionPanel livroRetiradoTablePanel;
-	//private PresentationModel<LivroRetirado> livroRetiradoModel;
 	private SelectionInList<LivroRetirado> livroRetiradoSelection = new SelectionInList<>();
 	private Server server;
+	private String selectedPanel;
+	private final boolean[] addMode = {true, true, false, false};
+	private final boolean[] editMode = {false, false, true, true};
+	private final boolean[] searchMode = {false, false, false, false};
+	
 	
 	public JInternalFrame createForm(Server server) {
 		initComponents();
@@ -86,11 +90,20 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		JButton btnRetirar = new JButton("Retirar");
 		panelTran.add(btnRetirar);
 		
+		JButton btnPesquisar = new JButton("Pesquisar");
+		panelTran.add(btnPesquisar);
+		
 		JButton btnRenovar = new JButton("Renovar");
 		panelTran.add(btnRenovar);
 		
 		JButton btnDevolver = new JButton("Devolver");
 		panelTran.add(btnDevolver);
+		
+		JButton btnCancelar = new JButton("Cancelar");
+		panelTran.add(btnCancelar);
+		
+		JButton[] btnArray = {btnRetirar, btnPesquisar, btnRenovar, btnDevolver};
+		
 		
 		JButton btnLivroTableConfirm = livroTablePanel.getConfirmButton();
 		JButton btnLivroTableCancel = livroTablePanel.getCancelButton();
@@ -171,6 +184,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 			if(!clientes.isEmpty()){
 				clienteSelection.setList(new ArrayListModel<>(clientes));
 				if(clientes.size() == 1) {
+					txtfEscolhaCliente.setText("");
 					this.clienteTablePanel.setSelectionToLastObject();
 				}else {
 					changePanel(contentPanel, "tableC");
@@ -183,11 +197,8 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 			switch(server.retirada(livroModel.getBean(), clienteModel.getBean().getCartao())) {
 				case 0:
 					JOptionPane.showMessageDialog(null, "O livro foi retirado com sucesso!");
-					livroTablePanel.clearList();
-					clienteTablePanel.clearList();
-					livroTablePanel.setSelectionToANewObject();
-					clienteTablePanel.setSelectionToANewObject();
-					txtfRetirado.setText(""); txtfQuant.setText(""); txtfQuantDisp.setText("");
+					this.selectedPanel = "cl";
+					clearDataAndSetButtons(true, btnArray, addMode);
 					break;
 				case 1:
 					JOptionPane.showMessageDialog(null, "O livro buscado não possui cópias disponíveis.");
@@ -204,6 +215,10 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 			}
 		});
 		
+		btnPesquisar.addActionListener(l -> {
+			//pesquisa por um livro retirado
+		});
+		
 		btnRenovar.addActionListener(l -> {
 			//realiza a renovação
 			changePanel(contentPanel,"tableLR");
@@ -212,41 +227,58 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		
 		btnDevolver.addActionListener(l -> {
 			//realiza a devolução
-			
+			if (livroModel.getBean().validate() && clienteModel.getBean().validate())
+				switch (server.devolucao(livroModel.getBean(), clienteModel.getBean().getCartao())) {
+					case 0:
+						JOptionPane.showMessageDialog(null, "O livro devolvido com sucesso!");
+						break;
+						
+				}
 			//TODO: abrir tela de busca de renovação com o cliente e/ou o livro preenchido
+		});
+		
+		btnCancelar.addActionListener(l -> {
+			this.selectedPanel = "clr";
+			clearDataAndSetButtons(true, btnArray, addMode);
+			changePanel(contentPanel, "data");
 		});
 		
 		btnLivroTableConfirm.addActionListener(l -> {
 			txtfQuant.setText(String.valueOf(server.returnBookCount(livroModel.getBean().getISBN())));
 			txtfQuantDisp.setText(String.valueOf(server.returnAvailableBookCount(livroModel.getBean().getISBN())));
 			txtfRetirado.setText(livroModel.getBean().isRetirado() ? "Retirado" : "Disponível");
+			this.selectedPanel = "l";
+			clearDataAndSetButtons(false, btnArray, addMode);
 			changePanel(contentPanel, "data");
 		});
 		
 		btnLivroTableCancel.addActionListener(l -> {
-			livroTablePanel.clearList();
-			livroTablePanel.setSelectionToANewObject();
-			txtfRetirado.setText(""); txtfQuant.setText(""); txtfQuantDisp.setText("");
+			this.selectedPanel = "l";
+			clearDataAndSetButtons(true, btnArray, addMode);
 			changePanel(contentPanel, "data");
 		});
 		
 		btnClienteTableConfirm.addActionListener(l -> {
+			this.selectedPanel = "c";
+			clearDataAndSetButtons(false, btnArray, addMode);
 			changePanel(contentPanel, "data");
 		});
 		
 		btnClienteTableCancel.addActionListener(l -> {
-			clienteTablePanel.clearList();
-			clienteTablePanel.setSelectionToANewObject();
+			this.selectedPanel = "c";
+			clearDataAndSetButtons(true, btnArray, addMode);
 			changePanel(contentPanel, "data");
 		});
 		
 		btnRetiradaTableConfirm.addActionListener(l -> {
+			this.selectedPanel = "r";
+			clearDataAndSetButtons(false, btnArray, addMode);
 			changePanel(contentPanel, "data");
 		});
 		
 		btnRetiradaTableCancel.addActionListener(l -> {
-			livroRetiradoTablePanel.clearList();
-			livroRetiradoTablePanel.setSelectionToANewObject();
+			this.selectedPanel = "r";
+			clearDataAndSetButtons(true, btnArray, addMode);
 			changePanel(contentPanel, "data");
 		});
 		
@@ -309,11 +341,6 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		txtfQuantDisp = new JTextField();
 		txtfQuantDisp.setEditable(false);
 		
-		//livroPanel = new JPanel();
-		//livroPanel.setLayout(new CardLayout());
-		//livroPanel.add(createLivroPanel(), "data");
-		//livroPanel.add(livroTablePanel, "table");
-		
 		/*
 		 * CLIENTE
 		 */
@@ -369,17 +396,11 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		txtfValidade = BasicComponentFactory.createFormattedTextField(ValidadeAdapter, 
 				new DateFormatter(new SimpleDateFormat("MM/yy")));
 		txtfValidade.setEditable(false);
-
-//		clientePanel = new JPanel();
-//		clientePanel.setLayout(new CardLayout());
-//		clientePanel.add(createClientePanel(), "data");
-//		clientePanel.add(clienteTablePanel, "table");
 		
 		/*
 		 * LIVRO RETIRADO
 		 */
 		
-		//livroRetiradoModel = new PresentationModel<LivroRetirado>(livroRetiradoSelection);
 		livroRetiradoTablePanel = new LivroRetiradoSelectionPanel(livroRetiradoSelection, 1.3, 18);
 		
 		livroRetiradoTablePanel.clearList();
@@ -493,6 +514,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	private void setDataFromGivenBookList(List<Livro> livros) {
 		livroSelection.setList(new ArrayListModel<>(livros));
 		if(livros.size() == 1) {
+			txtfEscolhaLivro.setText("");
 			this.livroTablePanel.setSelectionToLastObject();
 			txtfQuant.setText(String.valueOf(server.returnBookCount(livroModel.getBean().getISBN())));
 			txtfQuantDisp.setText(String.valueOf(server.returnAvailableBookCount(livroModel.getBean().getISBN())));
@@ -504,18 +526,37 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	
 	@Override
 	protected boolean allFieldsAreFilled() {
-		// TODO verificar se ambos os panels estão preenchidos
-		return false;
+		return (livroModel.getBean().validate() && clienteModel.getBean().validate());
 	}
 
 	@Override
 	protected void changePanel(JPanel panel, String name) {
 		((CardLayout)panel.getLayout()).show(panel, name);
 	}
-
+	
 	@Override
 	protected void clearDataAndSetButtons(boolean clearData, JButton[] btnArray, boolean[] modeList) {
-		//não é usado nesse form
+		if (clearData) {
+			if(selectedPanel.contains("l")) {
+				txtfEscolhaLivro.setText("");
+				this.livroTablePanel.clearList();
+				this.livroTablePanel.setSelectionToANewObject();
+				txtfRetirado.setText(""); txtfQuant.setText(""); txtfQuantDisp.setText("");
+			}
+			if(selectedPanel.contains("c")) {
+				txtfEscolhaCliente.setText("");
+				this.clienteTablePanel.clearList();
+				this.clienteTablePanel.setSelectionToANewObject();
+			}
+			if(selectedPanel.contains("r")) {
+				txtfEscolhaLivro.setText("");
+				txtfEscolhaCliente.setText("");
+				this.livroRetiradoTablePanel.clearList();
+				this.livroRetiradoTablePanel.setSelectionToANewObject();
+			}
+		}
+		for(int i = 0; i < btnArray.length; i++)
+			btnArray[i].setEnabled(modeList[i]);
 	}
 	
 }

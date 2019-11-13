@@ -26,7 +26,6 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 			return false;
 		
 	}
-
 	
 	//TODO: método de busca de livroRetirado e passar os dados de cliente/livro por parâmetro
 	@Override
@@ -52,5 +51,10 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 		}
 		return null;
 	}
+	
+	public int devolver() {
+		return 0;
+	}
+	
 	
 }
