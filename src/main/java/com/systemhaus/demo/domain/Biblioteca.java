@@ -109,6 +109,9 @@ public class Biblioteca {
 		return this.allTheBooksAreAvailable(key) ? true : quant >= this.regLivros.get(key)[1];
 	}
 
+	/*
+	 * Adiciona um livro no catálogo na biblioteca
+	 */
 	public void addDisponivel(String key) {
 		int value[] = new int[2];
 		if(!this.regLivros.containsKey(key)) {
@@ -120,11 +123,17 @@ public class Biblioteca {
 		}
 		this.regLivros.put(key, value);
 	}
+	/*
+	 * Remove um livro do catálogo da biblioteca
+	 */
 	public void remDisponivel(String key, int quant) {
 		int value[] = {this.regLivros.get(key)[0]-=quant,
 				this.regLivros.get(key)[1]-=quant};
 		this.regLivros.put(key, value);
 	}
+	/*
+	 * Remove um livro que estava retirado e foi devolvido do catálogo
+	 */
 	public boolean remRetirado(String key) {
 		if(this.regLivros.get(key)[1] + 1 > this.regLivros.get(key)[0])
 			return false;
@@ -133,6 +142,10 @@ public class Biblioteca {
 		this.regLivros.put(key, value);
 		return true;
 	}
+	
+	/*
+	 * Adiciona um exemplar que estava disponível e foi retirado
+	 */
 	public boolean addRetirado(String key) {
 		if(this.regLivros.get(key)[1] - 1 < 0)
 			return false;

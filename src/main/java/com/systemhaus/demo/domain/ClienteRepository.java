@@ -11,6 +11,7 @@ public interface ClienteRepository {
 	public abstract void delete(String CPF);
 	public abstract void edit(String CPF, Cliente cliente);
 	public abstract boolean thisCpfAlreadyExists(String CPF);
+	public abstract Cliente findClientWithThisCardCode(String code);
 
 	
 }

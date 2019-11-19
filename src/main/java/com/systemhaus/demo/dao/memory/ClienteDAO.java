@@ -95,4 +95,11 @@ public class ClienteDAO implements ClienteRepository {
 		return biblioteca.getClientes().stream()
 		.anyMatch(f -> {return (f.getCodCartao().equals(code));});
 	}
+	
+	@Override
+	public Cliente findClientWithThisCardCode(String code) {
+		return biblioteca.getClientes().stream()
+		.filter(f -> (f.getCodCartao().equals(code)))
+		.findFirst().orElse(null);
+	}
 }

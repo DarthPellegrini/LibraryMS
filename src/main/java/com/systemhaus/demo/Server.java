@@ -17,6 +17,7 @@ import com.systemhaus.demo.domain.EstanteRepository;
 import com.systemhaus.demo.domain.LivroRetiradoRepository;
 import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.LivroRepository;
+import com.systemhaus.demo.domain.LivroRetirado;
 import com.systemhaus.demo.domain.Prateleira;
 import com.systemhaus.demo.domain.Cliente;
 import com.systemhaus.demo.domain.ClienteRepository;
@@ -234,9 +235,20 @@ public class Server {
 		} else return 2; //erro livro não preenchido
 	}
 	
-	public int devolucao(Livro livro, Cartao cartao) {
-		
-		return 0; //sucesso
+	public LivroRetirado findLivroRetirado(Livro livro, Cliente cliente) {
+		return livroRetiradoRepository.findLivroRetirado(livro, cliente.getCartao());
+	}
+	
+	public List<LivroRetirado> findSimilarLivroRetirado(Livro livro, Cliente cliente) {
+		return livroRetiradoRepository.findSimilarLivroRetirado(livro, cliente.getCartao());
+	}
+	
+	public int devolucao(LivroRetirado livroRetirado) {
+		return livroRetiradoRepository.devolver(livroRetirado, "D");
+	}
+	
+	public Cliente findClientWithThisCardCode(String code) {
+		return clienteRepository.findClientWithThisCardCode(code);
 	}
 	
 	/**

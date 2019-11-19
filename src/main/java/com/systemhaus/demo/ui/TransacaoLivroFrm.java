@@ -62,12 +62,13 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	private SelectionInList<Cliente> clienteSelection = new SelectionInList<>();
 	private JPanel contentPanel;
 	private LivroRetiradoSelectionPanel livroRetiradoTablePanel;
+	private PresentationModel<LivroRetirado> livroRetiradoModel;
 	private SelectionInList<LivroRetirado> livroRetiradoSelection = new SelectionInList<>();
 	private Server server;
 	private String selectedPanel;
-	private final boolean[] addMode = {true, true, false, false};
-	private final boolean[] editMode = {false, false, true, true};
-	private final boolean[] searchMode = {false, false, false, false};
+	private final boolean[] addMode = {true, true, false, false, true, true};
+	private final boolean[] editMode = {false, false, true, true, false, false};
+	private final boolean[] searchMode = {false, false, false, false, true, true};
 	
 	
 	public JInternalFrame createForm(Server server) {
@@ -94,16 +95,17 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		panelTran.add(btnPesquisar);
 		
 		JButton btnRenovar = new JButton("Renovar");
+		btnRenovar.setEnabled(false);
 		panelTran.add(btnRenovar);
 		
 		JButton btnDevolver = new JButton("Devolver");
+		btnDevolver.setEnabled(false);
 		panelTran.add(btnDevolver);
 		
 		JButton btnCancelar = new JButton("Cancelar");
 		panelTran.add(btnCancelar);
 		
-		JButton[] btnArray = {btnRetirar, btnPesquisar, btnRenovar, btnDevolver};
-		
+		JButton[] btnArray = {btnRetirar, btnPesquisar, btnRenovar, btnDevolver, btnPesquisaLivro, btnPesquisaCliente};
 		
 		JButton btnLivroTableConfirm = livroTablePanel.getConfirmButton();
 		JButton btnLivroTableCancel = livroTablePanel.getCancelButton();
@@ -142,11 +144,11 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 			}
 			List<Livro> livros = server.findAvailableBooks(livroModel.getBean());
 			if (!livros.isEmpty()) {
-				setDataFromGivenBookList(livros);
+				setDataFromGivenBookList(livros,btnArray);
 			} else {
 				livros = server.findSimilarBooks(livroModel.getBean());
 				if (!livros.isEmpty()) {
-					setDataFromGivenBookList(livros);
+					setDataFromGivenBookList(livros,btnArray);
 					JOptionPane.showMessageDialog(null, "Nenhum livro buscado está disponível para retirada, somente devolução!");
 				} else {
 					JOptionPane.showMessageDialog(null, "Nenhum livro encontrado!");
@@ -187,6 +189,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 					txtfEscolhaCliente.setText("");
 					this.clienteTablePanel.setSelectionToLastObject();
 				}else {
+					clearDataAndSetButtons(false, btnArray, searchMode);
 					changePanel(contentPanel, "tableC");
 				}
 			}else
@@ -216,7 +219,33 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		});
 		
 		btnPesquisar.addActionListener(l -> {
-			//pesquisa por um livro retirado
+			if(livroModel.getBean().validate() || clienteModel.getBean().validate()) {
+				List<LivroRetirado> livrosRetirados = server.findSimilarLivroRetirado(livroModel.getBean(), clienteModel.getBean()); 
+				if(livrosRetirados.size() > 0) {
+					livroRetiradoSelection.setList(new ArrayListModel<>(livrosRetirados));
+					if(livrosRetirados.size() == 1) {
+						livroRetiradoTablePanel.setSelectionToLastObject();
+						setRemainingDataForBothModels();
+						clearDataAndSetButtons(false, btnArray, editMode);
+					}else {
+						clearDataAndSetButtons(false, btnArray, searchMode);
+						changePanel(contentPanel, "tableLR");
+					}
+				}else {
+					if(livroModel.getBean().validate() && clienteModel.getBean().validate())
+						JOptionPane.showMessageDialog(null, "Não há nenhum livro que tenha sido retirado por este cliente!");
+					else
+						if(clienteModel.getBean().validate())
+							JOptionPane.showMessageDialog(null, "Não há nenhum livro retirado por este cliente!");
+						else
+							if(livroModel.getBean().validate())
+								JOptionPane.showMessageDialog(null, "Não há nenhum exemplar deste livro que tenha sido retirado!");
+				}
+			}else
+				JOptionPane.showMessageDialog(null, "Por favor, pesquise por:"
+						+ "\n# Um livro: para encontrar os exemplares retirados."
+						+ "\n# Um cliente: para encontrar os livros retirados por este cliente."
+						+ "\n# Um livro e um cliente: para encontrar os livros retirados por este cliente.");
 		});
 		
 		btnRenovar.addActionListener(l -> {
@@ -228,13 +257,12 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		btnDevolver.addActionListener(l -> {
 			//realiza a devolução
 			if (livroModel.getBean().validate() && clienteModel.getBean().validate())
-				switch (server.devolucao(livroModel.getBean(), clienteModel.getBean().getCartao())) {
+				switch (server.devolucao(livroRetiradoModel.getBean())) {
 					case 0:
+						clearDataAndSetButtons(true, btnArray, addMode);
 						JOptionPane.showMessageDialog(null, "O livro devolvido com sucesso!");
 						break;
-						
 				}
-			//TODO: abrir tela de busca de renovação com o cliente e/ou o livro preenchido
 		});
 		
 		btnCancelar.addActionListener(l -> {
@@ -244,10 +272,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		});
 		
 		btnLivroTableConfirm.addActionListener(l -> {
-			txtfQuant.setText(String.valueOf(server.returnBookCount(livroModel.getBean().getISBN())));
-			txtfQuantDisp.setText(String.valueOf(server.returnAvailableBookCount(livroModel.getBean().getISBN())));
-			txtfRetirado.setText(livroModel.getBean().isRetirado() ? "Retirado" : "Disponível");
-			this.selectedPanel = "l";
+			setRemainingDataForLivro();
 			clearDataAndSetButtons(false, btnArray, addMode);
 			changePanel(contentPanel, "data");
 		});
@@ -259,7 +284,6 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		});
 		
 		btnClienteTableConfirm.addActionListener(l -> {
-			this.selectedPanel = "c";
 			clearDataAndSetButtons(false, btnArray, addMode);
 			changePanel(contentPanel, "data");
 		});
@@ -271,8 +295,8 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		});
 		
 		btnRetiradaTableConfirm.addActionListener(l -> {
-			this.selectedPanel = "r";
-			clearDataAndSetButtons(false, btnArray, addMode);
+			setRemainingDataForBothModels();
+			clearDataAndSetButtons(false, btnArray, editMode);
 			changePanel(contentPanel, "data");
 		});
 		
@@ -400,7 +424,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		/*
 		 * LIVRO RETIRADO
 		 */
-		
+		livroRetiradoModel = new PresentationModel<LivroRetirado>(livroRetiradoSelection);
 		livroRetiradoTablePanel = new LivroRetiradoSelectionPanel(livroRetiradoSelection, 1.3, 18);
 		
 		livroRetiradoTablePanel.clearList();
@@ -511,21 +535,35 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		return builder.build();
 	}
 
-	private void setDataFromGivenBookList(List<Livro> livros) {
+	private void setDataFromGivenBookList(List<Livro> livros, JButton[] btnArray) {
 		livroSelection.setList(new ArrayListModel<>(livros));
 		if(livros.size() == 1) {
 			txtfEscolhaLivro.setText("");
 			this.livroTablePanel.setSelectionToLastObject();
-			txtfQuant.setText(String.valueOf(server.returnBookCount(livroModel.getBean().getISBN())));
-			txtfQuantDisp.setText(String.valueOf(server.returnAvailableBookCount(livroModel.getBean().getISBN())));
-			txtfRetirado.setText(livroModel.getBean().isRetirado() ? "Retirado" : "Disponível");
+			setRemainingDataForLivro();
 		}else {
+			clearDataAndSetButtons(false, btnArray, searchMode);
 			changePanel(contentPanel,"tableL");
 		}
 	}
 	
+	private final void setRemainingDataForLivro() {
+		txtfQuant.setText(String.valueOf(server.returnBookCount(livroModel.getBean().getISBN())));
+		txtfQuantDisp.setText(String.valueOf(server.returnAvailableBookCount(livroModel.getBean().getISBN())));
+		txtfRetirado.setText(livroModel.getBean().isRetirado() ? "Retirado" : "Disponível");
+	}
+	
+	private final void setRemainingDataForBothModels() {
+		if(!livroModel.getBean().validate()) {
+			livroTablePanel.setSelectionToANewObject(livroRetiradoModel.getBean().getLivro());
+			setRemainingDataForLivro();
+		} else {
+			clienteTablePanel.setSelectionToANewObject(server.findClientWithThisCardCode(livroRetiradoModel.getBean().getCartao().getCodigo()));
+		}
+	}
+	
 	@Override
-	protected boolean allFieldsAreFilled() {
+ 	protected boolean allFieldsAreFilled() {
 		return (livroModel.getBean().validate() && clienteModel.getBean().validate());
 	}
 

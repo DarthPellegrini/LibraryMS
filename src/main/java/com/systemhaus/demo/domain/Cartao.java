@@ -62,7 +62,7 @@ public class Cartao {
 	}
 	
 	public boolean isEqual(Cartao cartao) {
-		return (this.nome.equals(cartao.getNome()) && this.codigo.equals(cartao.getCodigo()) && this.getValidade() == cartao.getValidade());
+		return (this.nome.contentEquals(cartao.getNome()) && this.codigo.contentEquals(cartao.getCodigo()) && this.getValidade().compareTo(cartao.getValidade()) == 0);
 	}
 	
 	public void clear() {
