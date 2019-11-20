@@ -249,13 +249,24 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		});
 		
 		btnRenovar.addActionListener(l -> {
-			//realiza a renovação
-			changePanel(contentPanel,"tableLR");
-			//TODO: abrir tela de busca de renovação com o cliente e/ou o livro preenchido
+			int returnData = server.estenderRetirada(livroRetiradoModel.getBean());
+			switch(returnData) {
+				case 0:
+					JOptionPane.showMessageDialog(null, "O livro foi renovado com sucesso!");
+					this.selectedPanel = "clr";
+					clearDataAndSetButtons(true, btnArray, addMode);
+					break;
+				case 1: //limite
+					JOptionPane.showMessageDialog(null, "Este livro já foi renovado muitas vezes, por favor, devolva-o e retire outro exemplar.");
+					break;
+				default: //too soon
+					JOptionPane.showMessageDialog(null, "Este livro foi movimentado recentemente, por favor, espere mais " + returnData + " dias para poder renová-lo.");
+					break;
+			}
+			//TODO: testes unitários
 		});
 		
 		btnDevolver.addActionListener(l -> {
-			//realiza a devolução
 			if (livroModel.getBean().validate() && clienteModel.getBean().validate())
 				switch (server.devolucao(livroRetiradoModel.getBean())) {
 					case 0:

@@ -1,9 +1,7 @@
 package com.systemhaus.demo;
 
-import java.time.LocalDate;
-import java.time.ZoneId;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.systemhaus.demo.dao.memory.LivroDAO;
@@ -38,15 +36,6 @@ public class Server {
 		this.clienteRepository = new ClienteDAO(biblioteca);
 		this.enderecoRepository = new EnderecoDAO(biblioteca);
 		this.livroRetiradoRepository = new LivroRetiradoDAO(biblioteca);
-		//facilitando os testes
-		this.addNewBookRoutine(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), 1);
-		this.addNewBookRoutine(new Livro("9780123456790", "Guerra de tronos: coroa espinhosa", "George Martinho", "Saraiva", 1, 250, false), 42);
-		this.addNewBookRoutine(new Livro("9780123456791", "Príncipe dos Espinhos", "Agatha Marinho", "LP&M", 1, 250, false), 3);
-		this.addNewBookRoutine(new Livro("9780123456792", "A arte da Guerra", "Xing crishong", "Saraiva", 1, 250, false), 12);
-		this.addNewBookRoutine(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false), 7);
-		this.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Rio Pardo","Higienópolis","Almirante Alexandrino",281,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		this.addCliente(new Cliente("Pellegrini","02789345280","5551999999998","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		this.addCliente(new Cliente("Eduarda","02789345281","5551999999997","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448876",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 	}
 	
 	public Server(EstanteRepository estanteRepository, LivroRepository livroRepository, 
@@ -65,7 +54,7 @@ public class Server {
 	 */
 	
 	/**
-	 * Método recursivo infalível de inserção de livros
+	 * Método de inserção de livros
 	 */
 	public boolean addNewBookRoutine(Livro livro, int quantCopias) {
 		//verifica se o livro inserido possui todos os campos válidos
@@ -84,7 +73,7 @@ public class Server {
 		return true; 
 	}
 	
-	//TODO: addLivro como método no estante repository
+	//TODO: addLivro como método no estanteRepository ou prateleiraRepository
 	public boolean addBook(Livro livro) {
 		Prateleira p = estanteRepository.getPrateleiraWithEmptySpace();
 		return p == null ? false : p.addLivro(livro);
@@ -241,6 +230,18 @@ public class Server {
 	
 	public List<LivroRetirado> findSimilarLivroRetirado(Livro livro, Cliente cliente) {
 		return livroRetiradoRepository.findSimilarLivroRetirado(livro, cliente.getCartao());
+	}
+	
+	public int estenderRetirada(LivroRetirado livroRetirado) {
+		if (livroRetirado.getTotalRenovacoes() < 3) {
+			LocalDateTime dataUltimaMovimentacao = (livroRetirado.getTotalRenovacoes() == 0 
+					? livroRetirado.getRetirada().getDataRaw() 
+					: livroRetirado.getLastRenovacao().getDataRaw());
+			if(dataUltimaMovimentacao.plusDays(3).isBefore(LocalDateTime.now())) { 
+				livroRetiradoRepository.estenderRetirada(livroRetirado, "E");
+				return 0; //sucesso
+			}else return dataUltimaMovimentacao.plusDays(3).getDayOfYear()-LocalDateTime.now().getDayOfYear(); //erro n- renovação muito cedo
+		}else return 1; //erro 1- limite de renovações ultrapassado
 	}
 	
 	public int devolucao(LivroRetirado livroRetirado) {

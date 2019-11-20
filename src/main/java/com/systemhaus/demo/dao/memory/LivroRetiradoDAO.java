@@ -1,6 +1,5 @@
 package com.systemhaus.demo.dao.memory;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
@@ -23,7 +22,6 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 	@Override
 	public boolean save(Livro livro, Cartao cartao, String key) {
 		if (biblioteca.addRetirado(livro.getISBN())) {
-			
 			biblioteca.addLivroRetirado(new LivroRetirado(livro, cartao, new Evento(biblioteca.getTipoEvento(key))));
 			return true;
 		}else
@@ -31,19 +29,12 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 		
 	}
 	
+	/*
+	 * Método de renovação, possui a regra de que somente 3 renovações são possíveis
+	 */
 	@Override
-	public int estenderRetirada(LivroRetirado livroRetirado, String key) {
-		if (livroRetirado.getTotalRenovacoes() < 3) {
-			LocalDateTime dataRetirado = LocalDateTime.now();
-			if(livroRetirado.getTotalRenovacoes() == 0)
-				dataRetirado = livroRetirado.getRetirada().getDataRaw();
-			else
-				dataRetirado = livroRetirado.getLastRenovacao().getDataRaw();
-			if(dataRetirado.plusDays(2).isAfter(LocalDateTime.now())) {
-				livroRetirado.estenderRetirada(new Evento(biblioteca.getTipoEvento(key)));
-				return 0; //sucesso
-			}else return 2; //erro 2- renovação muito cedo
-		}else return 1; //erro 1- limite de renovações ultrapassado
+	public void estenderRetirada(LivroRetirado livroRetirado, String key) {
+		livroRetirado.estenderRetirada(new Evento(biblioteca.getTipoEvento(key)));
 	}
 	
 	@Override
@@ -73,7 +64,7 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 	@Override
 	public int devolver(LivroRetirado livroRetirado, String key) {
 		biblioteca.remRetirado(livroRetirado.getLivro().getISBN());
-		livroRetirado.getLivro().setRetirado(false);
+		livroRetirado.getLivro().setRetirado(false); //precisa ser modificado quando o banco for incluído
 		livroRetirado.devolver(new Evento(biblioteca.getTipoEvento(key)));
 		return 0;
 	}

@@ -1,11 +1,8 @@
 package com.systemhaus.demo.domain;
 
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.jgoodies.binding.beans.Model;
@@ -31,7 +28,7 @@ public class LivroRetirado extends Model{
 		this.retirada = retirada;
 		this.renovacoes = new ArrayList<Evento>();
 		this.devolucao = null;
-		this.dataDevolucao = retirada.getDataRaw().plusDays(7);
+		setDataDevolucao(retirada.getDataRaw());
 	}
 	
 	public LivroRetirado() {
@@ -73,12 +70,6 @@ public class LivroRetirado extends Model{
 		return this.renovacoes.get(renovacoes.size()-1);
 	}
 	
-	public boolean addRenovacao(Evento evento) {
-		if (this.renovacoes.size() < 3) {
-			this.renovacoes.add(evento.copy());
-			return true;
-		} else return false;
-	}
 	public Evento getDevolucao() {
 		return devolucao;
 	}
@@ -107,16 +98,11 @@ public class LivroRetirado extends Model{
 	
 	public void estenderRetirada(Evento evento) {
 		this.renovacoes.add(evento.copy());
-		setDataDevolucao(
-				Date.from(evento.getDataRaw().plusDays(7)
-					.atZone(ZoneId.systemDefault()).toInstant()));
+		this.setDataDevolucao(evento.getDataRaw());
 	}
-
-	private void setDataDevolucao(Date data) {
-		this.dataDevolucao = Instant.ofEpochMilli(data.getTime())
-		        .atZone(ZoneId.systemDefault())
-		        .toLocalDateTime();
-		
+	
+	public void setDataDevolucao(LocalDateTime date) {
+		this.dataDevolucao = date.plusDays(7);
 	}
 	
 }
