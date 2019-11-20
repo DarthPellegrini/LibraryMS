@@ -63,10 +63,13 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 	
 	@Override
 	public int devolver(LivroRetirado livroRetirado, String key) {
-		biblioteca.remRetirado(livroRetirado.getLivro().getISBN());
-		livroRetirado.getLivro().setRetirado(false); //precisa ser modificado quando o banco for incluído
-		livroRetirado.devolver(new Evento(biblioteca.getTipoEvento(key)));
-		return 0;
+		if(livroRetirado.getDevolucao() != null) {
+			biblioteca.remRetirado(livroRetirado.getLivro().getISBN());
+			livroRetirado.getLivro().setRetirado(false); //precisa ser modificado quando o banco for incluído
+			livroRetirado.devolver(new Evento(biblioteca.getTipoEvento(key)));
+			return 0;
+		}else
+			return 1;
 	}
 	
 	

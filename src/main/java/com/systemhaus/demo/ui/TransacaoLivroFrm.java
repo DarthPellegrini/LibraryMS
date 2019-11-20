@@ -210,10 +210,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 					JOptionPane.showMessageDialog(null, "O livro buscado não foi encontrado.");
 					break;
 				case 3:
-					JOptionPane.showMessageDialog(null, "O cliente não foi selecionado, por favor, selecione-o.");
-					break;
-				case 4:
-					JOptionPane.showMessageDialog(null, "Os exemplares deste livro não estão disponíveis para retirada, somente devolução!");
+					JOptionPane.showMessageDialog(null, "O cliente buscado não foi encontrado.");
 					break;
 			}
 		});
@@ -233,7 +230,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 					}
 				}else {
 					if(livroModel.getBean().validate() && clienteModel.getBean().validate())
-						JOptionPane.showMessageDialog(null, "Não há nenhum livro que tenha sido retirado por este cliente!");
+						JOptionPane.showMessageDialog(null, "Não há nenhum exemplar deste livro que tenha sido retirado por este cliente!");
 					else
 						if(clienteModel.getBean().validate())
 							JOptionPane.showMessageDialog(null, "Não há nenhum livro retirado por este cliente!");
@@ -272,6 +269,9 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 					case 0:
 						clearDataAndSetButtons(true, btnArray, addMode);
 						JOptionPane.showMessageDialog(null, "O livro devolvido com sucesso!");
+						break;
+					case 1:
+						JOptionPane.showMessageDialog(null, "Este livro já foi devolvido!");
 						break;
 				}
 		});

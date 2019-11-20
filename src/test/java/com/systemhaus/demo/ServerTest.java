@@ -6,16 +6,19 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 import org.junit.Test;
 
 import com.systemhaus.demo.domain.Cliente;
 import com.systemhaus.demo.domain.Livro;
+import com.systemhaus.demo.domain.LivroRetirado;
 
 public class ServerTest {
-
+	
 	@Test
 	public void testAddBook() {
 		Server s = new Server();
@@ -72,21 +75,17 @@ public class ServerTest {
 		s.addNewBookRoutine(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false), 7);
 		Livro l = new Livro();
 		l.setTitulo("espinhos");
-		java.util.List<Livro> list = s.findSimilarBooks(l);
+		List<Livro> list = s.findSimilarBooks(l);
 		assertEquals(3, list.size());
 	}
 	
 	@Test
 	public void testErrorFindSimilarBooks() {
 		Server s = new Server();
-		s.addNewBookRoutine(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), 10);
-		s.addNewBookRoutine(new Livro("9780123456790", "Guerra de tronos: coroa espinhosa", "George Martinho", "Saraiva", 1, 250, false), 42);
-		s.addNewBookRoutine(new Livro("9780123456791", "Príncipe dos Espinhos", "Agatha Marinho", "LP&M", 1, 250, false), 3);
-		s.addNewBookRoutine(new Livro("9780123456792", "A arte da Guerra", "Xing crishong", "Saraiva", 1, 250, false), 12);
-		s.addNewBookRoutine(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false), 7);
+		initTestServer(s);
 		Livro l = new Livro();
 		l.setTitulo("Xing chang chong");
-		java.util.List<Livro> list = s.findSimilarBooks(l);
+		List<Livro> list = s.findSimilarBooks(l);
 		assertEquals(1, list.size());
 	}
 	
@@ -120,10 +119,7 @@ public class ServerTest {
 	@Test
 	public void testDeleteBook() {
 		Server s = new Server();
-		s.addNewBookRoutine(new Livro("9780123456789", "Livro", "Agatha Cristie", "LP&M", 1, 250, false), 140);
-		s.addNewBookRoutine(new Livro("9780123456790", "Livro novo", "Agatha Cristie", "LP&M", 1, 250, false), 20);
-		s.addNewBookRoutine(new Livro("9780123456790", "Livro novo", "Agatha Cristie", "LP&M", 1, 250, true), 20);
-		s.addNewBookRoutine(new Livro("9780123456789", "Livro", "Agatha Cristie", "LP&M", 1, 250, false), 100);
+		initTestServer(s);
 		boolean result = s.deleteBook("9780123456790", 20);
 		assertTrue(result);
 	}
@@ -131,10 +127,7 @@ public class ServerTest {
 	@Test
 	public void testErrorDeleteBookFail() {
 		Server s = new Server();
-		s.addNewBookRoutine(new Livro("9780123456789", "Livro", "Agatha Cristie", "LP&M", 1, 250, false), 140);
-		s.addNewBookRoutine(new Livro("9780123456790", "Livro novo", "Agatha Cristie", "LP&M", 1, 250, false), 20);
-		s.addNewBookRoutine(new Livro("9780123456790", "Livro novo", "Agatha Cristie", "LP&M", 1, 250, true), 20);
-		s.addNewBookRoutine(new Livro("9780123456789", "Livro", "Agatha Cristie", "LP&M", 1, 250, false), 100);
+		initTestServer(s);
 		boolean result = s.deleteBook("9780123456790", 0);
 		assertFalse(result);
 	}
@@ -142,10 +135,7 @@ public class ServerTest {
 	@Test
 	public void testOrganizeLibrary() {
 		Server s = new Server();
-		s.addNewBookRoutine(new Livro("9780123456789", "Livro", "Agatha Cristie", "LP&M", 1, 250, false), 140);
-		s.addNewBookRoutine(new Livro("9780123456790", "Livro novo", "Agatha Cristie", "LP&M", 1, 250, false), 20);
-		s.addNewBookRoutine(new Livro("9780123456790", "Livro novo", "Agatha Cristie", "LP&M", 1, 250, true), 20);
-		s.addNewBookRoutine(new Livro("9780123456789", "Livro", "Agatha Cristie", "LP&M", 1, 250, false), 100);
+		initTestServer(s);
 		boolean result1 = s.needsReorganization();
 		s.deleteBook("9780123456790", 0);
 		boolean result2 = s.needsReorganization();
@@ -162,13 +152,7 @@ public class ServerTest {
 	@Test
 	public void testErrorAddClient() {
 		Server s = new Server();
-		s.addCliente(new Cliente("Leonardo","02789345275","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Leonardo","02789345276","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448878",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Leonardo","02789345277","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448879",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Leonardo","02789345278","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448880",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Leonardo","02789345279","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448881",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448876",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		initTestServer(s);
 		int result = s.addCliente(new Cliente("Leonardo","02789345274","5551997359979","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		assertEquals(0,result);
 	}
@@ -176,36 +160,30 @@ public class ServerTest {
 	@Test
 	public void testFindSimilarClients() {
 		Server s = new Server();
-		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448876",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		initTestServer(s);
 		Cliente c = new Cliente();
 		c.setCidade("Porto");
-		java.util.List<Cliente> list = s.findSimilarClients(c);
+		List<Cliente> list = s.findSimilarClients(c);
 		assertEquals(2, list.size());
 	}
 	
 	@Test
 	public void testErrorFindSimilarClients() {
 		Server s = new Server();
-		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448876",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		initTestServer(s);
 		Cliente c = new Cliente();
 		c.setCidade("Porta");
-		java.util.List<Cliente> list = s.findSimilarClients(c);
+		List<Cliente> list = s.findSimilarClients(c);
 		assertEquals(2, list.size());
 	}
 	
 	@Test
 	public void testEditClient() {
 		Server s = new Server();
-		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448876",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		initTestServer(s);
 		Cliente c = new Cliente();
 		c.setCPF("02789345280");
-		java.util.List<Cliente> list = s.findSimilarClients(c);
+		List<Cliente> list = s.findSimilarClients(c);
 		Cliente beforeEdit = list.get(0);
 		s.editClient("02789345280",new Cliente("Leo Pellegrini","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		list = s.findSimilarClients(c);
@@ -216,14 +194,12 @@ public class ServerTest {
 	@Test
 	public void testErrorEditClientWithExistingCPF() {
 		Server s = new Server();
-		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Rio Pardo","Higienópolis","Almirante Alexandrino",281,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Pellegrini","02789345280","5551999999998","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Eduarda","02789345281","5551999999997","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448876",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		initTestServer(s);
 		Cliente c = new Cliente();
 		c.setNome("Leonardo");
-		java.util.List<Cliente> list = s.findSimilarClients(c);
+		List<Cliente> list = s.findSimilarClients(c);
 		Cliente beforeEdit = list.get(0);
-		s.editClient("02789345280",new Cliente("Leonardo","02789345281","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.editClient("02789345280",new Cliente("Pellegrini","02789345281","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		list = s.findSimilarClients(c);
 		Cliente afterEdit = list.get(0);
 		assertNotEquals(beforeEdit.getCPF(),afterEdit.getCPF());
@@ -232,12 +208,10 @@ public class ServerTest {
 	@Test
 	public void testErrorEditClientWithInvalidPhoneNumber() {
 		Server s = new Server();
-		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448878",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		initTestServer(s);
 		Cliente c = new Cliente();
 		c.setNome("Leonardo");
-		java.util.List<Cliente> list = s.findSimilarClients(c);
+		List<Cliente> list = s.findSimilarClients(c);
 		Cliente beforeEdit = list.get(0);
 		s.editClient("02789345280",new Cliente("Leonardo","02789345278","555199999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		list = s.findSimilarClients(c);
@@ -248,12 +222,10 @@ public class ServerTest {
 	@Test
 	public void testDeleteClient() {
 		Server s = new Server();
-		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Leonardo","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Eduarda","02789345281","5551999999999","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448878",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		initTestServer(s);
 		Cliente c = new Cliente();
 		c.setCPF("02789345280");
-		java.util.List<Cliente> list = s.findSimilarClients(c);
+		List<Cliente> list = s.findSimilarClients(c);
 		int sizeBeforeDelete = list.size();
 		s.deleteClient("02789345280");
 		list = s.findSimilarClients(c);
@@ -262,19 +234,121 @@ public class ServerTest {
 	}
 	
 	/*
-	 *  Para os testes da retirada de livros
-	 *  Cliente c = new Cliente("Leonardo","02789345274","5551999999999","Rio Pardo","Higienópolis","Almirante Alexandrino",281,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
-		this.addNewBookRoutine(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), 1);
-		this.addNewBookRoutine(new Livro("9780123456790", "Guerra de tronos: coroa espinhosa", "George Martinho", "Saraiva", 1, 250, false), 42);
-		this.addNewBookRoutine(new Livro("9780123456791", "Príncipe dos Espinhos", "Agatha Marinho", "LP&M", 1, 250, false), 3);
-		this.addNewBookRoutine(new Livro("9780123456792", "A arte da Guerra", "Xing crishong", "Saraiva", 1, 250, false), 12);
-		this.addNewBookRoutine(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false), 7);
-		this.addCliente(c);
-		this.addCliente(new Cliente("Pellegrini","02789345280","5551999999998","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		this.addCliente(new Cliente("Eduarda","02789345281","5551999999997","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448876",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		this.retirada(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), c.getCartao());
-		this.retirada(new Livro("9780123456792", "A arte da Guerra", "Xing crishong", "Saraiva", 1, 250, false), c.getCartao());
-		this.retirada(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false), c.getCartao());
+	 * Inicialização dos dados para testes de retirada
 	 */
+	public void initTestServer(Server s) {
+		s.addNewBookRoutine(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), 1);
+		s.addNewBookRoutine(new Livro("9780123456790", "Guerra de tronos: coroa espinhosa", "George Martinho", "Saraiva", 1, 250, false), 42);
+		s.addNewBookRoutine(new Livro("9780123456791", "Príncipe dos Espinhos", "Agatha Marinho", "LP&M", 1, 250, false), 3);
+		s.addNewBookRoutine(new Livro("9780123456792", "A arte da Guerra", "Xing crishong", "Saraiva", 1, 250, false), 12);
+		s.addNewBookRoutine(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false), 7);
+		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Rio Pardo","Higienópolis","Almirante Alexandrino",281,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Pellegrini","02789345280","5551999999998","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addCliente(new Cliente("Eduarda","02789345281","5551999999997","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448876",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+	}
+	
+	@Test
+	public void testRetiradaDeLivro() {
+		Server s = new Server();
+		initTestServer(s);
+		assertEquals(0, s.retirada(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), s.findClientWithThisCardCode("4000979800448877").getCartao()));
+	}
+	
+	@Test
+	public void testErrorRetiradaDeLivroNotEnoughCopies() {
+		Server s = new Server();
+		initTestServer(s);
+		s.retirada(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), s.findClientWithThisCardCode("4000979800448877").getCartao());
+		assertEquals(0,s.retirada(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), s.findClientWithThisCardCode("4000979800448876").getCartao()));
+	}
+	
+	@Test
+	public void testPesquisaDeRetiradaDeLivro() {
+		Server s = new Server();
+		initTestServer(s);
+		s.retirada(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), s.findClientWithThisCardCode("4000979800448877").getCartao());
+		s.retirada(new Livro("9780123456792", "A arte da Guerra", "Xing crishong", "Saraiva", 1, 250, false), s.findClientWithThisCardCode("4000979800448877").getCartao());
+		s.retirada(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false), s.findClientWithThisCardCode("4000979800448876").getCartao());
+		assertEquals(1,s.findSimilarLivroRetirado(new Livro(), s.findClientWithThisCardCode("4000979800448876")).size());
+	}
+	
+	@Test
+	public void testErrorPesquisaDeRetiradaDeLivroNotFound() {
+		Server s = new Server();
+		initTestServer(s); //not found
+		s.retirada(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), s.findClientWithThisCardCode("4000979800448877").getCartao());
+		s.retirada(new Livro("9780123456792", "A arte da Guerra", "Xing crishong", "Saraiva", 1, 250, false), s.findClientWithThisCardCode("4000979800448877").getCartao());
+		s.retirada(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false), s.findClientWithThisCardCode("4000979800448876").getCartao());
+		assertEquals(1,s.findSimilarLivroRetirado(new Livro(), s.findClientWithThisCardCode("4000979800448882")).size());
+	}
+	
+	@Test
+	public void testRenovacaoDeRetiradaDeLivro() {
+		Server s = new Server();
+		initTestServer(s);
+		s.retirada(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), s.findClientWithThisCardCode("4000979800448877").getCartao());
+		s.retirada(new Livro("9780123456792", "A arte da Guerra", "Xing crishong", "Saraiva", 1, 250, false), s.findClientWithThisCardCode("4000979800448877").getCartao());
+		s.retirada(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false), s.findClientWithThisCardCode("4000979800448876").getCartao());
+		List<LivroRetirado> l = s.findSimilarLivroRetirado(new Livro(), s.findClientWithThisCardCode("4000979800448877"));
+		LivroRetirado lr = l.get(0);
+		lr.getRetirada().setData(Date.from(LocalDateTime.now().minusDays(10).atZone(ZoneId.systemDefault()).toInstant()));
+		assertEquals(0,s.estenderRetirada(lr));
+	}
+	
+	@Test
+	public void testErrorRenovacaoDeRetiradaDeLivroNotEnoughTimeElapsed() {
+		Server s = new Server();
+		initTestServer(s);
+		s.retirada(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), s.findClientWithThisCardCode("4000979800448877").getCartao());
+		s.retirada(new Livro("9780123456792", "A arte da Guerra", "Xing crishong", "Saraiva", 1, 250, false), s.findClientWithThisCardCode("4000979800448877").getCartao());
+		s.retirada(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false), s.findClientWithThisCardCode("4000979800448876").getCartao());
+		List<LivroRetirado> l = s.findSimilarLivroRetirado(new Livro(), s.findClientWithThisCardCode("4000979800448877"));
+		s.estenderRetirada(l.get(0));
+		assertEquals(0,s.estenderRetirada(l.get(0)));
+	}
+	
+	@Test
+	public void testErrorRenovacaoDeRetiradaDeLivroTooManyRenewals() {
+		Server s = new Server();
+		initTestServer(s);
+		s.retirada(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), s.findClientWithThisCardCode("4000979800448877").getCartao());
+		s.retirada(new Livro("9780123456792", "A arte da Guerra", "Xing crishong", "Saraiva", 1, 250, false), s.findClientWithThisCardCode("4000979800448877").getCartao());
+		s.retirada(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false), s.findClientWithThisCardCode("4000979800448876").getCartao());
+		List<LivroRetirado> l = s.findSimilarLivroRetirado(new Livro(), s.findClientWithThisCardCode("4000979800448877"));
+		LivroRetirado lr = l.get(0);
+		lr.getRetirada().setData(Date.from(LocalDateTime.now().minusDays(30).atZone(ZoneId.systemDefault()).toInstant()));
+		s.estenderRetirada(lr);
+		lr.getLastRenovacao().setData(Date.from(LocalDateTime.now().minusDays(20).atZone(ZoneId.systemDefault()).toInstant()));
+		s.estenderRetirada(lr);
+		lr.getLastRenovacao().setData(Date.from(LocalDateTime.now().minusDays(10).atZone(ZoneId.systemDefault()).toInstant()));
+		s.estenderRetirada(lr);
+		assertEquals(0,s.estenderRetirada(lr));
+	}
+	
+	@Test
+	public void testDevolucaoDeLivro() {
+		Server s = new Server();
+		initTestServer(s);
+		s.retirada(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), s.findClientWithThisCardCode("4000979800448877").getCartao());
+		s.retirada(new Livro("9780123456792", "A arte da Guerra", "Xing crishong", "Saraiva", 1, 250, false), s.findClientWithThisCardCode("4000979800448877").getCartao());
+		s.retirada(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false), s.findClientWithThisCardCode("4000979800448876").getCartao());
+		List<LivroRetirado> l = s.findSimilarLivroRetirado(new Livro(), s.findClientWithThisCardCode("4000979800448877"));
+		LivroRetirado lr = l.get(0);
+		assertEquals(0,s.devolucao(lr));
+	}
+	
+	@Test
+	public void testErrorDevolucaoDeLivroAlreadyReturned() {
+		Server s = new Server();
+		initTestServer(s);
+		s.retirada(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), s.findClientWithThisCardCode("4000979800448877").getCartao());
+		s.retirada(new Livro("9780123456792", "A arte da Guerra", "Xing crishong", "Saraiva", 1, 250, false), s.findClientWithThisCardCode("4000979800448877").getCartao());
+		s.retirada(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false), s.findClientWithThisCardCode("4000979800448876").getCartao());
+		List<LivroRetirado> l = s.findSimilarLivroRetirado(new Livro(), s.findClientWithThisCardCode("4000979800448877"));
+		LivroRetirado lr = l.get(0);
+		s.devolucao(lr);
+		assertEquals(0, s.devolucao(lr));
+	}
+	
 	
 }

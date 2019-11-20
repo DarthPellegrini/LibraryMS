@@ -215,11 +215,9 @@ public class Server {
 	public int retirada(Livro livro, Cartao cartao) {
 		if (livro.validate()) {
 			if (cartao.validate()) {
-				if(!livro.isRetirado()) {
-					livro.setRetirado(true);
-					return livroRetiradoRepository.save(livro, cartao, "R") ? 0 : 1;
-					// 0 = sucesso | 1 = erro de quantidade insuficiente
-				} else return 4; //erro todos os exemplares retirados
+				livro.setRetirado(true);
+				return livroRetiradoRepository.save(livro, cartao, "R") ? 0 : 1;
+				// 0 = sucesso | 1 = erro de quantidade insuficiente
 			} else return 3; //erro cliente não preenchido
 		} else return 2; //erro livro não preenchido
 	}
