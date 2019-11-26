@@ -216,7 +216,7 @@ public class Server {
 		if (livro.validate()) {
 			if (cartao.validate()) {
 				livro.setRetirado(true);
-				return livroRetiradoRepository.save(livro, cartao, "R") ? 0 : 1;
+				return livroRetiradoRepository.save(livro, cartao, 0) ? 0 : 1;
 				// 0 = sucesso | 1 = erro de quantidade insuficiente
 			} else return 3; //erro cliente não preenchido
 		} else return 2; //erro livro não preenchido
@@ -236,14 +236,14 @@ public class Server {
 					? livroRetirado.getRetirada().getDataRaw() 
 					: livroRetirado.getLastRenovacao().getDataRaw());
 			if(dataUltimaMovimentacao.plusDays(3).isBefore(LocalDateTime.now())) { 
-				livroRetiradoRepository.estenderRetirada(livroRetirado, "E");
+				livroRetiradoRepository.estenderRetirada(livroRetirado, 1);
 				return 0; //sucesso
 			}else return dataUltimaMovimentacao.plusDays(3).getDayOfYear()-LocalDateTime.now().getDayOfYear(); //erro n- renovação muito cedo
 		}else return 1; //erro 1- limite de renovações ultrapassado
 	}
 	
 	public int devolucao(LivroRetirado livroRetirado) {
-		return livroRetiradoRepository.devolver(livroRetirado, "D");
+		return livroRetiradoRepository.devolver(livroRetirado, 2);
 	}
 	
 	public Cliente findClientWithThisCardCode(String code) {

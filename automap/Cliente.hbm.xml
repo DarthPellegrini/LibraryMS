@@ -1,0 +1,21 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name = "Cliente" table = "cliente">
+      
+      <meta attribute = "class-description">
+         A classe do cliente, contendo referência a um endereço e um cartão. 
+      </meta>
+      
+      <id name = "cpf" type = "string" column = "cpf"/>
+      
+      <property name = "nome" column = "nome" type = "string"/>
+      <property name = "telefone" column = "telefone" type = "string"/>
+      <many-to-one name="endereco" foreign-key="endereco" class="Endereco"/>
+      <one-to-one name="cartao" foreign-key="cartao" class="Cartao"/>      
+
+   </class>
+</hibernate-mapping>

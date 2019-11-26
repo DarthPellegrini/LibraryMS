@@ -16,6 +16,7 @@ public class Livro extends Model{
 	public static final String PROPERTY_NUMPAG = "numeroPaginas";
 	public static final String PROPERTY_RETIRADO = "retirado";
 	
+	private int id;
 	private String ISBN; //pode ser repetido, para n volumes do mesmo livro
 	private String titulo; //título do livro
 	private String autor; //autor do livro
@@ -39,6 +40,14 @@ public class Livro extends Model{
 		this.clear();
 	}
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getISBN() {
 		return ISBN;
 	}

@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 26/11/2019 13:42:20 by Hibernate Tools 3.6.0.Final -->
+<hibernate-mapping>
+    <class name="Endereco" table="endereco" schema="libraryms">
+        <id name="enderecoId" type="int">
+            <column name="endereco_id" />
+            <generator class="assigned" />
+        </id>
+        <property name="cidade" type="string">
+            <column name="cidade" length="30" not-null="true" />
+        </property>
+        <property name="bairro" type="string">
+            <column name="bairro" length="30" not-null="true" />
+        </property>
+        <property name="rua" type="string">
+            <column name="rua" length="50" not-null="true" />
+        </property>
+        <property name="numero" type="int">
+            <column name="numero" not-null="true" />
+        </property>
+        <set name="clientes" table="cliente" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="endereco" />
+            </key>
+            <one-to-many class="Cliente" />
+        </set>
+    </class>
+</hibernate-mapping>

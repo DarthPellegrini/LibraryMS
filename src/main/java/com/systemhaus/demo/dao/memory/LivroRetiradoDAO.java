@@ -20,9 +20,9 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 	}
 	
 	@Override
-	public boolean save(Livro livro, Cartao cartao, String key) {
+	public boolean save(Livro livro, Cartao cartao, int pos) {
 		if (biblioteca.addRetirado(livro.getISBN())) {
-			biblioteca.addLivroRetirado(new LivroRetirado(livro, cartao, new Evento(biblioteca.getTipoEvento(key))));
+			biblioteca.addLivroRetirado(new LivroRetirado(livro, cartao, new Evento(0)));
 			return true;
 		}else
 			return false;
@@ -33,8 +33,8 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 	 * Método de renovação, possui a regra de que somente 3 renovações são possíveis
 	 */
 	@Override
-	public void estenderRetirada(LivroRetirado livroRetirado, String key) {
-		livroRetirado.estenderRetirada(new Evento(biblioteca.getTipoEvento(key)));
+	public void estenderRetirada(LivroRetirado livroRetirado, int pos) {
+		livroRetirado.estenderRetirada(new Evento(1));
 	}
 	
 	@Override
@@ -62,11 +62,11 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 	}
 	
 	@Override
-	public int devolver(LivroRetirado livroRetirado, String key) {
+	public int devolver(LivroRetirado livroRetirado, int pos) {
 		if(livroRetirado.getDevolucao() != null) {
 			biblioteca.remRetirado(livroRetirado.getLivro().getISBN());
 			livroRetirado.getLivro().setRetirado(false); //precisa ser modificado quando o banco for incluído
-			livroRetirado.devolver(new Evento(biblioteca.getTipoEvento(key)));
+			livroRetirado.devolver(new Evento(2));
 			return 0;
 		}else
 			return 1;

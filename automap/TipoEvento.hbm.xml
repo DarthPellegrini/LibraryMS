@@ -1,0 +1,21 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name = "TipoEvento" table = "tipo_evento">
+      
+      <meta attribute = "class-description">
+         Classe que define os tipos de eventos possíveis. 
+      </meta>
+      
+      <id name = "id" type = "int" column = "tipo_evento_id">
+         <generator class="native"/>
+      </id>
+      
+      <property name = "tipoEvento" column = "tipo" type = "string"/>
+      <property name = "descr" column = "descr" type = "string"/>
+      
+   </class>
+</hibernate-mapping>

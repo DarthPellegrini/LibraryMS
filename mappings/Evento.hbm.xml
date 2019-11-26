@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 26/11/2019 13:42:20 by Hibernate Tools 3.6.0.Final -->
+<hibernate-mapping>
+    <class name="Evento" table="evento" schema="libraryms">
+        <id name="eventoId" type="int">
+            <column name="evento_id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="livroRetirado" class="LivroRetirado" fetch="select">
+            <column name="livro_retirado_id" not-null="true" />
+        </many-to-one>
+        <property name="tipoEventoId" type="int">
+            <column name="tipo_evento_id" not-null="true" />
+        </property>
+        <property name="dataEvento" type="timestamp">
+            <column name="data_evento" length="29" not-null="true" />
+        </property>
+    </class>
+</hibernate-mapping>

@@ -1,0 +1,26 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name = "Livro" table = "livro">
+      
+      <meta attribute = "class-description">
+         Classe de um exemplar de um livro. 
+      </meta>
+      
+      <id name = "id" type = "int" column = "livro_id">
+         <generator class="native"/>
+      </id>
+      
+      <property name = "ISBN" column = "isbn" type = "string"/>
+      <property name = "titulo" column = "titulo" type = "string"/>
+      <property name = "autor" column = "autor" type = "string"/>
+      <property name = "editora" column = "editora" type = "string"/>
+      <property name = "edicao" column = "edicao" type = "int"/>
+      <property name = "numeroPaginas" column = "numeroPaginas" type = "int"/>
+      <property name = "retirado" column = "retirado" type = "boolean"/>   
+   
+   </class>
+</hibernate-mapping>

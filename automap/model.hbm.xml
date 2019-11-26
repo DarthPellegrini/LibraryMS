@@ -1,0 +1,33 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name = "Employee" table = "EMPLOYEE">
+      
+      <meta attribute = "class-description">
+         This class contains the employee detail. 
+      </meta>
+      
+      <id name = "id" type = "int" column = "id">
+         <generator class="native"/>
+      </id>
+      
+      <property name = "firstName" column = "first_name" type = "string"/>
+      <property name = "lastName" column = "last_name" type = "string"/>
+      <property name = "salary" column = "salary" type = "int"/>
+      
+   </class>
+</hibernate-mapping>
+
+<mapping class="Biblioteca.hbm.xml"/>
+       <mapping class="Estante.hbm.xml"/>
+       <mapping class="Prateleira.hbm.xml"/>
+       <mapping class="Livro.hbm.xml"/>
+       <mapping class="Cliente.hbm.xml"/>
+       <mapping class="Endereco.hbm.xml"/>
+       <mapping class="Cartao.hbm.xml"/>
+       <mapping class="LivroRetirado.hbm.xml"/>
+       <mapping class="Evento.hbm.xml"/>
+       <mapping class="TipoEvento.hbm.xml"/>

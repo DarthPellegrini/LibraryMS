@@ -12,14 +12,11 @@ public class Biblioteca {
 	private List<Cliente> clientes;
 	private Map<String,int[]> regLivros;
 	private List<LivroRetirado> livrosRetirados;
-	private Map <String,TipoEvento> tipoEventos;
-
 	public Biblioteca() {
 		estantes = new ArrayList<Estante>();
 		clientes = new ArrayList<Cliente>();
 		regLivros = new HashMap<String,int[]>();
 		setLivrosRetirados(new ArrayList<LivroRetirado>());
-		setTipoEventos(new HashMap<String,TipoEvento>());
 		this.addEstante();
 	}
 	
@@ -45,20 +42,6 @@ public class Biblioteca {
 
 	public void setLivrosRetirados(List<LivroRetirado> livrosRetirados) {
 		this.livrosRetirados = livrosRetirados;
-	}
-
-	public TipoEvento getTipoEvento(String key){
-		return tipoEventos.get(key);
-	}
-	
-	/*
-	 * instanciação dos tipo de eventos padrão, TODO:será substituído pelos dados já existentes no banco
-	 */
-	private void setTipoEventos(Map<String,TipoEvento> tipoEventos) {
-		tipoEventos.put("R", new TipoEvento("Retirada","Evento de retirada de um livro por um cliente."));
-		tipoEventos.put("E", new TipoEvento("Renovação","Evento de extensão da retirada de um livro."));
-		tipoEventos.put("D", new TipoEvento("Devolução","Evento de devolução de um livro por um cliente."));
-		this.tipoEventos = tipoEventos;
 	}
 	
 	public void addEstante() {

@@ -2,6 +2,7 @@ package com.systemhaus.demo.domain;
 
 public class Endereco {
 
+	private int id;
 	private String cidade;
 	private String bairro;
 	private String rua;
@@ -19,6 +20,12 @@ public class Endereco {
 		this.clear();
 	}
 	
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public String getCidade() {
 		return cidade;
 	}
