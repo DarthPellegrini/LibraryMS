@@ -9,17 +9,16 @@ public class Evento {
 	
 	//registro de eventos
 	private int id; //id
-	private enum tiposDeEvento {RETIRADA,RENOVACAO,DEVOLUCAO}; //tipo de evento relacionado ao livro
-	private tiposDeEvento tipoEvento;
+	private TipoEvento tipoEvento;
 	private LocalDateTime data; //data do evento
 	
-	public Evento(int tipo) {
+	public Evento(TipoEvento tipoEvento) {
 		super();
-		setTipoEvento(tipo);
+		setTipoEvento(tipoEvento);
 		this.data = LocalDateTime.now();
 	}
 	
-	private Evento(tiposDeEvento tipoEvento, LocalDateTime data) {
+	private Evento(TipoEvento tipoEvento, LocalDateTime data) {
 		super();
 		this.tipoEvento = tipoEvento;
 		this.data = data;
@@ -31,22 +30,13 @@ public class Evento {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public tiposDeEvento getTipoDeEvento() {
+	public TipoEvento getTipoDeEvento() {
 		return tipoEvento;
 	}
-	public void setTipoEvento(int tipo) {
-		switch(tipo) {
-			case 0:
-				this.tipoEvento = tiposDeEvento.RETIRADA;
-				break;
-			case 1:
-				this.tipoEvento = tiposDeEvento.RENOVACAO;
-				break;
-			case 2:
-				this.tipoEvento = tiposDeEvento.DEVOLUCAO;
-				break;
-		}
+	public void setTipoEvento(TipoEvento tipoEvento) {
+		this.tipoEvento = tipoEvento;
 	}
+	
 	public Date getData() {
 		return Date.from(this.data.atZone(ZoneId.systemDefault()).toInstant());
 	}

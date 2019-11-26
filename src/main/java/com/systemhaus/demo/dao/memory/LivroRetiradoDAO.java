@@ -8,6 +8,7 @@ import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.Cartao;
 import com.systemhaus.demo.domain.Evento;
 import com.systemhaus.demo.domain.LivroRetiradoRepository;
+import com.systemhaus.demo.domain.TipoEvento;
 import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.LivroRetirado;
 
@@ -22,7 +23,7 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 	@Override
 	public boolean save(Livro livro, Cartao cartao, int pos) {
 		if (biblioteca.addRetirado(livro.getISBN())) {
-			biblioteca.addLivroRetirado(new LivroRetirado(livro, cartao, new Evento(0)));
+			biblioteca.addLivroRetirado(new LivroRetirado(livro, cartao, new Evento(TipoEvento.RETIRADA)));
 			return true;
 		}else
 			return false;
@@ -34,7 +35,7 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 	 */
 	@Override
 	public void estenderRetirada(LivroRetirado livroRetirado, int pos) {
-		livroRetirado.estenderRetirada(new Evento(1));
+		livroRetirado.estenderRetirada(new Evento(TipoEvento.RENOVACAO));
 	}
 	
 	@Override
@@ -66,7 +67,7 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 		if(livroRetirado.getDevolucao() != null) {
 			biblioteca.remRetirado(livroRetirado.getLivro().getISBN());
 			livroRetirado.getLivro().setRetirado(false); //precisa ser modificado quando o banco for incluído
-			livroRetirado.devolver(new Evento(2));
+			livroRetirado.devolver(new Evento(TipoEvento.DEVOLUCAO));
 			return 0;
 		}else
 			return 1;
