@@ -4,14 +4,14 @@ import java.util.List;
 
 public abstract class LivroRetiradoRepository {
 	
-	public abstract boolean save(Livro livro, Cartao cartao, int pos);
+	public abstract boolean save(Livro livro, Cliente cliente);
 
-	public abstract void estenderRetirada(LivroRetirado livroRetirado, int pos);
+	public abstract void estenderRetirada(LivroRetirado livroRetirado);
 	
-	public abstract LivroRetirado findLivroRetirado(Livro livro, Cartao cartao);
+	public abstract LivroRetirado findLivroRetirado(Livro livro, Cliente cliente);
 
-	public abstract int devolver(LivroRetirado livroRetirado, int pos);
+	public abstract int devolver(LivroRetirado livroRetirado);
 
-	public abstract List<LivroRetirado> findSimilarLivroRetirado(Livro livro, Cartao cartao);
+	public abstract List<LivroRetirado> findSimilarLivroRetirado(Livro livro, Cliente cliente);
 
 }

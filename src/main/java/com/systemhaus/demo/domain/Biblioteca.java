@@ -89,7 +89,7 @@ public class Biblioteca {
 	 * não será inferior ao de livros disponíveis
 	 */
 	public boolean havingOnlyThisAmountOfCopiesWontCauseProblems(String key, int quant) {
-		return this.allTheBooksAreAvailable(key) ? true : quant >= this.regLivros.get(key)[1];
+		return this.allTheBooksAreAvailable(key) ? true : quant >= (this.regLivros.get(key)[0]-this.regLivros.get(key)[1]);
 	}
 
 	/*

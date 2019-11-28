@@ -10,7 +10,6 @@ import com.systemhaus.demo.dao.memory.EnderecoDAO;
 import com.systemhaus.demo.dao.memory.EstanteDAO;
 import com.systemhaus.demo.dao.memory.LivroRetiradoDAO;
 import com.systemhaus.demo.domain.Biblioteca;
-import com.systemhaus.demo.domain.Cartao;
 import com.systemhaus.demo.domain.EstanteRepository;
 import com.systemhaus.demo.domain.LivroRetiradoRepository;
 import com.systemhaus.demo.domain.Livro;
@@ -58,7 +57,7 @@ public class Server {
 	 */
 	public boolean addNewBookRoutine(Livro livro, int quantCopias) {
 		//verifica se o livro inserido possui todos os campos válidos
-		if (livro.validate()) {
+		if (livro.validate() && quantCopias > 0) {
 			for (int quantLivros = 0; quantLivros < quantCopias; quantLivros++) {
 				Livro copy = livro.copy();
 				livroRepository.save(copy);
@@ -212,22 +211,22 @@ public class Server {
 		return livroRepository.findBySimilarExample(l,true);
 	}
 	
-	public int retirada(Livro livro, Cartao cartao) {
+	public int retirada(Livro livro, Cliente cliente) {
 		if (livro.validate()) {
-			if (cartao.validate()) {
+			if (cliente.validate()) {
 				livro.setRetirado(true);
-				return livroRetiradoRepository.save(livro, cartao, 0) ? 0 : 1;
+				return livroRetiradoRepository.save(livro, cliente) ? 0 : 1;
 				// 0 = sucesso | 1 = erro de quantidade insuficiente
 			} else return 3; //erro cliente não preenchido
 		} else return 2; //erro livro não preenchido
 	}
 	
 	public LivroRetirado findLivroRetirado(Livro livro, Cliente cliente) {
-		return livroRetiradoRepository.findLivroRetirado(livro, cliente.getCartao());
+		return livroRetiradoRepository.findLivroRetirado(livro, cliente);
 	}
 	
 	public List<LivroRetirado> findSimilarLivroRetirado(Livro livro, Cliente cliente) {
-		return livroRetiradoRepository.findSimilarLivroRetirado(livro, cliente.getCartao());
+		return livroRetiradoRepository.findSimilarLivroRetirado(livro, cliente);
 	}
 	
 	public int estenderRetirada(LivroRetirado livroRetirado) {
@@ -236,14 +235,14 @@ public class Server {
 					? livroRetirado.getRetirada().getDataRaw() 
 					: livroRetirado.getLastRenovacao().getDataRaw());
 			if(dataUltimaMovimentacao.plusDays(3).isBefore(LocalDateTime.now())) { 
-				livroRetiradoRepository.estenderRetirada(livroRetirado, 1);
+				livroRetiradoRepository.estenderRetirada(livroRetirado);
 				return 0; //sucesso
 			}else return dataUltimaMovimentacao.plusDays(3).getDayOfYear()-LocalDateTime.now().getDayOfYear(); //erro n- renovação muito cedo
 		}else return 1; //erro 1- limite de renovações ultrapassado
 	}
 	
 	public int devolucao(LivroRetirado livroRetirado) {
-		return livroRetiradoRepository.devolver(livroRetirado, 2);
+		return livroRetiradoRepository.devolver(livroRetirado);
 	}
 	
 	public Cliente findClientWithThisCardCode(String code) {

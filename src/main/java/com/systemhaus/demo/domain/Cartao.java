@@ -61,10 +61,6 @@ public class Cartao {
 		return codigo;
 	}
 	
-	public boolean isEqual(Cartao cartao) {
-		return (this.nome.contentEquals(cartao.getNome()) && this.codigo.contentEquals(cartao.getCodigo()) && this.getValidade().compareTo(cartao.getValidade()) == 0);
-	}
-	
 	public void clear() {
 		this.nome = "";
 		this.codigo = "";

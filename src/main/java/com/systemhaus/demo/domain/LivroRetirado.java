@@ -16,15 +16,15 @@ public class LivroRetirado extends Model{
 	//private static final String PROPERTY_LIVRO = "livro";
 	
 	private Livro livro; //referência ao livro
-	private Cartao cartao; //referência ao cartão do cliente
+	private Cliente cliente; //referência ao cliente
 	private Evento retirada; //evento de retirada do livro
 	private List<Evento> renovacoes; //lista de renovações
 	private Evento devolucao; //evento de devolução do livro
 	private LocalDateTime dataDevolucao; //data em que a devolução deve ser feita
 	
-	public LivroRetirado(Livro livro, Cartao cartao, Evento retirada) {
+	public LivroRetirado(Livro livro, Cliente cliente, Evento retirada) {
 		this.livro = livro;
-		this.cartao = cartao;
+		this.cliente = cliente;
 		this.retirada = retirada;
 		this.renovacoes = new ArrayList<Evento>();
 		this.devolucao = null;
@@ -33,7 +33,7 @@ public class LivroRetirado extends Model{
 	
 	public LivroRetirado() {
 		this.livro = new Livro();
-		this.cartao = new Cartao();
+		this.cliente = new Cliente();
 		this.retirada = null;
 		this.renovacoes = new ArrayList<Evento>();
 		this.devolucao = null;
@@ -46,11 +46,11 @@ public class LivroRetirado extends Model{
 	public void setLivro(Livro livro) {
 		this.livro = livro;
 	}
-	public Cartao getCartao() {
-		return cartao;
+	public Cliente getCliente() {
+		return cliente;
 	}
-	public void setCartao(Cartao cartao) {
-		this.cartao = cartao;
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
 	}
 	public Evento getRetirada() {
 		return retirada;

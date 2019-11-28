@@ -197,7 +197,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		});
 		
 		btnRetirar.addActionListener(l -> {
-			switch(server.retirada(livroModel.getBean(), clienteModel.getBean().getCartao())) {
+			switch(server.retirada(livroModel.getBean(), clienteModel.getBean())) {
 				case 0:
 					JOptionPane.showMessageDialog(null, "O livro foi retirado com sucesso!");
 					this.selectedPanel = "cl";
@@ -569,7 +569,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 			livroTablePanel.setSelectionToANewObject(livroRetiradoModel.getBean().getLivro());
 			setRemainingDataForLivro();
 		} else {
-			clienteTablePanel.setSelectionToANewObject(server.findClientWithThisCardCode(livroRetiradoModel.getBean().getCartao().getCodigo()));
+			clienteTablePanel.setSelectionToANewObject(livroRetiradoModel.getBean().getCliente());
 		}
 	}
 	

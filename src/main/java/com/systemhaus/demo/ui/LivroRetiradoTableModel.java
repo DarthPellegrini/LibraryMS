@@ -16,8 +16,8 @@ public class LivroRetiradoTableModel extends AbstractTableAdapter<LivroRetirado>
 		switch(columnIndex) {
 		case 0: return livroRetirado.getLivro().getISBN();
 		case 1: return livroRetirado.getLivro().getTitulo();
-		case 2: return livroRetirado.getCartao().getNome();
-		case 3: return livroRetirado.getCartao().getCodigo();
+		case 2: return livroRetirado.getCliente().getNome();
+		case 3: return livroRetirado.getCliente().getCartao().getCodigo();
 		case 4: return livroRetirado.getDataRetiradaAsLocalDate();
 		case 5: return livroRetirado.getTotalRenovacoes();
 		case 6: return livroRetirado.getDataDevolucaoAsLocalDate();
