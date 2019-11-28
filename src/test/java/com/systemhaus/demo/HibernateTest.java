@@ -36,7 +36,7 @@ public class HibernateTest {
 	
 	@Test
 	public void testHibernate() {
-		StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();  
+		StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("/resources/hibernate.cfg.xml").build();  
         Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();  
         SessionFactory factory = meta.getSessionFactoryBuilder().build();  
 	    Session session = factory.openSession();  
