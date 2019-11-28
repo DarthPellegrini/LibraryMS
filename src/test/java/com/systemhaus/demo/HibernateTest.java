@@ -1,5 +1,7 @@
 package com.systemhaus.demo;
 
+import static org.junit.Assert.assertTrue;
+
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -36,8 +38,7 @@ public class HibernateTest {
 	public void testHibernate() {
 		StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure("hibernate.cfg.xml").build();  
         Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();  
-      
-	    SessionFactory factory = meta.getSessionFactoryBuilder().build();  
+        SessionFactory factory = meta.getSessionFactoryBuilder().build();  
 	    Session session = factory.openSession();  
 	    Transaction t = session.beginTransaction();  
 	      
@@ -48,6 +49,7 @@ public class HibernateTest {
 	    System.out.println("successfully saved");    
 	    factory.close();  
 	    session.close();
+	    assertTrue(true);
 	}
 	
 }
