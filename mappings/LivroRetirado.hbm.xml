@@ -23,11 +23,11 @@
         <property name="dataDevolucao" type="timestamp">
             <column name="data_devolucao" length="29" not-null="true" />
         </property>
-        <list name="renovacoes" table="evento" inverse="true" lazy="true" fetch="select">
+        <bag name="renovacoes" table="evento" inverse="true" cascade="all">
             <key>
                 <column name="livro_retirado_id" not-null="true" />
             </key>
             <one-to-many class="Evento" />
-        </list>
+        </bag>
     </class>
 </hibernate-mapping>

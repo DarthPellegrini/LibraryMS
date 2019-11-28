@@ -14,12 +14,12 @@
          <generator class="native"/>
       </id>
       
-      <list name="livros" table="livro" inverse="true" lazy="true" fetch="select">
+      <bag name="livros" table="prateleira" inverse="true" cascade="all">
             <key>
                 <column name="prateleira_id" not-null="true" />
             </key>
             <one-to-many class="Livro" />
-        </list>
+        </bag>
       
    </class>
 </hibernate-mapping>

@@ -8,11 +8,11 @@
             <column name="biblioteca_id" />
             <generator class="assigned" />
         </id>
-        <list name="estantes" table="estante" inverse="true" lazy="true" fetch="select">
+        <bag name="estantes" table="estante" inverse="true" cascade="all">
             <key>
                 <column name="biblioteca_id" not-null="true" />
             </key>
             <one-to-many class="Estante" />
-        </list>
+        </bag>
     </class>
 </hibernate-mapping>
