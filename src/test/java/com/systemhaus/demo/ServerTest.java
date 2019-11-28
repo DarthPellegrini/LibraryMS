@@ -186,7 +186,7 @@ public class ServerTest {
 		Server s = new Server();
 		initTestServer(s);
 		Cliente c = new Cliente();
-		c.setCPF("02789345280");
+		c.setCpf("02789345280");
 		List<Cliente> list = s.findSimilarClients(c);
 		Cliente beforeEdit = list.get(0);
 		s.editClient("02789345280",new Cliente("Leo Pellegrini","02789345280","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
@@ -206,7 +206,7 @@ public class ServerTest {
 		s.editClient("02789345280",new Cliente("Pellegrini","02789345281","5551999999999","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 		list = s.findSimilarClients(c);
 		Cliente afterEdit = list.get(0);
-		assertEquals(beforeEdit.getCPF(),afterEdit.getCPF());
+		assertEquals(beforeEdit.getCpf(),afterEdit.getCpf());
 	}
 	
 	@Test
@@ -228,7 +228,7 @@ public class ServerTest {
 		Server s = new Server();
 		initTestServer(s);
 		Cliente c = new Cliente();
-		c.setCPF("02789345280");
+		c.setCpf("02789345280");
 		List<Cliente> list = s.findSimilarClients(c);
 		int sizeBeforeDelete = list.size();
 		s.deleteClient("02789345280");

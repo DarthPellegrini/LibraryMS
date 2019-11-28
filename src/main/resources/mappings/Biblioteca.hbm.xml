@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 28/11/2019 14:49:08 by Hibernate Tools 3.6.0.Final -->
+<!-- Generated 26/11/2019 13:42:20 by Hibernate Tools 3.6.0.Final -->
 <hibernate-mapping>
-    <class name="Biblioteca" table="biblioteca" schema="libraryms">
-        <id name="bibliotecaId" type="int">
+    <class name="com.systemhaus.demo.domain.Biblioteca" table="biblioteca" schema="libraryms">
+        <id name="id" type="int">
             <column name="biblioteca_id" />
             <generator class="assigned" />
         </id>
-        <set name="estantes" table="estante" inverse="true" lazy="true" fetch="select">
+        <bag name="estantes" table="estante" inverse="true" cascade="all">
             <key>
                 <column name="biblioteca_id" not-null="true" />
             </key>
-            <one-to-many class="Estante" />
-        </set>
+            <one-to-many class="com.systemhaus.demo.domain.Estante" />
+        </bag>
     </class>
 </hibernate-mapping>

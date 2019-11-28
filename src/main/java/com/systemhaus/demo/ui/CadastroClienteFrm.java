@@ -92,7 +92,7 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		
 		btnTableConfirm.addActionListener(l -> {
 			changePanel(contentPanel, "data");
-			clienteCPF = model.getBean().getCPF();
+			clienteCPF = model.getBean().getCpf();
 			this.clearDataAndSetButtons(false, btnArray, editMode);
 		});
 		
@@ -127,7 +127,7 @@ public class CadastroClienteFrm extends SkeletonFrm{
 				clienteSelection.setList(new ArrayListModel<>(clientes));
 				if(clientes.size() == 1) {
 					this.tablePanel.setSelectionToLastObject();
-					clienteCPF = model.getBean().getCPF();
+					clienteCPF = model.getBean().getCpf();
 					this.clearDataAndSetButtons(false, btnArray, editMode);
 				}else {
 					this.clearDataAndSetButtons(false, btnArray, searchMode);

@@ -8,6 +8,7 @@ import java.util.Map;
 public class Biblioteca {
 	
 	//a biblioteca terá um número n de estantes, dependendo somente da quantidade de livros
+	private int id;
 	private List<Estante> estantes;
 	private List<Cliente> clientes;
 	private Map<String,int[]> regLivros;
@@ -20,6 +21,14 @@ public class Biblioteca {
 		this.addEstante();
 	}
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public List<Estante> getEstantes() {
 		return estantes;
 	}

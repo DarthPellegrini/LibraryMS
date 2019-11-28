@@ -1,33 +1,33 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 28/11/2019 14:49:08 by Hibernate Tools 3.6.0.Final -->
+<!-- Generated 27/11/2019 15:14:09 by Hibernate Tools 3.6.0.Final -->
 <hibernate-mapping>
-    <class name="LivroRetirado" table="livro_retirado" schema="libraryms">
-        <id name="livroRetiradoId" type="int">
+    <class name="com.systemhaus.demo.domain.LivroRetirado" table="livro_retirado" schema="libraryms">
+        <id name="id" type="int">
             <column name="livro_retirado_id" />
             <generator class="assigned" />
         </id>
-        <many-to-one name="eventoByEventoRetiradaId" class="Evento" fetch="select">
+        <many-to-one name="eventoRetirada" class="com.systemhaus.demo.domain.Evento" fetch="select">
             <column name="evento_retirada_id" not-null="true" />
         </many-to-one>
-        <many-to-one name="livro" class="Livro" fetch="select">
+        <many-to-one name="livro" class="com.systemhaus.demo.domain.Livro" fetch="select">
             <column name="livro_id" not-null="true" />
         </many-to-one>
-        <many-to-one name="cliente" class="Cliente" fetch="select">
+        <many-to-one name="cliente" class="com.systemhaus.demo.domain.Cliente" fetch="select">
             <column name="cliente_id" length="11" not-null="true" />
         </many-to-one>
-        <many-to-one name="eventoByEventoDevolucaoId" class="Evento" fetch="select">
+        <many-to-one name="eventoDevolucao" class="com.systemhaus.demo.domain.Evento" fetch="select">
             <column name="evento_devolucao_id" />
         </many-to-one>
         <property name="dataDevolucao" type="timestamp">
             <column name="data_devolucao" length="29" not-null="true" />
         </property>
-        <set name="eventos" table="evento" inverse="true" lazy="true" fetch="select">
+        <bag name="renovacoes" table="evento" inverse="true" cascade="all">
             <key>
                 <column name="livro_retirado_id" not-null="true" />
             </key>
-            <one-to-many class="Evento" />
-        </set>
+            <one-to-many class="com.systemhaus.demo.domain.Evento" />
+        </bag>
     </class>
 </hibernate-mapping>

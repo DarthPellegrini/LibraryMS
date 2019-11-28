@@ -12,7 +12,7 @@ public class Cliente extends Model{
 	 */
 	private static final long serialVersionUID = 1L;
 	private static final String PROPERTY_NOME = "nome";
-	private static final String PROPERTY_CPF = "CPF";
+	private static final String PROPERTY_CPF = "cpf";
 	private static final String PROPERTY_TELEFONE = "telefone";
 	private static final String PROPERTY_CIDADE = "cidade";
 	private static final String PROPERTY_BAIRRO = "bairro";
@@ -34,7 +34,7 @@ public class Cliente extends Model{
 		this.endereco = new Endereco();
 		this.cartao = new Cartao();
 		this.setNome(nome);
-		this.setCPF(cpf);
+		this.setCpf(cpf);
 		this.setTelefone(telefone);
 		this.getEndereco().setCidade(cidade);
 		this.getEndereco().setBairro(bairro);
@@ -48,7 +48,7 @@ public class Cliente extends Model{
 		this.setEndereco(endereco);
 		this.setCartao(cartao);
 		this.setNome(nome);
-		this.setCPF(cpf);
+		this.setCpf(cpf);
 		this.setTelefone(telefone);
 	}
 	
@@ -68,10 +68,11 @@ public class Cliente extends Model{
 		this.cartao.setNome(nome);
 		firePropertyChange(PROPERTY_NOME, oldValue, this.nome);
 	}
-	public String getCPF() {
+	
+	public String getCpf() {
 		return cpf;
 	}
-	public void setCPF(String cpf) {
+	public void setCpf(String cpf) {
 		if(cpf.matches("[0-9]{11}")) {
 			String oldValue = this.cpf;
 			this.cpf = cpf;
@@ -153,7 +154,7 @@ public class Cliente extends Model{
 	
 	public void setAllDataFrom(Cliente from) {
 		this.setNome(from.getNome());
-		this.setCPF(from.getCPF());
+		this.setCpf(from.getCpf());
 		this.setTelefone(from.getTelefone());
 		this.setCidade(from.getCidade());
 		this.setBairro(from.getBairro());

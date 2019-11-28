@@ -1,18 +1,24 @@
-<?xml version = "1.0" encoding = "utf-8"?>
-<!DOCTYPE hibernate-mapping PUBLIC 
-"-//Hibernate/Hibernate Mapping DTD//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
-
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28/11/2019 14:49:08 by Hibernate Tools 3.6.0.Final -->
 <hibernate-mapping>
-   <class name = "Cartao" table = "cartao">
-      
-      <meta attribute = "class-description">
-         Classe do cartão do cliente. 
-      </meta>
-      
-      <id name = "codigo" type = "varchar" column = "codigo"/>      
-      <property name = "nome" column = "nome" type = "string"/>
-      <property name = "validade" column = "validade" type = "timestamp"/>
-      
-   </class>
+    <class name="Cartao" table="cartao" schema="libraryms">
+        <id name="codigo" type="string">
+            <column name="codigo" length="16" />
+            <generator class="assigned" />
+        </id>
+        <property name="nome" type="string">
+            <column name="nome" length="80" not-null="true" />
+        </property>
+        <property name="validade" type="timestamp">
+            <column name="validade" length="29" not-null="true" />
+        </property>
+        <set name="clientes" table="cliente" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="cartao" length="16" />
+            </key>
+            <one-to-many class="Cliente" />
+        </set>
+    </class>
 </hibernate-mapping>

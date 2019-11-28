@@ -1,21 +1,33 @@
-<?xml version = "1.0" encoding = "utf-8"?>
-<!DOCTYPE hibernate-mapping PUBLIC 
-"-//Hibernate/Hibernate Mapping DTD//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
-
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28/11/2019 14:49:08 by Hibernate Tools 3.6.0.Final -->
 <hibernate-mapping>
-   <class name = "Evento" table = "evento">
-      
-      <meta attribute = "class-description">
-         A classe de eventos. 
-      </meta>
-      
-      <id name = "id" type = "int" column = "evento_id">
-         <generator class="native"/>
-      </id>
-      
-      <property name="tipoEvento" column="tipo_evento" type="string"/>
-      <property name = "data" column = "data" type = "timestamp"/>
-      
-   </class>
+    <class name="Evento" table="evento" schema="libraryms">
+        <id name="eventoId" type="int">
+            <column name="evento_id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="livroRetirado" class="LivroRetirado" fetch="select">
+            <column name="livro_retirado_id" not-null="true" />
+        </many-to-one>
+        <property name="dataEvento" type="timestamp">
+            <column name="data_evento" length="29" not-null="true" />
+        </property>
+        <property name="tipoEvento" type="string">
+            <column name="tipo_evento" length="10" not-null="true" />
+        </property>
+        <set name="livroRetiradosForEventoDevolucaoId" table="livro_retirado" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="evento_devolucao_id" />
+            </key>
+            <one-to-many class="LivroRetirado" />
+        </set>
+        <set name="livroRetiradosForEventoRetiradaId" table="livro_retirado" inverse="true" lazy="true" fetch="select">
+            <key>
+                <column name="evento_retirada_id" not-null="true" />
+            </key>
+            <one-to-many class="LivroRetirado" />
+        </set>
+    </class>
 </hibernate-mapping>

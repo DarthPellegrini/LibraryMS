@@ -4,7 +4,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
 
 <hibernate-mapping>
-   <class name = "Livro" table = "livro">
+   <class name = "com.systemhaus.demo.domain.Livro" table = "livro">
       
       <meta attribute = "class-description">
          Classe de um exemplar de um livro. 

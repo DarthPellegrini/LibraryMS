@@ -43,7 +43,7 @@ public class HibernateTest {
 	    Transaction t = session.beginTransaction();  
 	      
 	    Livro l = new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false);
-	     
+	    
 	    session.save(l);  
 	    t.commit();  
 	    System.out.println("successfully saved");    

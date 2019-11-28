@@ -6,18 +6,27 @@ import java.util.List;
 public class Estante {
 
 	// cada estante terá no máximo 5 prateleiras
+	private int id;
 	private List<Prateleira> prateleiras;
 	private final int size = 5;
 	
 	public Estante() {
-		setEstante(new ArrayList<Prateleira>());
+		setPrateleiras(new ArrayList<Prateleira>());
 		initializeEstante();
 	}
 
 	public Estante(ArrayList<Prateleira> prateleiras) {
-		setEstante(prateleiras);
+		setPrateleiras(prateleiras);
 	}
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public void initializeEstante() {
 		for (int i = 0; i < size; i++)
 			this.getPrateleiras().add(new Prateleira());
@@ -31,7 +40,7 @@ public class Estante {
 		return prateleiras;
 	}
 
-	private boolean setEstante(ArrayList<Prateleira> prateleiras) {
+	private boolean setPrateleiras(ArrayList<Prateleira> prateleiras) {
 		if (prateleiras.size() < size) {
 			this.prateleiras = prateleiras;
 			return true;

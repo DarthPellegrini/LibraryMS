@@ -12,6 +12,12 @@ public class Evento {
 	private TipoEvento tipoEvento;
 	private LocalDateTime data; //data do evento
 	
+	public Evento() {
+		super();
+		this.setData(Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()));
+		this.setTipoEvento(TipoEvento.RETIRADA);
+	}
+	
 	public Evento(TipoEvento tipoEvento) {
 		super();
 		setTipoEvento(tipoEvento);
@@ -30,7 +36,7 @@ public class Evento {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public TipoEvento getTipoDeEvento() {
+	public TipoEvento getTipoEvento() {
 		return tipoEvento;
 	}
 	public void setTipoEvento(TipoEvento tipoEvento) {
@@ -40,6 +46,7 @@ public class Evento {
 	public Date getData() {
 		return Date.from(this.data.atZone(ZoneId.systemDefault()).toInstant());
 	}
+	
 	public LocalDateTime getDataRaw() {
 		return data;
 	}

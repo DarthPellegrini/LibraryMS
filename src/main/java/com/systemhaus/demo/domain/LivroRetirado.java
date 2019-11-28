@@ -15,6 +15,7 @@ public class LivroRetirado extends Model{
 	private static final long serialVersionUID = 1L;
 	//private static final String PROPERTY_LIVRO = "livro";
 	
+	private int id;
 	private Livro livro; //referência ao livro
 	private Cliente cliente; //referência ao cliente
 	private Evento retirada; //evento de retirada do livro
@@ -22,24 +23,30 @@ public class LivroRetirado extends Model{
 	private Evento devolucao; //evento de devolução do livro
 	private LocalDateTime dataDevolucao; //data em que a devolução deve ser feita
 	
-	public LivroRetirado(Livro livro, Cliente cliente, Evento retirada) {
-		this.livro = livro;
-		this.cliente = cliente;
-		this.retirada = retirada;
-		this.renovacoes = new ArrayList<Evento>();
-		this.devolucao = null;
-		setDataDevolucao(retirada.getDataRaw());
-	}
-	
 	public LivroRetirado() {
-		this.livro = new Livro();
-		this.cliente = new Cliente();
-		this.retirada = null;
-		this.renovacoes = new ArrayList<Evento>();
-		this.devolucao = null;
+		this.setLivro(new Livro());
+		this.setCliente(new Cliente());
+		this.setRetirada(null);
+		this.setRenovacoes(new ArrayList<Evento>());
+		this.setDevolucao(null);
 		this.dataDevolucao = null;
 	}
+	
+	public LivroRetirado(Livro livro, Cliente cliente, Evento retirada) {
+		this.setLivro(livro);
+		this.setCliente(cliente);
+		this.setRetirada(retirada);
+		this.setRenovacoes(new ArrayList<Evento>());
+		this.setDevolucao(null);
+		setDataDevolucao(retirada.getDataRaw());
+	}
 
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
 	public Livro getLivro() {
 		return livro;
 	}
@@ -55,19 +62,28 @@ public class LivroRetirado extends Model{
 	public Evento getRetirada() {
 		return retirada;
 	}
+	private void setRetirada(Evento retirada) {
+		this.retirada = retirada;
+	}
 	public LocalDate getDataRetiradaAsLocalDate() {
 		if (retirada == null)
 			return null;
 		else
 			return retirada.getDataRaw().toLocalDate();	
 	}
+	private List<Evento> getRenovacoes() {
+		return renovacoes;
+	}
 
+	private void setRenovacoes(List<Evento> renovacoes) {
+		this.renovacoes = renovacoes;
+	}
 	public int getTotalRenovacoes() {
-		return this.renovacoes.size();
+		return getRenovacoes().size();
 	}
 	
 	public Evento getLastRenovacao() {
-		return this.renovacoes.get(renovacoes.size()-1);
+		return getRenovacoes().get(getRenovacoes().size()-1);
 	}
 	
 	public Evento getDevolucao() {
@@ -92,8 +108,8 @@ public class LivroRetirado extends Model{
 			return dataDevolucao.toLocalDate();
 	}
 	
-	public void devolver(Evento evento) {
-		this.devolucao = evento;
+	public void setDevolucao(Evento evento) {
+		setDevolucao(evento);
 	}
 	
 	public void estenderRetirada(Evento evento) {
@@ -104,5 +120,6 @@ public class LivroRetirado extends Model{
 	public void setDataDevolucao(LocalDateTime date) {
 		this.dataDevolucao = date.plusDays(7);
 	}
+
 	
 }

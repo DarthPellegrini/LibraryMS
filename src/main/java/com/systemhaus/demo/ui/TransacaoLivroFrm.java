@@ -164,7 +164,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 					clienteModel.getBean().setNome(txtfEscolhaCliente.getText());
 					break;
 				case "CPF":
-					clienteModel.getBean().setCPF(txtfEscolhaCliente.getText());
+					clienteModel.getBean().setCpf(txtfEscolhaCliente.getText());
 					break;
 				case "Telefone":
 					clienteModel.getBean().setTelefone(txtfEscolhaCliente.getText());

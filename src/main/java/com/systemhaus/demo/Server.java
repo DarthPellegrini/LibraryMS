@@ -155,7 +155,7 @@ public class Server {
 	 * Método de adição de clientes
 	 */
 	public int addClienteRoutine(Cliente cliente) {
-		if(!clienteRepository.thisCpfAlreadyExists(cliente.getCPF()))
+		if(!clienteRepository.thisCpfAlreadyExists(cliente.getCpf()))
 			return this.addCliente(cliente.copy());
 		return 3; //erro de cpf
 	}
@@ -179,10 +179,10 @@ public class Server {
 	/*
 	 * Método de edição do cliente
 	 */
-	public boolean editClient(String CPF, Cliente cliente) {
-		if(!clienteRepository.thisCpfAlreadyExists(cliente.getCPF()) 
-			|| (cliente.getCPF().equals(CPF) && clienteRepository.thisCpfAlreadyExists(cliente.getCPF()))) {
-			clienteRepository.edit(CPF, cliente.copy());
+	public boolean editClient(String cpf, Cliente cliente) {
+		if(!clienteRepository.thisCpfAlreadyExists(cliente.getCpf()) 
+			|| (cliente.getCpf().equals(cpf) && clienteRepository.thisCpfAlreadyExists(cliente.getCpf()))) {
+			clienteRepository.edit(cpf, cliente.copy());
 			return true;
 		}
 		return false;
@@ -191,8 +191,8 @@ public class Server {
 	/*
 	 * Método de exclusão do cliente
 	 */
-	public void deleteClient(String CPF) {
-		clienteRepository.delete(CPF);
+	public void deleteClient(String cpf) {
+		clienteRepository.delete(cpf);
 	}
 	
 	/*

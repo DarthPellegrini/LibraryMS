@@ -1,0 +1,25 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name = "com.systemhaus.demo.domain.Prateleira" table = "prateleira">
+      
+      <meta attribute = "class-description">
+         Classe da prateleira que contém os livros. 
+      </meta>
+      
+      <id name = "id" type = "int" column = "prateleira_id">
+         <generator class="native"/>
+      </id>
+      
+      <bag name="livros" table="prateleira" inverse="true" cascade="all">
+            <key>
+                <column name="prateleira_id" not-null="true" />
+            </key>
+            <one-to-many class="com.systemhaus.demo.domain.Livro" />
+        </bag>
+      
+   </class>
+</hibernate-mapping>

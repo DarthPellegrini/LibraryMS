@@ -29,14 +29,14 @@ public class ClienteDAO implements ClienteRepository {
 				similar.getCidade().isEmpty() ? "" : similar.getCidade().toLowerCase(),
 				similar.getBairro().isEmpty() ? "" : similar.getBairro().toLowerCase(),
 				similar.getRua().isEmpty() ? "" : similar.getRua().toLowerCase()};
-		if(similar.getNome().isEmpty() && similar.getCPF().isEmpty() 
+		if(similar.getNome().isEmpty() && similar.getCpf().isEmpty() 
 			&& similar.getTelefone().isEmpty() && similar.getCidade().isEmpty() 
 			&& similar.getBairro().isEmpty() && similar.getRua().isEmpty()
 			&& similar.getNumero() == 0)
 			return clientes;
 		for(ListIterator<Cliente> cIt = biblioteca.getClientes().listIterator(); cIt.hasNext();) {
 			Cliente c = cIt.next();
-			if((c.getCPF().equals(similar.getCPF()) || similar.getCPF().isEmpty())
+			if((c.getCpf().equals(similar.getCpf()) || similar.getCpf().isEmpty())
 				&& (c.getTelefone().equals(similar.getTelefone()) || similar.getTelefone().isEmpty())
 				&& (c.getNumero() == similar.getNumero() || similar.getNumero() == 0)
 				&& (c.getNome().toLowerCase().contains(dadosSimilares[0])
@@ -54,18 +54,18 @@ public class ClienteDAO implements ClienteRepository {
 	}
 	
 	@Override
-	public void edit(String CPF, Cliente cliente) {
+	public void edit(String cpf, Cliente cliente) {
 		for(ListIterator<Cliente> cIt = biblioteca.getClientes().listIterator(); cIt.hasNext();) {
 			Cliente c = cIt.next();
-			if(c.getCPF().equals(CPF)) c.setAllDataFrom(cliente);
+			if(c.getCpf().equals(cpf)) c.setAllDataFrom(cliente);
 		}
 	}
 	
 	@Override
-	public void delete(String CPF) {
+	public void delete(String cpf) {
 		for(ListIterator<Cliente> cIt = biblioteca.getClientes().listIterator(); cIt.hasNext();) {
 			Cliente c = cIt.next();
-			if(c.getCPF().equals(CPF)) {
+			if(c.getCpf().equals(cpf)) {
 				cIt.remove();
 				return;
 			}
@@ -73,10 +73,10 @@ public class ClienteDAO implements ClienteRepository {
 	}
 	
 	@Override 
-	public boolean thisCpfAlreadyExists(String CPF) {
+	public boolean thisCpfAlreadyExists(String cpf) {
 		for(ListIterator<Cliente> cIt = biblioteca.getClientes().listIterator(); cIt.hasNext();) {
 			Cliente c = cIt.next();
-			if(c.getCPF().equals(CPF)) return true;
+			if(c.getCpf().equals(cpf)) return true;
 		}
 		return false;
 	}

@@ -43,7 +43,7 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 		for(ListIterator<LivroRetirado> lrIt = biblioteca.getLivrosRetirados().listIterator(biblioteca.getLivrosRetirados().size());
 				lrIt.hasPrevious();) {
 			LivroRetirado livroRetirado = lrIt.previous();
-			if (livroRetirado.getLivro().isEqual(livro) && livroRetirado.getCliente().getCPF().contentEquals(cliente.getCPF()))
+			if (livroRetirado.getLivro().isEqual(livro) && livroRetirado.getCliente().getCpf().contentEquals(cliente.getCpf()))
 				return livroRetirado;
 		}
 		return null;
@@ -54,9 +54,9 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 		List<LivroRetirado> livrosRetirados = new ArrayList<>();
 		for (LivroRetirado livroRetirado : biblioteca.getLivrosRetirados()) {
 			if (livroRetirado.getDevolucao() == null &&
-				((livroRetirado.getLivro().isEqual(livro) && livroRetirado.getCliente().getCPF().contentEquals(cliente.getCPF()))) ||
+				((livroRetirado.getLivro().isEqual(livro) && livroRetirado.getCliente().getCpf().contentEquals(cliente.getCpf()))) ||
 				(livroRetirado.getLivro().isEqual(livro) && !cliente.validate()) || 
-				(livroRetirado.getCliente().getCPF().contentEquals(cliente.getCPF())) && !livro.validate())
+				(livroRetirado.getCliente().getCpf().contentEquals(cliente.getCpf())) && !livro.validate())
 				livrosRetirados.add(livroRetirado);
 		}
 		return livrosRetirados;
@@ -67,7 +67,7 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 		if(livroRetirado.getDevolucao() == null) {
 			biblioteca.remRetirado(livroRetirado.getLivro().getISBN());
 			livroRetirado.getLivro().setRetirado(false); //precisa ser modificado quando o banco for incluído
-			livroRetirado.devolver(new Evento(TipoEvento.DEVOLUCAO));
+			livroRetirado.setDevolucao(new Evento(TipoEvento.DEVOLUCAO));
 			return 0;
 		}else
 			return 1;

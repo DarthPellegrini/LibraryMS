@@ -1,25 +1,21 @@
-<?xml version = "1.0" encoding = "utf-8"?>
-<!DOCTYPE hibernate-mapping PUBLIC 
-"-//Hibernate/Hibernate Mapping DTD//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
-
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 28/11/2019 14:49:08 by Hibernate Tools 3.6.0.Final -->
 <hibernate-mapping>
-   <class name = "Prateleira" table = "prateleira">
-      
-      <meta attribute = "class-description">
-         Classe da prateleira que contém os livros. 
-      </meta>
-      
-      <id name = "id" type = "int" column = "prateleira_id">
-         <generator class="native"/>
-      </id>
-      
-      <bag name="livros" table="prateleira" inverse="true" cascade="all">
+    <class name="Prateleira" table="prateleira" schema="libraryms">
+        <id name="prateleiraId" type="int">
+            <column name="prateleira_id" />
+            <generator class="assigned" />
+        </id>
+        <many-to-one name="estante" class="Estante" fetch="select">
+            <column name="estante_id" not-null="true" />
+        </many-to-one>
+        <set name="livros" table="livro" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="prateleira_id" not-null="true" />
             </key>
             <one-to-many class="Livro" />
-        </bag>
-      
-   </class>
+        </set>
+    </class>
 </hibernate-mapping>
