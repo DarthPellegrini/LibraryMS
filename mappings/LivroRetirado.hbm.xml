@@ -1,27 +1,33 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 26/11/2019 13:42:20 by Hibernate Tools 3.6.0.Final -->
+<!-- Generated 27/11/2019 15:14:09 by Hibernate Tools 3.6.0.Final -->
 <hibernate-mapping>
     <class name="LivroRetirado" table="livro_retirado" schema="libraryms">
         <id name="livroRetiradoId" type="int">
             <column name="livro_retirado_id" />
             <generator class="assigned" />
         </id>
+        <many-to-one name="eventoRetirada" class="Evento" fetch="select">
+            <column name="evento_retirada_id" not-null="true" />
+        </many-to-one>
         <many-to-one name="livro" class="Livro" fetch="select">
             <column name="livro_id" not-null="true" />
         </many-to-one>
-        <many-to-one name="cartao" class="Cartao" fetch="select">
-            <column name="cartao_id" length="16" not-null="true" />
+        <many-to-one name="cliente" class="Cliente" fetch="select">
+            <column name="cliente_id" length="11" not-null="true" />
+        </many-to-one>
+        <many-to-one name="eventoDevolucao" class="Evento" fetch="select">
+            <column name="evento_devolucao_id" />
         </many-to-one>
         <property name="dataDevolucao" type="timestamp">
             <column name="data_devolucao" length="29" not-null="true" />
         </property>
-        <set name="eventos" table="evento" inverse="true" lazy="true" fetch="select">
+        <list name="renovacoes" table="evento" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="livro_retirado_id" not-null="true" />
             </key>
             <one-to-many class="Evento" />
-        </set>
+        </list>
     </class>
 </hibernate-mapping>

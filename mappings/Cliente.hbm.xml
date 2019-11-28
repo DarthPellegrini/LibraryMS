@@ -1,24 +1,21 @@
-<?xml version="1.0"?>
-<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 26/11/2019 13:42:20 by Hibernate Tools 3.6.0.Final -->
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
 <hibernate-mapping>
-    <class name="Cliente" table="cliente" schema="libraryms">
-        <id name="cpf" type="string">
-            <column name="cpf" length="11" />
-            <generator class="assigned" />
-        </id>
-        <many-to-one name="cartao" class="Cartao" fetch="select">
-            <column name="cartao" length="16" />
-        </many-to-one>
-        <many-to-one name="endereco" class="Endereco" fetch="select">
-            <column name="endereco" />
-        </many-to-one>
-        <property name="nome" type="string">
-            <column name="nome" length="80" not-null="true" />
-        </property>
-        <property name="telefone" type="string">
-            <column name="telefone" length="13" not-null="true" />
-        </property>
-    </class>
+   <class name = "Cliente" table = "cliente">
+      
+      <meta attribute = "class-description">
+         A classe do cliente, contendo referência a um endereço e um cartão. 
+      </meta>
+      
+      <id name = "cpf" type = "string" column = "cpf"/>
+      
+      <property name = "nome" column = "nome" type = "string"/>
+      <property name = "telefone" column = "telefone" type = "string"/>
+      <many-to-one name="endereco" foreign-key="endereco" class="Endereco"/>
+      <one-to-one name="cartao" foreign-key="cartao" class="Cartao"/>      
+
+   </class>
 </hibernate-mapping>

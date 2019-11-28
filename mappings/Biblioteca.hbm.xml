@@ -4,15 +4,15 @@
 <!-- Generated 26/11/2019 13:42:20 by Hibernate Tools 3.6.0.Final -->
 <hibernate-mapping>
     <class name="Biblioteca" table="biblioteca" schema="libraryms">
-        <id name="bibliotecaId" type="int">
+        <id name="id" type="int">
             <column name="biblioteca_id" />
             <generator class="assigned" />
         </id>
-        <set name="estantes" table="estante" inverse="true" lazy="true" fetch="select">
+        <list name="estantes" table="estante" inverse="true" lazy="true" fetch="select">
             <key>
                 <column name="biblioteca_id" not-null="true" />
             </key>
             <one-to-many class="Estante" />
-        </set>
+        </list>
     </class>
 </hibernate-mapping>
