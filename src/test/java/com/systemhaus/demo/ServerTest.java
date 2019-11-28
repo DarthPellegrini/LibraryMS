@@ -362,5 +362,4 @@ public class ServerTest {
 		assertEquals(1, s.devolucao(lr));
 	}
 	
-	
 }
