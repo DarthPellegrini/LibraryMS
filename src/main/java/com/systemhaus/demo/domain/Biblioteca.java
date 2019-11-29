@@ -14,8 +14,8 @@ public class Biblioteca {
 	private Map<String,int[]> regLivros;
 	private List<LivroRetirado> livrosRetirados;
 	public Biblioteca() {
-		estantes = new ArrayList<Estante>();
-		clientes = new ArrayList<Cliente>();
+		setEstantes(new ArrayList<Estante>());
+		setClientes(new ArrayList<Cliente>());
 		regLivros = new HashMap<String,int[]>();
 		setLivrosRetirados(new ArrayList<LivroRetirado>());
 		this.addEstante();

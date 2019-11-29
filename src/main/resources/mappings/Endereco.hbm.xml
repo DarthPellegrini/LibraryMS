@@ -11,7 +11,7 @@
       </meta>
       
       <id name = "id" type = "int" column = "endereco_id">
-         <generator class="native"/>
+         <generator class="assigned"/>
       </id>
       
       <property name = "cidade" column = "cidade" type = "string"/>

@@ -15,6 +15,7 @@ import org.hibernate.boot.registry.StandardServiceRegistry;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.junit.Test;
 
+import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.Cliente;
 import com.systemhaus.demo.domain.Livro;
 
@@ -41,10 +42,12 @@ public class HibernateTest {
         SessionFactory factory = meta.getSessionFactoryBuilder().build();  
 	    Session session = factory.openSession();  
 	    Transaction t = session.beginTransaction();  
-	      
-	    Livro l = new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false);
 	    
-	    session.save(l);  
+	    Biblioteca b = new Biblioteca();
+	    Server s = new Server(b);
+	    s.addNewBookRoutine(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), 5);
+	    
+	    session.save(b);  
 	    t.commit();  
 	    System.out.println("successfully saved");    
 	    factory.close();  

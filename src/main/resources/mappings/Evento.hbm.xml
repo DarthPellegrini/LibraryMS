@@ -11,7 +11,7 @@
       </meta>
       
       <id name = "id" type = "int" column = "evento_id">
-         <generator class="native"/>
+         <generator class="assigned"/>
       </id>
       
       <property name="tipoEvento" column="tipo_evento" type="string"/>

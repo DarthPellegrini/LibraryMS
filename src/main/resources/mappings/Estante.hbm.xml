@@ -11,7 +11,7 @@
       </meta>
       
       <id name = "id" type = "int" column = "estante_id">
-         <generator class="native"/>
+         <generator class="assigned"/>
       </id>
       
       <bag name="prateleiras" table="prateleira" inverse="true" cascade="all">

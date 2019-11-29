@@ -10,7 +10,7 @@ public class Evento {
 	//registro de eventos
 	private int id; //id
 	private TipoEvento tipoEvento;
-	private LocalDateTime data; //data do evento
+	private Date data; //data do evento
 	
 	public Evento() {
 		super();
@@ -21,10 +21,10 @@ public class Evento {
 	public Evento(TipoEvento tipoEvento) {
 		super();
 		setTipoEvento(tipoEvento);
-		this.data = LocalDateTime.now();
+		this.data = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
 	}
 	
-	private Evento(TipoEvento tipoEvento, LocalDateTime data) {
+	private Evento(TipoEvento tipoEvento, Date data) {
 		super();
 		this.tipoEvento = tipoEvento;
 		this.data = data;
@@ -44,16 +44,15 @@ public class Evento {
 	}
 	
 	public Date getData() {
-		return Date.from(this.data.atZone(ZoneId.systemDefault()).toInstant());
-	}
-	
-	public LocalDateTime getDataRaw() {
 		return data;
 	}
+	public LocalDateTime getDataRaw() {
+		return Instant.ofEpochMilli(data.getTime())
+		        .atZone(ZoneId.systemDefault())
+		        .toLocalDateTime();
+	}
 	public void setData(Date data) {
-		this.data = Instant.ofEpochMilli(data.getTime())
-				        .atZone(ZoneId.systemDefault())
-				        .toLocalDateTime();
+		this.data = data;
 	}
 	
 	public Evento copy() {

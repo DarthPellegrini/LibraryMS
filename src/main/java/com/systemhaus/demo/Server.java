@@ -37,6 +37,15 @@ public class Server {
 		this.livroRetiradoRepository = new LivroRetiradoDAO(biblioteca);
 	}
 	
+	public Server (Biblioteca biblioteca) {
+		biblioteca = new Biblioteca();
+		this.estanteRepository = new EstanteDAO(biblioteca);
+		this.livroRepository = new LivroDAO(biblioteca);
+		this.clienteRepository = new ClienteDAO(biblioteca);
+		this.enderecoRepository = new EnderecoDAO(biblioteca);
+		this.livroRetiradoRepository = new LivroRetiradoDAO(biblioteca);
+	}
+	
 	public Server(EstanteRepository estanteRepository, LivroRepository livroRepository, 
 			ClienteRepository clienteRepository, EnderecoRepository enderecoRepository,
 			LivroRetiradoRepository livroRetiradoRepository) {
