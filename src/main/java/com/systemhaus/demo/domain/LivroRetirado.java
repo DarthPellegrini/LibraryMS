@@ -109,7 +109,7 @@ public class LivroRetirado extends Model{
 	}
 	
 	public void setDevolucao(Evento evento) {
-		setDevolucao(evento);
+		this.devolucao = evento;
 	}
 	
 	public void estenderRetirada(Evento evento) {

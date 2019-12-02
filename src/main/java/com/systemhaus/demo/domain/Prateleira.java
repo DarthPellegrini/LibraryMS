@@ -14,7 +14,7 @@ public class Prateleira {
 		setLivros(new ArrayList<Livro>());
 	}
 	
-	public Prateleira(ArrayList<Livro> livros) {
+	public Prateleira(List<Livro> livros) {
 		setLivros(livros);
 	}
 	

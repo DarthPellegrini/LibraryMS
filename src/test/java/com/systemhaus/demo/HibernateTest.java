@@ -47,7 +47,7 @@ public class HibernateTest {
 	    Server s = new Server(b);
 	    s.addNewBookRoutine(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), 5);
 	    
-	    session.save(b);  
+	    session.save(b);
 	    t.commit();  
 	    System.out.println("successfully saved");    
 	    factory.close();  

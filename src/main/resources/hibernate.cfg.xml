@@ -12,22 +12,22 @@
         <property name="hibernate.default_schema">libraryms</property>
         <property name="connection_pool_size">1</property>
 
-        <property name="hbm2ddl.auto">create</property>
+        <property name="hbm2ddl.auto">update</property>
 
         <property name="show_sql">true</property>
 
        <!-- Set the current session context -->
 	    <property name="current_session_context_class">thread</property>
 		
-		<mapping resource="/mappings/Biblioteca.hbm.xml"/>
-		<mapping resource="/mappings/Estante.hbm.xml"/>
-		<mapping resource="/mappings/Prateleira.hbm.xml"/>
-		<mapping resource="/mappings/Livro.hbm.xml"/>
-		<mapping resource="/mappings/Cliente.hbm.xml"/>
-		<mapping resource="/mappings/Endereco.hbm.xml"/>
-		<mapping resource="/mappings/Cartao.hbm.xml"/>
-		<mapping resource="/mappings/LivroRetirado.hbm.xml"/>
-		<mapping resource="/mappings/Evento.hbm.xml"/>
+		<mapping resource="mappings/Biblioteca.hbm.xml"/>
+		<mapping resource="mappings/Estante.hbm.xml"/>
+		<mapping resource="mappings/Prateleira.hbm.xml"/>
+		<mapping resource="mappings/Livro.hbm.xml"/>
+		<mapping resource="mappings/Cliente.hbm.xml"/>
+		<mapping resource="mappings/Endereco.hbm.xml"/>
+		<mapping resource="mappings/Cartao.hbm.xml"/>
+		<mapping resource="mappings/LivroRetirado.hbm.xml"/>
+		<mapping resource="mappings/Evento.hbm.xml"/>
 		
     </session-factory>
 </hibernate-configuration>

@@ -6,7 +6,7 @@
     <class name="com.systemhaus.demo.domain.LivroRetirado" table="livro_retirado" schema="libraryms">
         <id name="id" type="int">
             <column name="livro_retirado_id" />
-            <generator class="assigned" />
+            <generator class="sequence" />
         </id>
         <many-to-one name="retirada" class="com.systemhaus.demo.domain.Evento" fetch="select">
             <column name="evento_retirada_id" not-null="true" />

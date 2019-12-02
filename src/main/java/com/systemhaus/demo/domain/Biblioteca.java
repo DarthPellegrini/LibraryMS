@@ -33,7 +33,7 @@ public class Biblioteca {
 		return estantes;
 	}
 
-	public void setEstantes(ArrayList<Estante> estantes) {
+	public void setEstantes(List<Estante> estantes) {
 		this.estantes = estantes;
 	}
 	

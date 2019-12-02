@@ -15,7 +15,7 @@ public class Estante {
 		initializeEstante();
 	}
 
-	public Estante(ArrayList<Prateleira> prateleiras) {
+	public Estante(List<Prateleira> prateleiras) {
 		setPrateleiras(prateleiras);
 	}
 	
@@ -40,7 +40,7 @@ public class Estante {
 		return prateleiras;
 	}
 
-	private boolean setPrateleiras(ArrayList<Prateleira> prateleiras) {
+	private boolean setPrateleiras(List<Prateleira> prateleiras) {
 		if (prateleiras.size() < size) {
 			this.prateleiras = prateleiras;
 			return true;

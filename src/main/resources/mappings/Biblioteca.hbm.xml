@@ -6,7 +6,7 @@
     <class name="com.systemhaus.demo.domain.Biblioteca" table="biblioteca" schema="libraryms">
         <id name="id" type="int">
             <column name="biblioteca_id" />
-            <generator class="assigned" />
+            <generator class="sequence" />
         </id>
         <bag name="estantes" table="estante" inverse="true" cascade="all">
             <key>
