@@ -7,14 +7,17 @@ public class Prateleira {
 
 	// cada prateleira terá no máximo 20 livros
 	private int id;
+	private Estante estante;
 	private List<Livro> livros;
 	private final int size = 20;
 
-	public Prateleira() {
+	public Prateleira(Estante e) {
+		setEstante(e);
 		setLivros(new ArrayList<Livro>());
 	}
 	
-	public Prateleira(List<Livro> livros) {
+	public Prateleira(List<Livro> livros, Estante e) {
+		setEstante(e);
 		setLivros(livros);
 	}
 	
@@ -24,6 +27,14 @@ public class Prateleira {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Estante getEstante() {
+		return estante;
+	}
+
+	public void setEstante(Estante estante) {
+		this.estante = estante;
 	}
 
 	public int getSize() {
@@ -45,6 +56,7 @@ public class Prateleira {
 	
 	public boolean addLivro(Livro l) {
 		if (livros.size() < size) {
+			l.setPrateleira(this);
 			livros.add(l);
 			return true;
 		} else {

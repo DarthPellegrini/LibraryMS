@@ -54,7 +54,7 @@ public class Biblioteca {
 	}
 	
 	public void addEstante() {
-		estantes.add(new Estante());
+		estantes.add(new Estante(this));
 	}
 	
 	/*

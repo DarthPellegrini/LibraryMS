@@ -14,6 +14,9 @@
          <generator class="sequence"/>
       </id>
       
+        <many-to-one name="prateleira" class="com.systemhaus.demo.domain.Prateleira" fetch="select">
+            <column name="prateleira_id" not-null="true" />
+        </many-to-one>
       <property name = "ISBN" column = "isbn" type = "string"/>
       <property name = "titulo" column = "titulo" type = "string"/>
       <property name = "autor" column = "autor" type = "string"/>

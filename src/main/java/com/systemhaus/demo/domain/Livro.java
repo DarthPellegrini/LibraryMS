@@ -17,6 +17,7 @@ public class Livro extends Model{
 	public static final String PROPERTY_RETIRADO = "retirado";
 	
 	private int id;
+	private Prateleira prateleira;
 	private String ISBN; //pode ser repetido, para n volumes do mesmo livro
 	private String titulo; //título do livro
 	private String autor; //autor do livro
@@ -24,6 +25,18 @@ public class Livro extends Model{
 	private int edicao; //edição do livro
 	private int numeroPaginas; //número de páginas
 	private boolean retirado; //boolean que define se o livro está ou não retirado
+	
+	public Livro(String iSBN, String titulo, String autor, String editora, int edicao, int numeroPaginas, boolean retirado, Prateleira p) {
+		super();
+		this.setPrateleira(p);
+		setISBN(iSBN);
+		setTitulo(titulo);
+		setAutor(autor);
+		setEditora(editora);
+		setEdicao(edicao);
+		setNumeroPaginas(numeroPaginas);
+		this.retirado = retirado;
+	}
 	
 	public Livro(String iSBN, String titulo, String autor, String editora, int edicao, int numeroPaginas, boolean retirado) {
 		super();
@@ -46,6 +59,14 @@ public class Livro extends Model{
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	public Prateleira getPrateleira() {
+		return prateleira;
+	}
+
+	public void setPrateleira(Prateleira prateleira) {
+		this.prateleira = prateleira;
 	}
 
 	public String getISBN() {
@@ -143,7 +164,7 @@ public class Livro extends Model{
 	 * Cria uma cópia do livro
 	 */
 	public Livro copy() {
-		return new Livro(ISBN, titulo, autor, editora, edicao, numeroPaginas, retirado);
+		return new Livro(ISBN, titulo, autor, editora, edicao, numeroPaginas, retirado, prateleira);
 	}
 	
 	public boolean isEqual(Livro l) {

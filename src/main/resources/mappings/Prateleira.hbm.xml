@@ -13,7 +13,9 @@
       <id name = "id" type = "int" column = "prateleira_id">
          <generator class="sequence"/>
       </id>
-      
+      <many-to-one name="estante" class="com.systemhaus.demo.domain.Estante" fetch="select">
+            <column name="estante_id" not-null="true" />
+        </many-to-one>
       <bag name="livros" table="prateleira" inverse="true" cascade="all">
             <key>
                 <column name="prateleira_id" not-null="true" />
