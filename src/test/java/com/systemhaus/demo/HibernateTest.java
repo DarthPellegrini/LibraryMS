@@ -1,7 +1,5 @@
 package com.systemhaus.demo;
 
-import static org.junit.Assert.assertTrue;
-
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
@@ -18,6 +16,7 @@ import org.junit.Test;
 import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.Cliente;
 import com.systemhaus.demo.domain.Livro;
+import com.systemhaus.demo.domain.Prateleira;
 
 public class HibernateTest {
 	
@@ -46,16 +45,14 @@ public class HibernateTest {
 	    Biblioteca b = new Biblioteca();
 	    Server s = new Server(b);
 	    initTestServer(s);
-	    s.addNewBookRoutine(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), 5);
+
 	    session.save(b);
-	    //for (Livro l : b.getLastLivros())
-	    //	session.save(l);
-	    t.commit();  
-	    System.out.println("successfully saved");    
+	    for(Cliente c : b.getClientes()) {
+	    	session.save(c);
+	    }
+	    t.commit();
 	    factory.close();  
 	    session.close();
-	    
-	    assertTrue(true);
 	}
 	
 }

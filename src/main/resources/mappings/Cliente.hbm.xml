@@ -14,8 +14,8 @@
       
       <property name = "nome" column = "nome" type = "string"/>
       <property name = "telefone" column = "telefone" type = "string"/>
-      <many-to-one name="endereco" foreign-key="endereco" class="com.systemhaus.demo.domain.Endereco"/>
-      <one-to-one name="cartao" foreign-key="cartao" class="com.systemhaus.demo.domain.Cartao"/>      
-
+      <many-to-one name="endereco" foreign-key="endereco" class="com.systemhaus.demo.domain.Endereco" cascade="all"/>
+      <one-to-one name="cartao" foreign-key="cartao" class="com.systemhaus.demo.domain.Cartao" cascade="all"/>      
+ 
    </class>
 </hibernate-mapping>

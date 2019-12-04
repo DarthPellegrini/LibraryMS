@@ -13,6 +13,7 @@ public class Biblioteca {
 	private List<Cliente> clientes;
 	private Map<String,int[]> regLivros;
 	private List<LivroRetirado> livrosRetirados;
+	
 	public Biblioteca() {
 		setEstantes(new ArrayList<Estante>());
 		setClientes(new ArrayList<Cliente>());

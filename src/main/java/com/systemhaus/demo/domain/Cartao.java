@@ -14,12 +14,14 @@ public class Cartao {
 	private LocalDateTime validade; //validade do cartao
 	
 	public Cartao(String nome, String codigo, LocalDateTime validade) {
+		super();
 		this.nome = nome;
 		this.codigo = codigo;
 		this.validade = validade;
 	}
 	
 	public Cartao() {
+		super();
 		this.clear();
 	}
 	
