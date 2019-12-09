@@ -11,13 +11,13 @@ public class Cartao {
 
 	private String nome; //nome do cliente impresso no cartão
 	private String codigo; //codigo unico do cartao
-	private LocalDateTime validade; //validade do cartao
+	private Date validade; //validade do cartao
 	
 	public Cartao(String nome, String codigo, LocalDateTime validade) {
 		super();
 		this.nome = nome;
 		this.codigo = codigo;
-		this.validade = validade;
+		this.validade = Date.from(validade.atZone(ZoneId.systemDefault()).toInstant());
 	}
 	
 	public Cartao() {
@@ -41,12 +41,10 @@ public class Cartao {
 			this.codigo = codigo;
 	}
 	public Date getValidade() {
-		return Date.from(this.validade.atZone(ZoneId.systemDefault()).toInstant());
+		return validade;
 	}
 	public void setValidade(Date validade) {
-		this.validade = Instant.ofEpochMilli(validade.getTime())
-				        .atZone(ZoneId.systemDefault())
-				        .toLocalDateTime();
+		this.validade = validade;
 	}
 
 	public final String createNewValidCodCartao() {
@@ -66,15 +64,19 @@ public class Cartao {
 	public void clear() {
 		this.nome = "";
 		this.codigo = "";
-		this.validade = LocalDateTime.now().plusYears(4);
+		this.validade = Date.from(LocalDateTime.now().plusYears(4).atZone(ZoneId.systemDefault()).toInstant());
 	}
 
 	public boolean validate() {
-		return (codigo.length() == 16 && validade.isAfter(LocalDateTime.now()));
+		return (codigo.length() == 16 && Instant.ofEpochMilli(validade.getTime())
+									      .atZone(ZoneId.systemDefault())
+									      .toLocalDateTime().isAfter(LocalDateTime.now()));
 	}
 
 	public LocalDate getValidadeAsLocalDate() {
-		return validade.toLocalDate();
+		return Instant.ofEpochMilli(validade.getTime())
+			      .atZone(ZoneId.systemDefault())
+			      .toLocalDate();
 	}
 	
 	

@@ -23,7 +23,9 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 	@Override
 	public boolean save(Livro livro, Cliente cliente) {
 		if (biblioteca.addRetirado(livro.getISBN())) {
-			biblioteca.addLivroRetirado(new LivroRetirado(livro, cliente, new Evento(TipoEvento.RETIRADA)));
+			LivroRetirado livroRetirado = new LivroRetirado(livro, cliente);
+			livroRetirado.addRetirada(new Evento(TipoEvento.RETIRADA, livroRetirado));
+			biblioteca.addLivroRetirado(livroRetirado);
 			return true;
 		}else
 			return false;
@@ -35,7 +37,7 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 	 */
 	@Override
 	public void estenderRetirada(LivroRetirado livroRetirado) {
-		livroRetirado.estenderRetirada(new Evento(TipoEvento.RENOVACAO));
+		livroRetirado.estenderRetirada(new Evento(TipoEvento.RENOVACAO,livroRetirado));
 	}
 	
 	@Override
@@ -67,7 +69,7 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 		if(livroRetirado.getDevolucao() == null) {
 			biblioteca.remRetirado(livroRetirado.getLivro().getISBN());
 			livroRetirado.getLivro().setRetirado(false); //precisa ser modificado quando o banco for incluído
-			livroRetirado.setDevolucao(new Evento(TipoEvento.DEVOLUCAO));
+			livroRetirado.setDevolucao(new Evento(TipoEvento.DEVOLUCAO, livroRetirado));
 			return 0;
 		}else
 			return 1;

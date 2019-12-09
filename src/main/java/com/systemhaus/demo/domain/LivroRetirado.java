@@ -1,8 +1,10 @@
 package com.systemhaus.demo.domain;
 
+import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.jgoodies.binding.beans.Model;
@@ -21,11 +23,20 @@ public class LivroRetirado extends Model{
 	private Evento retirada; //evento de retirada do livro
 	private List<Evento> renovacoes; //lista de renovações
 	private Evento devolucao; //evento de devolução do livro
-	private LocalDateTime dataDevolucao; //data em que a devolução deve ser feita
+	private Date dataDevolucao; //data em que a devolução deve ser feita
 	
 	public LivroRetirado() {
 		this.setLivro(new Livro());
 		this.setCliente(new Cliente());
+		this.setRetirada(null);
+		this.setRenovacoes(new ArrayList<Evento>());
+		this.setDevolucao(null);
+		this.dataDevolucao = null;
+	}
+	
+	public LivroRetirado(Livro livro, Cliente cliente) {
+		this.setLivro(livro);
+		this.setCliente(cliente);
 		this.setRetirada(null);
 		this.setRenovacoes(new ArrayList<Evento>());
 		this.setDevolucao(null);
@@ -38,7 +49,7 @@ public class LivroRetirado extends Model{
 		this.setRetirada(retirada);
 		this.setRenovacoes(new ArrayList<Evento>());
 		this.setDevolucao(null);
-		setDataDevolucao(retirada.getDataRaw());
+		setDataDevolucao(retirada.getData());
 	}
 
 	public int getId() {
@@ -65,6 +76,11 @@ public class LivroRetirado extends Model{
 	private void setRetirada(Evento retirada) {
 		this.retirada = retirada;
 	}
+	public void addRetirada(Evento retirada) {
+		this.setRetirada(retirada);
+		this.setDataDevolucao(retirada.getData());
+	}
+	
 	public LocalDate getDataRetiradaAsLocalDate() {
 		if (retirada == null)
 			return null;
@@ -97,7 +113,7 @@ public class LivroRetirado extends Model{
 			return devolucao.getDataRaw().toLocalDate();	
 	}
 	
-	public LocalDateTime getDataDevolucao() {
+	public Date getDataDevolucao() {
 		return this.dataDevolucao;
 	}
 	
@@ -105,7 +121,9 @@ public class LivroRetirado extends Model{
 		if (dataDevolucao == null)
 			return null;
 		else 
-			return dataDevolucao.toLocalDate();
+			return Instant.ofEpochMilli(dataDevolucao.getTime())
+					      .atZone(ZoneId.systemDefault())
+					      .toLocalDate();
 	}
 	
 	public void setDevolucao(Evento evento) {
@@ -114,11 +132,15 @@ public class LivroRetirado extends Model{
 	
 	public void estenderRetirada(Evento evento) {
 		this.renovacoes.add(evento.copy());
-		this.setDataDevolucao(evento.getDataRaw());
+		this.setDataDevolucao(evento.getData());
 	}
 	
-	public void setDataDevolucao(LocalDateTime date) {
-		this.dataDevolucao = date.plusDays(7);
+	public void setDataDevolucao(Date date) {
+		this.dataDevolucao = Date.from(
+								Instant.ofEpochMilli(date.getTime())
+						      .atZone(ZoneId.systemDefault())
+						      .toLocalDateTime().plusDays(7)
+						      .atZone(ZoneId.systemDefault()).toInstant());
 	}
 
 	

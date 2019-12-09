@@ -1,8 +1,10 @@
 package com.systemhaus.demo;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -16,7 +18,7 @@ import org.junit.Test;
 import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.Cliente;
 import com.systemhaus.demo.domain.Livro;
-import com.systemhaus.demo.domain.Prateleira;
+import com.systemhaus.demo.domain.LivroRetirado;
 
 public class HibernateTest {
 	
@@ -46,10 +48,27 @@ public class HibernateTest {
 	    Server s = new Server(b);
 	    initTestServer(s);
 
+	    s.retirada(s.findSimilarBooks(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false)).get(0), s.findClientWithThisCardCode("4000979800448877"));
+		s.retirada(s.findSimilarBooks(new Livro("9780123456792", "A arte da Guerra", "Xing crishong", "Saraiva", 1, 250, false)).get(0), s.findClientWithThisCardCode("4000979800448877"));
+		s.retirada(s.findSimilarBooks(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false)).get(0), s.findClientWithThisCardCode("4000979800448876"));
+		List<LivroRetirado> l = s.findSimilarLivroRetirado(s.findSimilarBooks(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false)).get(0), s.findClientWithThisCardCode("4000979800448876"));
+		LivroRetirado lr = l.get(0);
+		lr.getRetirada().setData(Date.from(LocalDateTime.now().minusDays(30).atZone(ZoneId.systemDefault()).toInstant()));
+		s.estenderRetirada(lr);
+		lr.getLastRenovacao().setData(Date.from(LocalDateTime.now().minusDays(20).atZone(ZoneId.systemDefault()).toInstant()));
+		s.estenderRetirada(lr);
+		lr.getLastRenovacao().setData(Date.from(LocalDateTime.now().minusDays(10).atZone(ZoneId.systemDefault()).toInstant()));
+		s.estenderRetirada(lr);
+		s.devolucao(lr);
+		
 	    session.save(b);
 	    for(Cliente c : b.getClientes()) {
 	    	session.save(c);
 	    }
+	    
+	    for(LivroRetirado livret : b.getLivrosRetirados())
+	    	session.save(livret);
+	    
 	    t.commit();
 	    factory.close();  
 	    session.close();

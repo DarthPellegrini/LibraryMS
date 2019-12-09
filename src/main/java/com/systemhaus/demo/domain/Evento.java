@@ -11,6 +11,7 @@ public class Evento {
 	private int id; //id
 	private TipoEvento tipoEvento;
 	private Date data; //data do evento
+	private LivroRetirado livroRetirado;
 	
 	public Evento() {
 		super();
@@ -18,16 +19,19 @@ public class Evento {
 		this.setTipoEvento(TipoEvento.RETIRADA);
 	}
 	
-	public Evento(TipoEvento tipoEvento) {
+	public Evento(TipoEvento tipoEvento, LivroRetirado livroRetirado) {
 		super();
 		setTipoEvento(tipoEvento);
 		this.data = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant());
+		this.livroRetirado = livroRetirado;
 	}
 	
-	private Evento(TipoEvento tipoEvento, Date data) {
+	private Evento(TipoEvento tipoEvento, Date data, LivroRetirado livroRetirado) {
 		super();
 		this.tipoEvento = tipoEvento;
 		this.data = data;
+		this.livroRetirado = livroRetirado;
+		
 	}
 	
 	public int getId() {
@@ -43,6 +47,14 @@ public class Evento {
 		this.tipoEvento = tipoEvento;
 	}
 	
+	public LivroRetirado getLivroRetirado() {
+		return livroRetirado;
+	}
+
+	public void setLivroRetirado(LivroRetirado livroRetirado) {
+		this.livroRetirado = livroRetirado;
+	}
+
 	public Date getData() {
 		return data;
 	}
@@ -56,6 +68,6 @@ public class Evento {
 	}
 	
 	public Evento copy() {
-		return new Evento(this.tipoEvento, this.data);
+		return new Evento(this.tipoEvento, this.data, this.livroRetirado);
 	}
 }

@@ -14,8 +14,15 @@
          <generator class="sequence"/>
       </id>
       
-      <property name="tipoEvento" column="tipo_evento" type="string"/>
+      <property name="tipoEvento" column="tipo_evento">
+      	<type name="org.hibernate.type.EnumType">
+	        <param name="enumClass">com.systemhaus.demo.domain.TipoEvento</param>
+	    </type>
+      </property>
       <property name = "data" column = "data" type = "timestamp"/>
+      <many-to-one name="livroRetirado" class="com.systemhaus.demo.domain.LivroRetirado" fetch="select">
+            <column name="livro_retirado_id"/>
+        </many-to-one>
       
    </class>
 </hibernate-mapping>

@@ -8,24 +8,24 @@
             <column name="livro_retirado_id" />
             <generator class="sequence" />
         </id>
-        <many-to-one name="retirada" class="com.systemhaus.demo.domain.Evento" fetch="select">
-            <column name="evento_retirada_id" not-null="true" />
+        <many-to-one name="retirada" class="com.systemhaus.demo.domain.Evento" fetch="select" cascade="all">
+            <column name="evento_retirada_id" not-null="true" unique="true" />
         </many-to-one>
-        <many-to-one name="livro" class="com.systemhaus.demo.domain.Livro" fetch="select">
+        <many-to-one name="livro" class="com.systemhaus.demo.domain.Livro" fetch="select" cascade="all">
             <column name="livro_id" not-null="true" />
         </many-to-one>
-        <many-to-one name="cliente" class="com.systemhaus.demo.domain.Cliente" fetch="select">
+        <many-to-one name="cliente" class="com.systemhaus.demo.domain.Cliente" fetch="select" cascade="all"> 
             <column name="cliente_id" length="11" not-null="true" />
         </many-to-one>
-        <many-to-one name="devolucao" class="com.systemhaus.demo.domain.Evento" fetch="select">
-            <column name="evento_devolucao_id" />
+        <many-to-one name="devolucao" class="com.systemhaus.demo.domain.Evento" fetch="select" cascade="all">
+            <column name="evento_devolucao_id" unique="true" />
         </many-to-one>
         <property name="dataDevolucao" type="timestamp">
             <column name="data_devolucao" length="29" not-null="true" />
         </property>
         <bag name="renovacoes" table="evento" inverse="true" cascade="all">
             <key>
-                <column name="livro_retirado_id" not-null="true" />
+                <column name="livro_retirado_id" unique="true"/>
             </key>
             <one-to-many class="com.systemhaus.demo.domain.Evento" />
         </bag>
