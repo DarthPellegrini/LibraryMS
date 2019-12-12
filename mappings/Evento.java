@@ -1,5 +1,5 @@
 // default package
-// Generated 28/11/2019 14:49:05 by Hibernate Tools 3.6.0.Final
+// Generated 09/12/2019 15:01:45 by Hibernate Tools 3.6.0.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -12,28 +12,25 @@ public class Evento implements java.io.Serializable {
 
 	private int eventoId;
 	private LivroRetirado livroRetirado;
-	private Date dataEvento;
-	private String tipoEvento;
+	private Integer tipoEvento;
+	private Date data;
 	private Set<LivroRetirado> livroRetiradosForEventoDevolucaoId = new HashSet<LivroRetirado>(0);
 	private Set<LivroRetirado> livroRetiradosForEventoRetiradaId = new HashSet<LivroRetirado>(0);
 
 	public Evento() {
 	}
 
-	public Evento(int eventoId, LivroRetirado livroRetirado, Date dataEvento, String tipoEvento) {
+	public Evento(int eventoId) {
 		this.eventoId = eventoId;
-		this.livroRetirado = livroRetirado;
-		this.dataEvento = dataEvento;
-		this.tipoEvento = tipoEvento;
 	}
 
-	public Evento(int eventoId, LivroRetirado livroRetirado, Date dataEvento, String tipoEvento,
+	public Evento(int eventoId, LivroRetirado livroRetirado, Integer tipoEvento, Date data,
 			Set<LivroRetirado> livroRetiradosForEventoDevolucaoId,
 			Set<LivroRetirado> livroRetiradosForEventoRetiradaId) {
 		this.eventoId = eventoId;
 		this.livroRetirado = livroRetirado;
-		this.dataEvento = dataEvento;
 		this.tipoEvento = tipoEvento;
+		this.data = data;
 		this.livroRetiradosForEventoDevolucaoId = livroRetiradosForEventoDevolucaoId;
 		this.livroRetiradosForEventoRetiradaId = livroRetiradosForEventoRetiradaId;
 	}
@@ -54,20 +51,20 @@ public class Evento implements java.io.Serializable {
 		this.livroRetirado = livroRetirado;
 	}
 
-	public Date getDataEvento() {
-		return this.dataEvento;
-	}
-
-	public void setDataEvento(Date dataEvento) {
-		this.dataEvento = dataEvento;
-	}
-
-	public String getTipoEvento() {
+	public Integer getTipoEvento() {
 		return this.tipoEvento;
 	}
 
-	public void setTipoEvento(String tipoEvento) {
+	public void setTipoEvento(Integer tipoEvento) {
 		this.tipoEvento = tipoEvento;
+	}
+
+	public Date getData() {
+		return this.data;
+	}
+
+	public void setData(Date data) {
+		this.data = data;
 	}
 
 	public Set<LivroRetirado> getLivroRetiradosForEventoDevolucaoId() {

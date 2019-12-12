@@ -10,8 +10,11 @@
          A classe do cliente, contendo referência a um endereço e um cartão. 
       </meta>
       
-      <id name = "cpf" type = "string" column = "cpf"/>
       
+      <id name = "id" type = "int" column = "cliente_id">
+         <generator class="sequence"/>
+      </id>
+      <property name = "cpf" type = "string" column = "cpf" unique="true"/>
       <property name = "nome" column = "nome" type = "string"/>
       <property name = "telefone" column = "telefone" type = "string"/>
       <many-to-one name="endereco" foreign-key="endereco" class="com.systemhaus.demo.domain.Endereco" cascade="all"/>

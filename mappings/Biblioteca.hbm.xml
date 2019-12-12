@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated 28/11/2019 14:49:08 by Hibernate Tools 3.6.0.Final -->
+<!-- Generated 09/12/2019 15:01:46 by Hibernate Tools 3.6.0.Final -->
 <hibernate-mapping>
-    <class name="Biblioteca" table="biblioteca" schema="libraryms">
+    <class name="Biblioteca" table="biblioteca">
         <id name="bibliotecaId" type="int">
             <column name="biblioteca_id" />
             <generator class="assigned" />

@@ -1,5 +1,5 @@
 // default package
-// Generated 28/11/2019 14:49:05 by Hibernate Tools 3.6.0.Final
+// Generated 09/12/2019 15:01:45 by Hibernate Tools 3.6.0.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -13,21 +13,17 @@ public class Endereco implements java.io.Serializable {
 	private String cidade;
 	private String bairro;
 	private String rua;
-	private int numero;
+	private Integer numero;
 	private Set<Cliente> clientes = new HashSet<Cliente>(0);
 
 	public Endereco() {
 	}
 
-	public Endereco(int enderecoId, String cidade, String bairro, String rua, int numero) {
+	public Endereco(int enderecoId) {
 		this.enderecoId = enderecoId;
-		this.cidade = cidade;
-		this.bairro = bairro;
-		this.rua = rua;
-		this.numero = numero;
 	}
 
-	public Endereco(int enderecoId, String cidade, String bairro, String rua, int numero, Set<Cliente> clientes) {
+	public Endereco(int enderecoId, String cidade, String bairro, String rua, Integer numero, Set<Cliente> clientes) {
 		this.enderecoId = enderecoId;
 		this.cidade = cidade;
 		this.bairro = bairro;
@@ -68,11 +64,11 @@ public class Endereco implements java.io.Serializable {
 		this.rua = rua;
 	}
 
-	public int getNumero() {
+	public Integer getNumero() {
 		return this.numero;
 	}
 
-	public void setNumero(int numero) {
+	public void setNumero(Integer numero) {
 		this.numero = numero;
 	}
 

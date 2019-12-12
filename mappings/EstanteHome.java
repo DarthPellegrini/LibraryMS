@@ -1,5 +1,5 @@
 // default package
-// Generated 28/11/2019 14:49:10 by Hibernate Tools 3.6.0.Final
+// Generated 09/12/2019 15:01:47 by Hibernate Tools 3.6.0.Final
 
 import java.util.List;
 import javax.naming.InitialContext;

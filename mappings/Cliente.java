@@ -1,5 +1,5 @@
 // default package
-// Generated 28/11/2019 14:49:05 by Hibernate Tools 3.6.0.Final
+// Generated 09/12/2019 15:01:45 by Hibernate Tools 3.6.0.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -19,10 +19,8 @@ public class Cliente implements java.io.Serializable {
 	public Cliente() {
 	}
 
-	public Cliente(String cpf, String nome, String telefone) {
+	public Cliente(String cpf) {
 		this.cpf = cpf;
-		this.nome = nome;
-		this.telefone = telefone;
 	}
 
 	public Cliente(String cpf, Cartao cartao, Endereco endereco, String nome, String telefone,

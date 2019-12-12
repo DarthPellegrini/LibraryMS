@@ -9,6 +9,7 @@ import java.util.Random;
 
 public class Cartao {
 
+	private int id;
 	private String nome; //nome do cliente impresso no cartão
 	private String codigo; //codigo unico do cartao
 	private Date validade; //validade do cartao
@@ -25,6 +26,14 @@ public class Cartao {
 		this.clear();
 	}
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getNome() {
 		return nome;
 	}

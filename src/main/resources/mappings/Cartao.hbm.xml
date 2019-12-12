@@ -10,7 +10,10 @@
          Classe do cartão do cliente. 
       </meta>
       
-      <id name = "codigo" type = "string" length="16" column = "codigo"/>      
+      <id name = "id" type = "int" column = "cartao_id">
+         <generator class="sequence"/>
+      </id>
+      <property name = "codigo" type = "string" length="16" column = "codigo"/>      
       <property name = "nome" column = "nome" type = "string"/>
       <property name = "validade" column = "validade" type = "timestamp"/>
       

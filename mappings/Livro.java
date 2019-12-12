@@ -1,5 +1,5 @@
 // default package
-// Generated 28/11/2019 14:49:05 by Hibernate Tools 3.6.0.Final
+// Generated 09/12/2019 15:01:45 by Hibernate Tools 3.6.0.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,37 +12,29 @@ public class Livro implements java.io.Serializable {
 	private int livroId;
 	private Prateleira prateleira;
 	private String isbn;
-	private String autor;
 	private String titulo;
+	private String autor;
 	private String editora;
-	private int edicao;
-	private int numeropaginas;
-	private boolean retirado;
+	private Integer edicao;
+	private Integer numeropaginas;
+	private Boolean retirado;
 	private Set<LivroRetirado> livroRetirados = new HashSet<LivroRetirado>(0);
 
 	public Livro() {
 	}
 
-	public Livro(int livroId, Prateleira prateleira, String isbn, String autor, String titulo, String editora,
-			int edicao, int numeropaginas, boolean retirado) {
+	public Livro(int livroId, Prateleira prateleira) {
 		this.livroId = livroId;
 		this.prateleira = prateleira;
-		this.isbn = isbn;
-		this.autor = autor;
-		this.titulo = titulo;
-		this.editora = editora;
-		this.edicao = edicao;
-		this.numeropaginas = numeropaginas;
-		this.retirado = retirado;
 	}
 
-	public Livro(int livroId, Prateleira prateleira, String isbn, String autor, String titulo, String editora,
-			int edicao, int numeropaginas, boolean retirado, Set<LivroRetirado> livroRetirados) {
+	public Livro(int livroId, Prateleira prateleira, String isbn, String titulo, String autor, String editora,
+			Integer edicao, Integer numeropaginas, Boolean retirado, Set<LivroRetirado> livroRetirados) {
 		this.livroId = livroId;
 		this.prateleira = prateleira;
 		this.isbn = isbn;
-		this.autor = autor;
 		this.titulo = titulo;
+		this.autor = autor;
 		this.editora = editora;
 		this.edicao = edicao;
 		this.numeropaginas = numeropaginas;
@@ -74,20 +66,20 @@ public class Livro implements java.io.Serializable {
 		this.isbn = isbn;
 	}
 
-	public String getAutor() {
-		return this.autor;
-	}
-
-	public void setAutor(String autor) {
-		this.autor = autor;
-	}
-
 	public String getTitulo() {
 		return this.titulo;
 	}
 
 	public void setTitulo(String titulo) {
 		this.titulo = titulo;
+	}
+
+	public String getAutor() {
+		return this.autor;
+	}
+
+	public void setAutor(String autor) {
+		this.autor = autor;
 	}
 
 	public String getEditora() {
@@ -98,27 +90,27 @@ public class Livro implements java.io.Serializable {
 		this.editora = editora;
 	}
 
-	public int getEdicao() {
+	public Integer getEdicao() {
 		return this.edicao;
 	}
 
-	public void setEdicao(int edicao) {
+	public void setEdicao(Integer edicao) {
 		this.edicao = edicao;
 	}
 
-	public int getNumeropaginas() {
+	public Integer getNumeropaginas() {
 		return this.numeropaginas;
 	}
 
-	public void setNumeropaginas(int numeropaginas) {
+	public void setNumeropaginas(Integer numeropaginas) {
 		this.numeropaginas = numeropaginas;
 	}
 
-	public boolean isRetirado() {
+	public Boolean getRetirado() {
 		return this.retirado;
 	}
 
-	public void setRetirado(boolean retirado) {
+	public void setRetirado(Boolean retirado) {
 		this.retirado = retirado;
 	}
 

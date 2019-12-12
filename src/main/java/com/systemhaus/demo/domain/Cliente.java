@@ -21,6 +21,7 @@ public class Cliente extends Model{
 	private static final String PROPERTY_CODCARTAO = "codCartao";
 	private static final String PROPERTY_VALIDADE = "validade";
 	
+	private int id;
 	private String nome;
 	private String cpf;
 	private String telefone;
@@ -59,6 +60,14 @@ public class Cliente extends Model{
 		this.clear();
 	}
 	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 	public String getNome() {
 		return nome;
 	}

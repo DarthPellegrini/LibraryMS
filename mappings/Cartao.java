@@ -1,5 +1,5 @@
 // default package
-// Generated 28/11/2019 14:49:05 by Hibernate Tools 3.6.0.Final
+// Generated 09/12/2019 15:01:45 by Hibernate Tools 3.6.0.Final
 
 import java.util.Date;
 import java.util.HashSet;
@@ -18,10 +18,8 @@ public class Cartao implements java.io.Serializable {
 	public Cartao() {
 	}
 
-	public Cartao(String codigo, String nome, Date validade) {
+	public Cartao(String codigo) {
 		this.codigo = codigo;
-		this.nome = nome;
-		this.validade = validade;
 	}
 
 	public Cartao(String codigo, String nome, Date validade, Set<Cliente> clientes) {

@@ -3,7 +3,6 @@ package com.systemhaus.demo.dao.memory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
-
 import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.Cliente;
 import com.systemhaus.demo.domain.ClienteRepository;
@@ -86,12 +85,12 @@ public class ClienteDAO implements ClienteRepository {
 		String code = "";
 		do {
 			code = c.getCartao().createNewValidCodCartao();
-		}while(findCardWhitThisCode(code));
+		}while(findCardWithThisCode(code));
 		c.setCodCartao(code);
 	}
 	
 	@Override
-	public boolean findCardWhitThisCode(String code) {
+	public boolean findCardWithThisCode(String code) {
 		return biblioteca.getClientes().stream()
 		.anyMatch(f -> {return (f.getCodCartao().equals(code));});
 	}
@@ -101,5 +100,17 @@ public class ClienteDAO implements ClienteRepository {
 		return biblioteca.getClientes().stream()
 		.filter(f -> (f.getCodCartao().equals(code)))
 		.findFirst().orElse(null);
+	}
+
+	@Override
+	public void update(Cliente cliente) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void delete(Cliente cliente) {
+		// TODO Auto-generated method stub
+		
 	}
 }
