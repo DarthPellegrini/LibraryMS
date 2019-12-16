@@ -20,6 +20,7 @@
 	    <property name="current_session_context_class">thread</property>
 		
 		<mapping resource="mappings/Biblioteca.hbm.xml"/>
+		<mapping resource="mappings/RegLivros.hbm.xml"/>
 		<mapping resource="mappings/Estante.hbm.xml"/>
 		<mapping resource="mappings/Prateleira.hbm.xml"/>
 		<mapping resource="mappings/Livro.hbm.xml"/>

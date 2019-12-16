@@ -14,5 +14,11 @@
             </key>
             <one-to-many class="com.systemhaus.demo.domain.Estante" />
         </bag>
+        <bag name="regLivros" table="reg_livros" inverse="true" cascade="all">
+            <key>
+                <column name="biblioteca_id" not-null="true" />
+            </key>
+            <one-to-many class="com.systemhaus.demo.domain.RegLivros" />
+        </bag>
     </class>
 </hibernate-mapping>

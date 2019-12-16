@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+<!-- Generated 26/11/2019 13:42:20 by Hibernate Tools 3.6.0.Final -->
+<hibernate-mapping>
+    <class name="com.systemhaus.demo.domain.RegLivros" table="reg_livros" schema="libraryms">
+        <id name="id" type="int">
+            <column name="reg_livros_id" />
+            <generator class="sequence" />
+        </id>
+        
+        <property name = "isbn" column = "isbn" type = "string" unique="true"/>
+        <property name = "quantLivrosNoCatalogo" column = "quant_cat" type = "int"/>
+        <property name = "quantLivrosParaRetirar" column = "quant_disp" type = "int"/>
+		<many-to-one name="biblioteca" class="com.systemhaus.demo.domain.Biblioteca" fetch="select">
+            <column name="biblioteca_id" not-null="true" />
+        </many-to-one>     
+        
+    </class>
+</hibernate-mapping>

@@ -1,10 +1,18 @@
-package com.systemhaus.demo.dao.memory;
+package com.systemhaus.demo.dao;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import javax.persistence.Query;
+
+import org.hibernate.Session;
+
+import com.systemhaus.demo.SessionUtil;
 import com.systemhaus.demo.domain.Biblioteca;
+import com.systemhaus.demo.domain.Cartao;
+import com.systemhaus.demo.domain.Cliente;
+import com.systemhaus.demo.domain.Endereco;
 import com.systemhaus.demo.domain.Estante;
 import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.LivroRepository;
@@ -20,54 +28,45 @@ public class LivroDAO implements LivroRepository {
 
 	@Override
 	public void save(Livro livro) {
+		Session session = SessionUtil.getInstance().getSession();
+		//session.save(livro.getPrateleira().getEstante().getBiblioteca());
+		//session.save(livro.getPrateleira().getEstante());
+		//session.save(livro.getPrateleira());
+		session.save(livro);
+		//TODO: criar um BibliotecaDAO para lidar com o controle do estoque dos livros
 		biblioteca.addDisponivel(livro.getISBN());
+		session.close();
 	}
 	
 	@Override
 	public List<Livro> findBySimilarExample(Livro example, boolean findAvailable) {
-		List<String> ISBNs = new ArrayList<String>();
 		List<Livro> livros = new ArrayList<Livro>();
-		String[] dadosExemplo = {
-				example.getTitulo().isEmpty() ? "" : example.getTitulo().toLowerCase(), 
-				example.getAutor().isEmpty() ? "" : example.getAutor().toLowerCase(),
-				example.getEditora().isEmpty() ? "" : example.getEditora().toLowerCase()};
 		if ((example.getISBN().isEmpty() && example.getTitulo().isEmpty()
 			&& example.getAutor().isEmpty() && example.getEditora().isEmpty() 
 			&& (example.getEdicao() == 0 || example.getNumeroPaginas() == 0)) )
 			return livros;
-		for(ListIterator<Estante> eIt = biblioteca.getEstantes().listIterator();
-				eIt.hasNext();) {
-			Estante e = eIt.next();
-			for(ListIterator<Prateleira> pIt = e.getPrateleiras().listIterator();
-					pIt.hasNext();) {
-				Prateleira p = pIt.next();
-				for(ListIterator<Livro> lIt = p.getLivros().listIterator();
-						lIt.hasNext();) {
-					Livro l = lIt.next();
-					if ((l.getISBN().equals(example.getISBN()) || example.getISBN().isEmpty())
-						&& (l.getEdicao() == example.getEdicao() || example.getEdicao() == 0) 
-						&& (l.getTitulo().toLowerCase().contains(dadosExemplo[0]) 
-								|| example.getTitulo().isEmpty()) 
-						&& (l.getAutor().toLowerCase().contains(dadosExemplo[1]) 
-								|| example.getAutor().isEmpty()) 
-						&& (l.getEditora().toLowerCase().contains(dadosExemplo[2]) 
-								|| example.getEditora().isEmpty()) 
-						&& (l.getNumeroPaginas() == example.getNumeroPaginas() || example.getNumeroPaginas() == 0)) {
-						if (!ISBNs.contains(l.getISBN())) {
-							if(findAvailable) {
-								if(!l.isRetirado()) {
-									ISBNs.add(l.getISBN());
-									livros.add(l);
-								}
-							} else {
-								ISBNs.add(l.getISBN());
-								livros.add(l);
-							}
-						}
-					}
-				}
-			}
-		}
+		
+		Session session = SessionUtil.getInstance().getSession();
+		
+		String hql = "from Livro l where ";
+		String parameters = "";
+		String data[] = {example.getISBN(), example.getTitulo(), example.getAutor(), example.getEditora()};
+		String dataIndex[] = {"l.ISBN","l.titulo","l.autor","l.editora"};
+		
+		for (int i = 0; i < data.length; i++) 
+			if(!data[i].isEmpty())
+				parameters += (parameters.length() == 0 ? "" : " and ") + dataIndex[i] + " = \'" + data[i] + "\'";
+		if (example.getEdicao() > 0)
+			parameters += (parameters.length() == 0 ? "" : " and ") + "l.edicao = " + String.valueOf(example.getEdicao());
+		if (example.getNumeroPaginas() > 0)
+			parameters += (parameters.length() == 0 ? "" : " and ") + "l.numeroPaginas = " + String.valueOf(example.getNumeroPaginas());
+		if(findAvailable)
+			parameters += (parameters.length() == 0 ? "" : " and ") + "l.retirado = false";
+		
+		Query query = session.createQuery(hql+parameters);
+		List<Livro> list= query.getResultList();
+		
+		session.close();
 		return livros;
 	}
 

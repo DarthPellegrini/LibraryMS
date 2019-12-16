@@ -8,7 +8,9 @@ public interface ClienteRepository {
 	public abstract List<Cliente> findSimilarClients(Cliente cliente);
 	public abstract void createValidCode(Cliente c);
 	public abstract boolean findCardWithThisCode(String code);
+	@Deprecated
 	public abstract void delete(String CPF);
+	@Deprecated
 	public abstract void edit(String CPF, Cliente cliente);
 	public abstract boolean thisCpfAlreadyExists(String CPF);
 	public abstract Cliente findClientWithThisCardCode(String code);

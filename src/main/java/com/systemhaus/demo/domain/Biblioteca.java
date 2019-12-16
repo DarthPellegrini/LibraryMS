@@ -1,9 +1,7 @@
 package com.systemhaus.demo.domain;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Biblioteca {
 	
@@ -11,13 +9,13 @@ public class Biblioteca {
 	private int id;
 	private List<Estante> estantes;
 	private List<Cliente> clientes;
-	private Map<String,int[]> regLivros;
+	private List<RegLivros> regLivros;
 	private List<LivroRetirado> livrosRetirados;
 	
 	public Biblioteca() {
 		setEstantes(new ArrayList<Estante>());
 		setClientes(new ArrayList<Cliente>());
-		regLivros = new HashMap<String,int[]>();
+		setRegLivros(new ArrayList<RegLivros>());
 		setLivrosRetirados(new ArrayList<LivroRetirado>());
 		this.addEstante();
 	}
@@ -73,79 +71,77 @@ public class Biblioteca {
 	}
 	
 	/*
-	 * retorna os livros da última prateleira adicionadas
+	 * retorna os livros da última prateleira adicionada
 	 */
 	public List<Livro> getLastLivros(){
 		return this.getLastPrateleira().getLivros();
 	}
 	
 	/*
-	 * retorna o hashmap de todos os livros registrados
+	 * retorna a lista de todos os livros registrados
 	 */
-	public Map<String,int[]> getRegistroDeLivros(){
+	public List<RegLivros> getRegLivros(){
 		return this.regLivros;
 	}
 	
-	/*
-	 * Verifica se todos os livros de um mesmo ISBN estão disponíveis para retirada
-	 */
-	public boolean allTheBooksAreAvailable(String key) {
-		return this.regLivros.get(key)[0] == this.regLivros.get(key)[1];
-	}
-	
-	/**
-	 * Caso todos os livros estejam disponíveis, não há problema em deletar alguns exemplares,
-	 * senão, é necessário conferir se o número atual de livros depois da remoção 
-	 * não será inferior ao de livros disponíveis
-	 */
-	public boolean havingOnlyThisAmountOfCopiesWontCauseProblems(String key, int quant) {
-		return this.allTheBooksAreAvailable(key) ? true : quant >= (this.regLivros.get(key)[0]-this.regLivros.get(key)[1]);
+	public void setRegLivros(List<RegLivros> regLivros) {
+		this.regLivros = regLivros;
 	}
 
 	/*
 	 * Adiciona um livro no catálogo na biblioteca
 	 */
 	public void addDisponivel(String key) {
-		int value[] = new int[2];
-		if(!this.regLivros.containsKey(key)) {
-			value[0] = 1;
-			value[1] = 1;
+		RegLivros reg = findRegLivrosForThis(key);
+		if(reg == null) {
+			reg = new RegLivros(key,1,this);
+			regLivros.add(reg);
 		}else {
-			value[0] = ++this.regLivros.get(key)[0];
-			value[1] = ++this.regLivros.get(key)[1];
+			reg.setQuantLivrosNoCatalogo(reg.getQuantLivrosNoCatalogo()+1);
+			reg.setQuantLivrosParaRetirar(reg.getQuantLivrosParaRetirar()+1);
 		}
-		this.regLivros.put(key, value);
 	}
 	/*
-	 * Remove um livro do catálogo da biblioteca
+	 * Remove livros do catálogo da biblioteca
 	 */
 	public void remDisponivel(String key, int quant) {
-		int value[] = {this.regLivros.get(key)[0]-=quant,
-				this.regLivros.get(key)[1]-=quant};
-		this.regLivros.put(key, value);
+		RegLivros reg = findRegLivrosForThis(key);
+		if (reg != null) {
+			reg.setQuantLivrosNoCatalogo(reg.getQuantLivrosNoCatalogo()-quant);
+			reg.setQuantLivrosParaRetirar(reg.getQuantLivrosParaRetirar()-quant);
+		}
 	}
 	/*
 	 * Remove um livro que estava retirado e foi devolvido do catálogo
 	 */
 	public boolean remRetirado(String key) {
-		if(this.regLivros.get(key)[1] + 1 > this.regLivros.get(key)[0])
+		RegLivros reg = findRegLivrosForThis(key);
+		if (reg != null && reg.getQuantLivrosParaRetirar() + 1 <= reg.getQuantLivrosNoCatalogo()) {
+			reg.setQuantLivrosParaRetirar(reg.getQuantLivrosParaRetirar()+1);
+			return true;
+		} else
 			return false;
-		int value[] = {this.regLivros.get(key)[0]
-				,++this.regLivros.get(key)[1]};
-		this.regLivros.put(key, value);
-		return true;
 	}
 	
 	/*
 	 * Adiciona um exemplar que estava disponível e foi retirado
 	 */
 	public boolean addRetirado(String key) {
-		if(this.regLivros.get(key)[1] - 1 < 0)
+		RegLivros reg = findRegLivrosForThis(key);
+		if (reg != null && reg.getQuantLivrosParaRetirar() - 1 >= 0) {
+			reg.setQuantLivrosParaRetirar(reg.getQuantLivrosParaRetirar()-1);
+			return true;
+		} else
 			return false;
-		int value[] = {this.regLivros.get(key)[0]
-				,--this.regLivros.get(key)[1]};
-		this.regLivros.put(key, value);
-		return true;
+	}
+	
+	
+	
+	public RegLivros findRegLivrosForThis(String isbn) {
+		for (RegLivros rl : this.getRegLivros())
+			if (rl.getIsbn().contentEquals(isbn))
+				return rl;
+		return null;
 	}
 	
 	/**

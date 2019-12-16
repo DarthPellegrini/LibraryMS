@@ -1,9 +1,12 @@
-package com.systemhaus.demo.dao.memory;
+package com.systemhaus.demo.dao;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.hibernate.Session;
+
+import com.systemhaus.demo.SessionUtil;
 import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.Cliente;
 import com.systemhaus.demo.domain.Evento;
@@ -34,7 +37,14 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 	
 	@Override
 	public void estenderRetirada(LivroRetirado livroRetirado) {
+		Session session = SessionUtil.getInstance().getSession();
+		
 		livroRetirado.estenderRetirada(new Evento(TipoEvento.RENOVACAO,livroRetirado));
+		
+		session.save(livroRetirado.getLastRenovacao());
+		session.saveOrUpdate(livroRetirado);
+		
+		session.close();
 	}
 	
 	@Override
@@ -71,6 +81,5 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 		}else
 			return 1;
 	}
-	
 	
 }

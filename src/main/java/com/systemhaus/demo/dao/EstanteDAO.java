@@ -1,36 +1,72 @@
-package com.systemhaus.demo.dao.memory;
+package com.systemhaus.demo.dao;
 
 import java.util.ListIterator;
 
+import javax.persistence.TypedQuery;
+
+import org.hibernate.Session;
+
+import com.systemhaus.demo.SessionUtil;
 import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.Estante;
-import com.systemhaus.demo.domain.Prateleira;
 import com.systemhaus.demo.domain.EstanteRepository;
 import com.systemhaus.demo.domain.Livro;
+import com.systemhaus.demo.domain.Prateleira;
 
 public class EstanteDAO implements EstanteRepository {
-	
+
 	private Biblioteca biblioteca;
 
 	public EstanteDAO(Biblioteca biblioteca) {
 		this.biblioteca = biblioteca;
 	}
 
+	/*
+	 * Move to PrateleiraDAO ? Maybe not, need to search every prateleira of every estante
+	 */
 	@Override
 	public Prateleira getPrateleiraWithEmptySpace() {
-		return biblioteca.getPrateleiraWithEmptySpace();
+		Session session = SessionUtil.getInstance().getSession();
+		
+		Prateleira p = null;
+		
+		TypedQuery<Object[]> query = session.createQuery("select l.prateleira,count(l.prateleira) from Livro l group by l.prateleira");
+		
+		
+		
+		session.close();
+		return p;
 	}
 
+	/*
+	 * Move to biblioteca DAO, MAYBE
+	 * Get data and add new estante to database
+	 */
 	@Override
 	public void addEstante() {
+		Session session = SessionUtil.getInstance().getSession();
+		
 		biblioteca.addEstante();
+		
+		session.close();
 	}
 	
+	/*
+	 * read from database and count estantes
+	 */
 	@Override
 	public int getCountOfEstantes() {
-		return biblioteca.getEstantes().size();
+		Session session = SessionUtil.getInstance().getSession();
+		
+		TypedQuery<Integer> query = session.createQuery("select count(*) from Estante");
+		
+		session.close();
+		return query.getResultList().get(0);
 	}
 	
+	/*
+	 * Search in database for estantes with prateleiras that have a bookcount == 20
+	 */
 	@Override
 	public boolean needsReorganization() {
 		for (Estante e : biblioteca.getEstantes())
@@ -39,6 +75,9 @@ public class EstanteDAO implements EstanteRepository {
 		return false;
 	}
 
+	/*
+	 * get all bookdata from the database and organize it
+	 */
 	@Override
 	public void organizeLibrary() {
 		//removendo estantes vazias
@@ -72,4 +111,5 @@ public class EstanteDAO implements EstanteRepository {
 					eIt.remove();
 			}
 	}
+	
 }

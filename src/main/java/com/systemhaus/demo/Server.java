@@ -9,6 +9,7 @@ import com.systemhaus.demo.dao.memory.ClienteDAO;
 import com.systemhaus.demo.dao.memory.EnderecoDAO;
 import com.systemhaus.demo.dao.memory.EstanteDAO;
 import com.systemhaus.demo.dao.memory.LivroRetiradoDAO;
+import com.systemhaus.demo.dao.RegLivrosDAO;
 import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.EstanteRepository;
 import com.systemhaus.demo.domain.LivroRetiradoRepository;
@@ -16,6 +17,7 @@ import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.LivroRepository;
 import com.systemhaus.demo.domain.LivroRetirado;
 import com.systemhaus.demo.domain.Prateleira;
+import com.systemhaus.demo.domain.RegLivrosRepository;
 import com.systemhaus.demo.domain.Cliente;
 import com.systemhaus.demo.domain.ClienteRepository;
 import com.systemhaus.demo.domain.EnderecoRepository;
@@ -24,6 +26,7 @@ public class Server {
 
 	private EstanteRepository estanteRepository;
 	private LivroRepository livroRepository;
+	private RegLivrosRepository regLivrosRepository;
 	private ClienteRepository clienteRepository;
 	private EnderecoRepository enderecoRepository;
 	private LivroRetiradoRepository livroRetiradoRepository;
@@ -32,6 +35,7 @@ public class Server {
 		Biblioteca biblioteca = new Biblioteca();
 		this.estanteRepository = new EstanteDAO(biblioteca);
 		this.livroRepository = new LivroDAO(biblioteca);
+		this.regLivrosRepository = new RegLivrosDAO(biblioteca);
 		this.clienteRepository = new ClienteDAO(biblioteca);
 		this.enderecoRepository = new EnderecoDAO(biblioteca);
 		this.livroRetiradoRepository = new LivroRetiradoDAO(biblioteca);
@@ -40,6 +44,7 @@ public class Server {
 	public Server (Biblioteca biblioteca) {
 		this.estanteRepository = new EstanteDAO(biblioteca);
 		this.livroRepository = new LivroDAO(biblioteca);
+		this.regLivrosRepository = new RegLivrosDAO(biblioteca);
 		this.clienteRepository = new ClienteDAO(biblioteca);
 		this.enderecoRepository = new EnderecoDAO(biblioteca);
 		this.livroRetiradoRepository = new LivroRetiradoDAO(biblioteca);
@@ -68,11 +73,11 @@ public class Server {
 		if (livro.validate() && quantCopias > 0) {
 			for (int quantLivros = 0; quantLivros < quantCopias; quantLivros++) {
 				Livro copy = livro.copy();
-				livroRepository.save(copy);
 				if(!addBook(copy)) {
 					estanteRepository.addEstante();
 					addBook(copy);
 				}
+				livroRepository.save(copy);
 			}
 		} else {
 			return false;
@@ -83,15 +88,20 @@ public class Server {
 	//TODO: addLivro como método no estanteRepository ou prateleiraRepository
 	public boolean addBook(Livro livro) {
 		Prateleira p = estanteRepository.getPrateleiraWithEmptySpace();
-		return p == null ? false : p.addLivro(livro);
+		if (p == null)
+			return false;
+		else {
+			livro.setPrateleira(p);
+			return p.addLivro(livro);
+		}
 	}
 	
 	public int returnBookCount(String iSBN) {
-		return estanteRepository.returnBookCount(iSBN);
+		return regLivrosRepository.returnBookCount(iSBN);
 	}
 	
 	public int returnAvailableBookCount(String iSBN) {
-		return estanteRepository.returnAvailableBookCount(iSBN);
+		return regLivrosRepository.returnAvailableBookCount(iSBN);
 	}
 	
 	public List<Livro> findSimilarBooks(Livro l){
@@ -100,8 +110,8 @@ public class Server {
 	
 	public boolean editBook(String iSBNOriginal, Livro livro, int quantCopias) {
 		//caso o número de cópias final seja menor que o disponível, os livros que:
-		int quantNoAcervo = estanteRepository.returnBookCount(iSBNOriginal);
-		if(!estanteRepository.havingOnlyThisAmountOfCopiesWontCauseProblems(iSBNOriginal, quantCopias))
+		int quantNoAcervo = regLivrosRepository.returnBookCount(iSBNOriginal);
+		if(!regLivrosRepository.havingOnlyThisAmountOfCopiesWontCauseProblems(iSBNOriginal, quantCopias))
 			return false;
 		if(quantCopias > quantNoAcervo)
 			this.addNewBookRoutine(livro, quantCopias-quantNoAcervo);
@@ -118,7 +128,7 @@ public class Server {
 		List<Prateleira> prateleiras = new ArrayList<Prateleira>();
 		List<Livro> livros = new ArrayList<Livro>();
 		//primeiramente verificando se podemos deletar todos os livros (se não há nenhum retirado)
-		if(!estanteRepository.allTheBooksAreAvailable(iSBNOriginal) && delete == 0)
+		if(!regLivrosRepository.allTheBooksAreAvailable(iSBNOriginal) && delete == 0)
 			return false; 
 		//marcando livros para serem deletados
 		livroRepository.markBooksForDeletion(iSBNOriginal ,prateleiras, livros);
@@ -187,6 +197,19 @@ public class Server {
 	/*
 	 * Método de edição do cliente
 	 */
+	public boolean updateClient(String cpf, Cliente cliente) {
+		if(!clienteRepository.thisCpfAlreadyExists(cliente.getCpf()) 
+			|| (cliente.getCpf().equals(cpf) && clienteRepository.thisCpfAlreadyExists(cliente.getCpf()))) {
+			clienteRepository.update(cliente);
+			return true;
+		}
+		return false;
+	}
+	
+	@Deprecated
+	/*
+	 * Método de edição do cliente
+	 */
 	public boolean editClient(String cpf, Cliente cliente) {
 		if(!clienteRepository.thisCpfAlreadyExists(cliente.getCpf()) 
 			|| (cliente.getCpf().equals(cpf) && clienteRepository.thisCpfAlreadyExists(cliente.getCpf()))) {
@@ -199,6 +222,14 @@ public class Server {
 	/*
 	 * Método de exclusão do cliente
 	 */
+	public void deleteClient(Cliente cliente) {
+		clienteRepository.delete(cliente);
+	}
+	
+	/*
+	 * Método de exclusão do cliente
+	 */
+	@Deprecated
 	public void deleteClient(String cpf) {
 		clienteRepository.delete(cpf);
 	}
