@@ -79,13 +79,28 @@ public class LivroDAO implements LivroRepository {
 		Session session = SessionUtil.getInstance().getSession();
 		Transaction tx = session.beginTransaction();
 		
-		TypedQuery<Livro> query = session.createQuery("from Livro where isbn = \'" + iSBNOriginal + "\'");
+		TypedQuery<Object[]> query = session.createQuery("select l.id,l.ISBN,l.titulo,l.autor,l.editora,l.edicao,l.numeroPaginas,l.retirado,l.prateleira.id, l.prateleira.estante.id"
+				+ " from Livro l where isbn = \'" + iSBNOriginal + "\'");
 		
-		List<Livro> livros = query.getResultList();
+		List<Object[]> list= query.getResultList();
 		
-		for (Livro l : livros) {
-			l.setAllDataFrom(livro);
-			session.update(l);
+		List<Livro> livros = new ArrayList<>();
+		for(int i=0;i<list.size();i++){
+			Object[] obj = list.get(i);
+			
+			Estante e = new Estante(biblioteca);
+			e.setId((int)obj[9]);
+			Prateleira p = new Prateleira(e);
+			p.setId((int)obj[8]);
+			e.addPrateleira(p);
+	        Livro l = new Livro((String)obj[1],(String)obj[2],(String)obj[3],(String)obj[4],(int)obj[5],(int)obj[6],(boolean)obj[7]);
+	        l.setId((int)obj[0]);
+	        
+	        livro.setPrateleira(p);
+	        p.addLivro(livro);
+	        
+	        l.setAllDataFrom(livro);
+	        session.update(l);
 		}
 		
 		tx.commit();

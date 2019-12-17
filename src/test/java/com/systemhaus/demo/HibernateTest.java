@@ -68,12 +68,7 @@ public class HibernateTest {
 	    
 	    Biblioteca b = new Biblioteca();
 	    Server s = new Server(b);
-	    initTestServer(s);
 	    
-//	    Livro l = new Livro();
-//	    l.setTitulo("Mistério no trem vrum vrum");
-//	    s.editBook("9780123456789", l, 1);
-
 	    t.commit();
 	    session.close();
 	}

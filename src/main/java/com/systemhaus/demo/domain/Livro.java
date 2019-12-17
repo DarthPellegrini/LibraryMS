@@ -154,14 +154,13 @@ public class Livro extends Model{
 	 * Copia todos os atributos de um livro
 	 */
 	public final void setAllDataFrom(Livro l) {
-		setISBN(l.getISBN());
-		setTitulo(l.getTitulo());
-		setAutor(l.getAutor());
-		setEditora(l.getEditora());
-		setEdicao(l.getEdicao());
-		setNumeroPaginas(l.getNumeroPaginas());
+		if (!l.getISBN().isEmpty())  setISBN(l.getISBN());
+		if (!l.getTitulo().isEmpty())  setTitulo(l.getTitulo());
+		if (!l.getAutor().isEmpty())  setAutor(l.getAutor());
+		if (!l.getEditora().isEmpty())  setEditora(l.getEditora());
+		if (l.getEdicao() != 0)  setEdicao(l.getEdicao());
+		if (l.getNumeroPaginas() != 0)	setNumeroPaginas(l.getNumeroPaginas());
 		setPrateleira(l.getPrateleira());
-		setRetirado(l.isRetirado());
 	}
 	
 	/*
