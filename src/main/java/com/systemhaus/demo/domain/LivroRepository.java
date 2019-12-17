@@ -10,6 +10,12 @@ public interface LivroRepository {
 	void deleteOnlyTheseBooks(String iSBNOriginal, List<Prateleira> prateleiras, List<Livro> livros, int delete);
 	void deleteAllTheseBooks(String iSBNOriginal, List<Prateleira> prateleiras, List<Livro> livros);
 	void markBooksForDeletion(String iSBNOriginal, List<Prateleira> prateleiras, List<Livro> livros);
+	int returnBookCount(String iSBN);
+	int returnAvailableBookCount(String iSBN);
+	boolean allTheBooksAreAvailable(String iSBN);
+	boolean havingOnlyThisAmountOfCopiesWontCauseProblems(String iSBN, int quantCopias);
+	void deleteThisRegLivros(RegLivros reg);
+	RegLivros findRegLivrosForThis(String isbn);
 	
 	
 }

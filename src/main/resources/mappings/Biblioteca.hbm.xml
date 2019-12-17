@@ -14,7 +14,7 @@
             </key>
             <one-to-many class="com.systemhaus.demo.domain.Estante" />
         </bag>
-        <bag name="regLivros" table="reg_livros" inverse="true" cascade="all">
+        <bag name="regLivros" table="reg_livros" inverse="true">
             <key>
                 <column name="biblioteca_id" not-null="true" />
             </key>

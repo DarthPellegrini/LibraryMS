@@ -135,7 +135,9 @@ public class Livro extends Model{
         this.retirado = retirado;
         firePropertyChange(PROPERTY_RETIRADO, oldValue, this.retirado);
 	}
-	
+	public boolean getRetirado() {
+		return retirado;
+	}
 	//valida os dados de um livro
 	public boolean validate() {
 		return (!ISBN.equals("") && edicao > 0 && numeroPaginas > 0) ? true: false;
@@ -158,6 +160,8 @@ public class Livro extends Model{
 		setEditora(l.getEditora());
 		setEdicao(l.getEdicao());
 		setNumeroPaginas(l.getNumeroPaginas());
+		setPrateleira(l.getPrateleira());
+		setRetirado(l.isRetirado());
 	}
 	
 	/*

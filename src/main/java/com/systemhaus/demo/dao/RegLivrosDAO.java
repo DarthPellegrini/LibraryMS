@@ -88,7 +88,7 @@ public class RegLivrosDAO implements RegLivrosRepository {
 			
 			RegLivros reg = new RegLivros(isbn,1, (Biblioteca)newQuery.getResultList().get(0));
 			biblioteca.getRegLivros().add(reg);
-			session.save(reg);
+			session.saveOrUpdate(reg);
 		}
 		
 		tx.commit();

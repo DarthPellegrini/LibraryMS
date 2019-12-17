@@ -7,4 +7,5 @@ public interface EstanteRepository {
 	public int getCountOfEstantes();
 	public boolean needsReorganization();
 	public void organizeLibrary();
+	boolean addBook(Livro livro);
 }

@@ -17,7 +17,6 @@ public class Biblioteca {
 		setClientes(new ArrayList<Cliente>());
 		setRegLivros(new ArrayList<RegLivros>());
 		setLivrosRetirados(new ArrayList<LivroRetirado>());
-		this.addEstante();
 	}
 	
 	public int getId() {
@@ -50,10 +49,6 @@ public class Biblioteca {
 
 	public void setLivrosRetirados(List<LivroRetirado> livrosRetirados) {
 		this.livrosRetirados = livrosRetirados;
-	}
-	
-	public void addEstante() {
-		estantes.add(new Estante(this));
 	}
 	
 	/*

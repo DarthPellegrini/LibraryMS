@@ -14,7 +14,7 @@
          <generator class="sequence"/>
       </id>
       <many-to-one name="biblioteca" class="com.systemhaus.demo.domain.Biblioteca" unique="true" fetch="select">
-            <column name="biblioteca_id" not-null="true" />
+            <column name="biblioteca_id" />
       </many-to-one>
       <bag name="prateleiras" table="prateleira" inverse="true" cascade="all">
             <key>

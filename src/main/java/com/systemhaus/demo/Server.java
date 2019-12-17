@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.systemhaus.demo.dao.memory.LivroDAO;
-import com.systemhaus.demo.dao.memory.ClienteDAO;
-import com.systemhaus.demo.dao.memory.EnderecoDAO;
-import com.systemhaus.demo.dao.memory.EstanteDAO;
+import com.systemhaus.demo.dao.EstanteDAO;
+import com.systemhaus.demo.dao.LivroDAO;
+import com.systemhaus.demo.dao.ClienteDAO;
+import com.systemhaus.demo.dao.EnderecoDAO;
 import com.systemhaus.demo.dao.memory.LivroRetiradoDAO;
 import com.systemhaus.demo.dao.RegLivrosDAO;
 import com.systemhaus.demo.domain.Biblioteca;
@@ -39,6 +39,7 @@ public class Server {
 		this.clienteRepository = new ClienteDAO(biblioteca);
 		this.enderecoRepository = new EnderecoDAO(biblioteca);
 		this.livroRetiradoRepository = new LivroRetiradoDAO(biblioteca);
+		initializeLibrary();
 	}
 	
 	public Server (Biblioteca biblioteca) {
@@ -48,6 +49,7 @@ public class Server {
 		this.clienteRepository = new ClienteDAO(biblioteca);
 		this.enderecoRepository = new EnderecoDAO(biblioteca);
 		this.livroRetiradoRepository = new LivroRetiradoDAO(biblioteca);
+		initializeLibrary();
 	}
 	
 	public Server(EstanteRepository estanteRepository, LivroRepository livroRepository, 
@@ -58,6 +60,14 @@ public class Server {
 		this.clienteRepository = clienteRepository;
 		this.enderecoRepository = enderecoRepository;
 		this.livroRetiradoRepository = livroRetiradoRepository;
+		initializeLibrary();
+	}
+	
+	/*
+	 * Inicializa a bilioteca, ocorre somente uma vez, na criação do banco de dados
+	 */
+	public void initializeLibrary() {
+		((EstanteDAO)estanteRepository).initializeLibrary();
 	}
 	
 	/*
@@ -73,9 +83,9 @@ public class Server {
 		if (livro.validate() && quantCopias > 0) {
 			for (int quantLivros = 0; quantLivros < quantCopias; quantLivros++) {
 				Livro copy = livro.copy();
-				if(!addBook(copy)) {
+				if(!estanteRepository.addBook(copy)) {
 					estanteRepository.addEstante();
-					addBook(copy);
+					estanteRepository.addBook(copy);
 				}
 				livroRepository.save(copy);
 			}
@@ -85,16 +95,6 @@ public class Server {
 		return true; 
 	}
 	
-	//TODO: addLivro como método no estanteRepository ou prateleiraRepository
-	public boolean addBook(Livro livro) {
-		Prateleira p = estanteRepository.getPrateleiraWithEmptySpace();
-		if (p == null)
-			return false;
-		else {
-			livro.setPrateleira(p);
-			return p.addLivro(livro);
-		}
-	}
 	
 	public int returnBookCount(String iSBN) {
 		return regLivrosRepository.returnBookCount(iSBN);

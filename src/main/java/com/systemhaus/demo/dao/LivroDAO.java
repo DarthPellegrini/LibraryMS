@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.ListIterator;
 
 import javax.persistence.Query;
+import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import com.systemhaus.demo.SessionUtil;
 import com.systemhaus.demo.domain.Biblioteca;
@@ -17,6 +19,7 @@ import com.systemhaus.demo.domain.Estante;
 import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.LivroRepository;
 import com.systemhaus.demo.domain.Prateleira;
+import com.systemhaus.demo.domain.RegLivros;
 
 public class LivroDAO implements LivroRepository {
 	
@@ -29,12 +32,13 @@ public class LivroDAO implements LivroRepository {
 	@Override
 	public void save(Livro livro) {
 		Session session = SessionUtil.getInstance().getSession();
-		//session.save(livro.getPrateleira().getEstante().getBiblioteca());
-		//session.save(livro.getPrateleira().getEstante());
-		//session.save(livro.getPrateleira());
+		Transaction tx = session.beginTransaction();
+		
 		session.save(livro);
-		//TODO: criar um BibliotecaDAO para lidar com o controle do estoque dos livros
-		biblioteca.addDisponivel(livro.getISBN());
+		
+		this.addDisponivel(livro.getISBN());
+		
+		tx.commit();
 		session.close();
 	}
 	
@@ -64,7 +68,7 @@ public class LivroDAO implements LivroRepository {
 			parameters += (parameters.length() == 0 ? "" : " and ") + "l.retirado = false";
 		
 		Query query = session.createQuery(hql+parameters);
-		List<Livro> list= query.getResultList();
+		livros = query.getResultList();
 		
 		session.close();
 		return livros;
@@ -72,12 +76,23 @@ public class LivroDAO implements LivroRepository {
 
 	@Override
 	public void editByExample(String iSBNOriginal, Livro livro) {
-		for (Estante e : biblioteca.getEstantes()) 
-			for (Prateleira p : e.getPrateleiras()) 
-				for (Livro l : p.getLivros())
-					if (l.getISBN().equals(iSBNOriginal)) l.setAllDataFrom(livro);
+		Session session = SessionUtil.getInstance().getSession();
+		Transaction tx = session.beginTransaction();
+		
+		TypedQuery<Livro> query = session.createQuery("from Livro where isbn = \'" + iSBNOriginal + "\'");
+		
+		List<Livro> livros = query.getResultList();
+		
+		for (Livro l : livros) {
+			l.setAllDataFrom(livro);
+			session.update(l);
+		}
+		
+		tx.commit();
+		session.close();
 	}
 	
+	//Will disappear after db insertion
 	@Override
 	public void markBooksForDeletion(String iSBNOriginal,List<Prateleira> prateleiras, List<Livro> livros) {
 		for(ListIterator<Estante> eIt = biblioteca.getEstantes().listIterator(biblioteca.getEstantes().size());
@@ -121,4 +136,172 @@ public class LivroDAO implements LivroRepository {
 			    }
 			}
 	}
+
+	@Override
+	public int returnBookCount(String iSBN) {
+		Session session = SessionUtil.getInstance().getSession();
+		
+		TypedQuery<RegLivros> query = session.createQuery("from RegLivros where isbn = \'" + iSBN + "\'");
+		
+		List<RegLivros> list = query.getResultList();
+		
+		session.close();
+		return (list.size() > 0) ? list.get(0).getQuantLivrosNoCatalogo() : 0;
+	}
+	
+	@Override
+	public int returnAvailableBookCount(String iSBN) {
+		Session session = SessionUtil.getInstance().getSession();
+		
+		TypedQuery<RegLivros> query = session.createQuery("from RegLivros where isbn = \'" + iSBN + "\'");
+		
+		List<RegLivros> list = query.getResultList();
+		
+		session.close();
+		return (list.size() > 0) ? list.get(0).getQuantLivrosParaRetirar() : 0;
+	}
+	
+	@Override
+	public boolean allTheBooksAreAvailable(String iSBN) {
+		Session session = SessionUtil.getInstance().getSession();
+		
+		TypedQuery<RegLivros> query = session.createQuery("from RegLivros where isbn = \'" + iSBN + "\'");
+		
+		List<RegLivros> list = query.getResultList();
+		
+		session.close();
+		return (list.size() > 0) ? (list.get(0).getQuantLivrosNoCatalogo()==list.get(0).getQuantLivrosParaRetirar()) : false;
+	}
+	
+	@Override
+	public boolean havingOnlyThisAmountOfCopiesWontCauseProblems(String iSBN, int quantCopias){
+		Session session = SessionUtil.getInstance().getSession();
+		
+		TypedQuery<RegLivros> query = session.createQuery("from RegLivros where isbn = \'" + iSBN + "\'");
+		
+		List<RegLivros> list = query.getResultList();
+		
+		session.close();
+		return (list.size() > 0) ? (quantCopias >= list.get(0).getMaxDeletionNumber()) : false;
+	}
+	
+	/*
+	 * Adiciona um livro no catálogo na biblioteca
+	 */
+	public void addDisponivel(String isbn) {
+		Session session = SessionUtil.getInstance().getSession();
+		Transaction tx = session.beginTransaction();
+		
+		TypedQuery<RegLivros> query = session.createQuery("from RegLivros where isbn = \'" + isbn + "\'");
+		
+		List<RegLivros> list = query.getResultList();
+		
+		if (list.size() > 0){
+			list.get(0).setQuantLivrosNoCatalogo(list.get(0).getQuantLivrosNoCatalogo()+1);
+			list.get(0).setQuantLivrosParaRetirar(list.get(0).getQuantLivrosParaRetirar()+1);
+			session.update(list.get(0));
+		} else {
+			TypedQuery<Biblioteca> newQuery = session.createQuery("from Biblioteca");
+			
+			RegLivros reg = new RegLivros(isbn,1, (Biblioteca)newQuery.getResultList().get(0));
+			biblioteca.getRegLivros().add(reg);
+			session.saveOrUpdate(reg);
+		}
+		
+		tx.commit();
+		session.close();
+	}
+	/*
+	 * Remove livros do catálogo da biblioteca
+	 */
+	public void remDisponivel(String isbn, int quant) {
+		Session session = SessionUtil.getInstance().getSession();
+		Transaction tx = session.beginTransaction();
+		
+		TypedQuery<RegLivros> query = session.createQuery("from RegLivros where isbn = \'" + isbn + "\'");
+		
+		List<RegLivros> list = query.getResultList();
+		
+		if (list.size() > 0 && list.get(0).getQuantLivrosParaRetirar() - 1 >= 0){
+			list.get(0).setQuantLivrosNoCatalogo(list.get(0).getQuantLivrosNoCatalogo()-quant);
+			list.get(0).setQuantLivrosParaRetirar(list.get(0).getQuantLivrosParaRetirar()-quant);
+			session.update(list.get(0));
+		}
+		tx.commit();
+		session.close();  
+	}
+	/*
+	 * Remove um livro que estava retirado e foi devolvido do catálogo
+	 */
+	public boolean remRetirado(String isbn) {
+		Session session = SessionUtil.getInstance().getSession();
+		Transaction tx = session.beginTransaction();
+		
+		TypedQuery<RegLivros> query = session.createQuery("from RegLivros where isbn = \'" + isbn+ "\'");
+		
+		List<RegLivros> list = query.getResultList();
+		
+		if (list.size() > 0 && list.get(0).getQuantLivrosParaRetirar() + 1 <= list.get(0).getQuantLivrosNoCatalogo()){
+			list.get(0).setQuantLivrosParaRetirar(list.get(0).getQuantLivrosParaRetirar()+1);
+			session.update(list.get(0));
+			
+			tx.commit();
+			session.close();  
+			return true;
+		} else {
+			tx.commit();
+			session.close();
+			return false;
+		}
+	}
+	
+	/*
+	 * Adiciona um exemplar que estava disponível e foi retirado
+	 */
+	public boolean addRetirado(String isbn) {
+		Session session = SessionUtil.getInstance().getSession();
+		Transaction tx = session.beginTransaction();
+		
+		TypedQuery<RegLivros> query = session.createQuery("from RegLivros where isbn = \'" + isbn+ "\'");
+		
+		List<RegLivros> list = query.getResultList();
+		
+		if (list.size() > 0 && list.get(0).getQuantLivrosParaRetirar() - 1 >= 0){
+			list.get(0).setQuantLivrosParaRetirar(list.get(0).getQuantLivrosParaRetirar()-1);
+			session.update(list.get(0));
+			
+			tx.commit();
+			session.close();  
+			return true;
+		} else {
+			tx.commit();
+			session.close();
+			return false;
+		}
+	}
+	
+	@Override
+	public void deleteThisRegLivros(RegLivros reg) {
+		Session session = SessionUtil.getInstance().getSession();
+		Transaction tx = session.beginTransaction();
+		
+		biblioteca.getRegLivros().remove(reg);
+		session.delete(reg);
+			
+		tx.commit();
+		session.close();
+	}
+	
+	@Override
+	public RegLivros findRegLivrosForThis(String isbn) {
+		Session session = SessionUtil.getInstance().getSession();
+		
+		TypedQuery<RegLivros> query = session.createQuery("from RegLivros where isbn = \'" + isbn + "\'");
+		
+		List<RegLivros> list = query.getResultList();
+		
+		session.close();
+		return (list.size() > 0) ? list.get(0) : null;
+	}
+	
 }

@@ -22,6 +22,10 @@ public class Estante {
 		setPrateleiras(prateleiras);
 	}
 	
+	public Estante() {
+		setPrateleiras(new ArrayList<Prateleira>());
+	}
+	
 	public int getId() {
 		return id;
 	}

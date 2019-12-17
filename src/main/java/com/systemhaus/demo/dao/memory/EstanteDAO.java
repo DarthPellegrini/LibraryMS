@@ -17,13 +17,24 @@ public class EstanteDAO implements EstanteRepository {
 	}
 
 	@Override
+	public boolean addBook(Livro livro) {
+		Prateleira p = this.getPrateleiraWithEmptySpace();
+		if (p == null)
+			return false;
+		else {
+			livro.setPrateleira(p);
+			return p.addLivro(livro);
+		}
+	}
+	
+	@Override
 	public Prateleira getPrateleiraWithEmptySpace() {
 		return biblioteca.getPrateleiraWithEmptySpace();
 	}
 
 	@Override
 	public void addEstante() {
-		biblioteca.addEstante();
+		biblioteca.getEstantes().add(new Estante(biblioteca));
 	}
 	
 	@Override

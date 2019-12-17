@@ -5,6 +5,7 @@ import java.util.ListIterator;
 import javax.persistence.TypedQuery;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import com.systemhaus.demo.SessionUtil;
 import com.systemhaus.demo.domain.Biblioteca;
@@ -30,24 +31,60 @@ public class EstanteDAO implements EstanteRepository {
 		
 		Prateleira p = null;
 		
-		TypedQuery<Object[]> query = session.createQuery("select l.prateleira,count(l.prateleira) from Livro l group by l.prateleira");
+		// Not working
+		TypedQuery<Object[]> query = session.createQuery("select p.id, count(l) from Prateleira p left join p.livros l group by p.id");
 		
-		
+		for (Object[] obj : query.getResultList()) {
+			if((long)obj[1] < 20) {
+				int prateleiraID = (int) obj[0];
+				p = session.get(Prateleira.class, prateleiraID);
+				session.close();
+				return p;
+			}
+		}
 		
 		session.close();
 		return p;
 	}
 
-	/*
-	 * Move to biblioteca DAO, MAYBE
-	 * Get data and add new estante to database
-	 */
+	public void initializeLibrary() {
+		Session session = SessionUtil.getInstance().getSession();
+		Transaction tx = session.beginTransaction();
+		
+		TypedQuery<Integer> query = session.createQuery("select id from Biblioteca");
+		if (query.getResultList().size() == 0) {
+			biblioteca.getEstantes().add(new Estante(biblioteca));
+			session.save(biblioteca);
+		} else {
+			int x = query.getResultList().get(0);
+			biblioteca.setId(query.getResultList().get(0));
+		}
+			
+		tx.commit();
+		session.close();
+	}
+	
+	@Override
+	public boolean addBook(Livro livro) {
+		Prateleira p = this.getPrateleiraWithEmptySpace();
+		if (p == null)
+			return false;
+		else {
+			livro.setPrateleira(p);
+			return p.addLivro(livro);
+		}
+	}
+	
 	@Override
 	public void addEstante() {
 		Session session = SessionUtil.getInstance().getSession();
+		Transaction tx = session.beginTransaction();
 		
-		biblioteca.addEstante();
+		Estante e = new Estante(biblioteca);
+		biblioteca.getEstantes().add(e);
+		session.update(biblioteca);
 		
+		tx.commit();
 		session.close();
 	}
 	

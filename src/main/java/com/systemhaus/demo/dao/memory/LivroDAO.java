@@ -9,6 +9,7 @@ import com.systemhaus.demo.domain.Estante;
 import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.LivroRepository;
 import com.systemhaus.demo.domain.Prateleira;
+import com.systemhaus.demo.domain.RegLivros;
 
 public class LivroDAO implements LivroRepository {
 	
@@ -121,5 +122,41 @@ public class LivroDAO implements LivroRepository {
 				    	return;
 			    }
 			}
+	}
+
+	@Override
+	public int returnBookCount(String iSBN) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int returnAvailableBookCount(String iSBN) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public boolean allTheBooksAreAvailable(String iSBN) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean havingOnlyThisAmountOfCopiesWontCauseProblems(String iSBN, int quantCopias) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void deleteThisRegLivros(RegLivros reg) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public RegLivros findRegLivrosForThis(String isbn) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

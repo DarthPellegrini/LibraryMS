@@ -40,9 +40,9 @@ public class HibernateTest {
 		s.addNewBookRoutine(new Livro("9780123456791", "Príncipe dos Espinhos", "Agatha Marinho", "LP&M", 1, 250, false), 3);
 		s.addNewBookRoutine(new Livro("9780123456792", "A arte da Guerra", "Xing crishong", "Saraiva", 1, 250, false), 12);
 		s.addNewBookRoutine(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false), 7);
-		s.addCliente(new Cliente("Leonardo","02789345274","5551999999999","Rio Pardo","Higienópolis","Almirante Alexandrino",281,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Pellegrini","02789345280","5551999999998","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-		s.addCliente(new Cliente("Eduarda","02789345281","5551999999997","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448876",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addClienteRoutine(new Cliente("Leonardo Pellegrini","02789345274","5551999999999","Rio Pardo","Higienópolis","Almirante Alexandrino",281,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addClienteRoutine(new Cliente("Pellegrini","02789345280","5551999999998","Porto Alegre","Higienópolis","Marechal Floriano",925,"4000979800448882",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
+		s.addClienteRoutine(new Cliente("Eduarda","02789345281","5551999999997","Santa Cruz","Centro","Governador Pinheiro",856,"4000979800448876",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
 	}
 	
 	public void initEnhancedTestServer(Server s) {
@@ -63,27 +63,19 @@ public class HibernateTest {
 	
 	@Test
 	public void testHibernate() {
-		StandardServiceRegistry ssr = new StandardServiceRegistryBuilder().configure(this.getClass().getResource("/hibernate.cfg.xml")).build();  
-        Metadata meta = new MetadataSources(ssr).getMetadataBuilder().build();  
-        SessionFactory factory = meta.getSessionFactoryBuilder().build();  
-	    Session session = factory.openSession();  
+		Session session = SessionUtil.getInstance().getSession();  
 	    Transaction t = session.beginTransaction();  
 	    
 	    Biblioteca b = new Biblioteca();
 	    Server s = new Server(b);
-	    initEnhancedTestServer(s);
+	    initTestServer(s);
+	    
+//	    Livro l = new Livro();
+//	    l.setTitulo("Mistério no trem vrum vrum");
+//	    s.editBook("9780123456789", l, 1);
 
-	    session.save(b);
-	    for(Cliente c : b.getClientes()) {
-	    	session.save(c);
-	    }
-	    
-	    for(LivroRetirado livret : b.getLivrosRetirados())
-	    	session.save(livret);
-	    
 	    t.commit();
 	    session.close();
-	    factory.close();
 	}
 
 //	@Test

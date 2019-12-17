@@ -20,23 +20,6 @@ import com.systemhaus.demo.domain.LivroRetirado;
 public class ServerTest {
 	
 	@Test
-	public void testAddBook() {
-		Server s = new Server();
-		boolean result = s.addBook(new Livro("9780123456789", "Livro", "Agatha Cristie", "LP&M", 1, 250, false));
-		assertTrue(result);
-	}
-	
-	@Test
-	public void testErrorAddingBookNoEmptySpaceAvailable() {
-		Server s = new Server();
-		for(int i = 0; i <= 100; i++) {
-			s.addBook(new Livro("9780123456789", "Livro", "Agatha Cristie", "LP&M", 1, 250, false));
-		}
-		boolean result = s.addBook(new Livro("9780123456789", "Livro", "Agatha Cristie", "LP&M", 1, 250, false));
-		assertFalse(result);
-	}
-	
-	@Test
 	public void testAddNewBookRoutine() {
 		Server s = new Server();
 		boolean result = s.addNewBookRoutine(new Livro("9780123456789", "Livro", "Agatha Cristie", "LP&M", 1, 250, false), 1);

@@ -29,7 +29,7 @@ public class ClienteDAO implements ClienteRepository {
 		Session session = SessionUtil.getInstance().getSession();
 		Transaction t = session.beginTransaction();  
 		biblioteca.addCliente(cliente);
-		session.save(cliente);
+		session.saveOrUpdate(cliente);
 		t.commit();
 		session.close();
 	}
