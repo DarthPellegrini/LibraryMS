@@ -71,6 +71,7 @@ public class RegLivrosDAO implements RegLivrosRepository {
 	/*
 	 * Adiciona um livro no catálogo na biblioteca
 	 */
+	@Override
 	public void addDisponivel(String isbn) {
 		Session session = SessionUtil.getInstance().getSession();
 		Transaction tx = session.beginTransaction();
@@ -97,6 +98,7 @@ public class RegLivrosDAO implements RegLivrosRepository {
 	/*
 	 * Remove livros do catálogo da biblioteca
 	 */
+	@Override
 	public void remDisponivel(String isbn, int quant) {
 		Session session = SessionUtil.getInstance().getSession();
 		Transaction tx = session.beginTransaction();
@@ -116,6 +118,7 @@ public class RegLivrosDAO implements RegLivrosRepository {
 	/*
 	 * Remove um livro que estava retirado e foi devolvido do catálogo
 	 */
+	@Override
 	public boolean remRetirado(String isbn) {
 		Session session = SessionUtil.getInstance().getSession();
 		Transaction tx = session.beginTransaction();
@@ -141,6 +144,7 @@ public class RegLivrosDAO implements RegLivrosRepository {
 	/*
 	 * Adiciona um exemplar que estava disponível e foi retirado
 	 */
+	@Override
 	public boolean addRetirado(String isbn) {
 		Session session = SessionUtil.getInstance().getSession();
 		Transaction tx = session.beginTransaction();

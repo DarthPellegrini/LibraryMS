@@ -38,7 +38,7 @@ public class EstanteDAO implements EstanteRepository {
 	}
 	
 	@Override
-	public int getCountOfEstantes() {
+	public long getCountOfEstantes() {
 		return biblioteca.getEstantes().size();
 	}
 	

@@ -159,4 +159,16 @@ public class LivroDAO implements LivroRepository {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public void deleteAllTheseBooks(String iSBNOriginal) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteOnlyTheseBooks(String iSBNOriginal, int delete) {
+		// TODO Auto-generated method stub
+		
+	}
 }

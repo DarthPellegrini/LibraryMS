@@ -3,9 +3,16 @@ package com.systemhaus.demo.dao.memory;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+
+import javax.persistence.Query;
+
+import org.hibernate.Session;
+
+import com.systemhaus.demo.SessionUtil;
 import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.Cliente;
 import com.systemhaus.demo.domain.ClienteRepository;
+import com.systemhaus.demo.domain.Endereco;
 
 public class ClienteDAO implements ClienteRepository {
 
@@ -112,5 +119,17 @@ public class ClienteDAO implements ClienteRepository {
 	public void delete(Cliente cliente) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Override
+	public boolean thereAreTooManySimilarAddresses(Endereco exemplo) {
+		Session session = SessionUtil.getInstance().getSession();
+		
+		Query query = session.createQuery("from Cliente c where c.endereco = " + exemplo.getId());
+		
+		List<Cliente> list= query.getResultList();
+		
+		session.close();
+		return list.size() >= 6;
 	}
 }

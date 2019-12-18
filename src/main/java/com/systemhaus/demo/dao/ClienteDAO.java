@@ -52,7 +52,7 @@ public class ClienteDAO implements ClienteRepository {
 		
 		for (int i = 0; i < data.length; i++) 
 			if(!data[i].isEmpty())
-				parameters += " and " + dataIndex[i] + " = \'" + data[i] + "\'";
+				parameters += " and " + dataIndex[i] + " like \'%" + data[i] + "%\'";
 		if (similar.getNumero() > 0)
 			parameters += " and e.numero = " + String.valueOf(similar.getNumero());
 		
@@ -138,6 +138,18 @@ public class ClienteDAO implements ClienteRepository {
 		return (clientes.size() != 0) ? clientes.get(0) : null;
 	}
 
+	@Override
+	public boolean thereAreTooManySimilarAddresses(Endereco exemplo) {
+		Session session = SessionUtil.getInstance().getSession();
+		
+		Query query = session.createQuery("from Cliente c where c.endereco = " + exemplo.getId());
+		
+		List<Cliente> list= query.getResultList();
+		
+		session.close();
+		return list.size() >= 6;
+	}
+	
 	@Override
 	public void edit(String CPF, Cliente cliente) {}
 

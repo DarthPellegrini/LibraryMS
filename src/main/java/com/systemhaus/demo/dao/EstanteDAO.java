@@ -22,9 +22,6 @@ public class EstanteDAO implements EstanteRepository {
 		this.biblioteca = biblioteca;
 	}
 
-	/*
-	 * Move to PrateleiraDAO ? Maybe not, need to search every prateleira of every estante
-	 */
 	@Override
 	public Prateleira getPrateleiraWithEmptySpace() {
 		Session session = SessionUtil.getInstance().getSession();
@@ -35,7 +32,7 @@ public class EstanteDAO implements EstanteRepository {
 		TypedQuery<Object[]> query = session.createQuery("select p.id, count(l) from Prateleira p left join p.livros l group by p.id");
 		
 		for (Object[] obj : query.getResultList()) {
-			if((long)obj[1] < 20) {
+			if((long)obj[1] < Prateleira.getSize()) {
 				int prateleiraID = (int) obj[0];
 				p = session.get(Prateleira.class, prateleiraID);
 				session.close();
@@ -92,18 +89,18 @@ public class EstanteDAO implements EstanteRepository {
 	 * read from database and count estantes
 	 */
 	@Override
-	public int getCountOfEstantes() {
+	public long getCountOfEstantes() {
 		Session session = SessionUtil.getInstance().getSession();
 		
-		TypedQuery<Integer> query = session.createQuery("select count(*) from Estante");
+		TypedQuery<Long> query = session.createQuery("select count(e.id) from Estante e");
+		
+		long l = query.getResultList().get(0);
 		
 		session.close();
-		return query.getResultList().get(0);
+		return l;
 	}
 	
-	/*
-	 * Search in database for estantes with prateleiras that have a bookcount == 20
-	 */
+	@Deprecated
 	@Override
 	public boolean needsReorganization() {
 		for (Estante e : biblioteca.getEstantes())
@@ -112,9 +109,7 @@ public class EstanteDAO implements EstanteRepository {
 		return false;
 	}
 
-	/*
-	 * get all bookdata from the database and organize it
-	 */
+	@Deprecated
 	@Override
 	public void organizeLibrary() {
 		//removendo estantes vazias

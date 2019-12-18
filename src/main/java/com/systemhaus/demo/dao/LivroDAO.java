@@ -12,9 +12,6 @@ import org.hibernate.Transaction;
 
 import com.systemhaus.demo.SessionUtil;
 import com.systemhaus.demo.domain.Biblioteca;
-import com.systemhaus.demo.domain.Cartao;
-import com.systemhaus.demo.domain.Cliente;
-import com.systemhaus.demo.domain.Endereco;
 import com.systemhaus.demo.domain.Estante;
 import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.LivroRepository;
@@ -59,7 +56,7 @@ public class LivroDAO implements LivroRepository {
 		
 		for (int i = 0; i < data.length; i++) 
 			if(!data[i].isEmpty())
-				parameters += (parameters.length() == 0 ? "" : " and ") + dataIndex[i] + " = \'" + data[i] + "\'";
+				parameters += (parameters.length() == 0 ? "" : " and ") + dataIndex[i] + " like \'%" + data[i] + "%\'";
 		if (example.getEdicao() > 0)
 			parameters += (parameters.length() == 0 ? "" : " and ") + "l.edicao = " + String.valueOf(example.getEdicao());
 		if (example.getNumeroPaginas() > 0)
@@ -85,7 +82,7 @@ public class LivroDAO implements LivroRepository {
 		List<Object[]> list= query.getResultList();
 		
 		List<Livro> livros = new ArrayList<>();
-		for(int i=0;i<list.size();i++){
+		for(int i=0;i<list.size()-1;i++){
 			Object[] obj = list.get(i);
 			
 			Estante e = new Estante(biblioteca);
@@ -131,25 +128,35 @@ public class LivroDAO implements LivroRepository {
 	}
 	
 	@Override
-	public void deleteAllTheseBooks(String iSBNOriginal, List<Prateleira> prateleiras, List<Livro> livros) {
-		biblioteca.getRegLivros().remove(biblioteca.findRegLivrosForThis(iSBNOriginal));
-		for (Prateleira p : prateleiras) 
-			p.getLivros().removeAll(livros);
+	public void deleteAllTheseBooks(String iSBNOriginal) {
+		Session session = SessionUtil.getInstance().getSession();
+		Transaction tx = session.beginTransaction();
+		
+		TypedQuery<Livro> query = session.createQuery("from Livro where ISBN = \'" + iSBNOriginal + "\'");
+		
+		for (Livro l : query.getResultList()) {
+			session.remove(l);
+		}
+		
+		tx.commit();
+		session.close();
 	}
 	
 	@Override
-	public void deleteOnlyTheseBooks(String iSBNOriginal, List<Prateleira> prateleiras, List<Livro> livros, int delete) {
-		biblioteca.remDisponivel(iSBNOriginal, delete);
-		for (Prateleira p : prateleiras)
-			for(ListIterator<Livro> lIt = p.getLivros().listIterator(p.getLivros().size());
-					lIt.hasPrevious();) {
-				Livro l = lIt.previous();
-			    if (livros.contains(l) && !l.isRetirado()) {
-			        lIt.remove();
-			        if (--delete <= 0)
-				    	return;
-			    }
-			}
+	public void deleteOnlyTheseBooks(String iSBNOriginal, int delete) {
+		Session session = SessionUtil.getInstance().getSession();
+		Transaction tx = session.beginTransaction();
+		
+		TypedQuery<Livro> query = session.createQuery("from Livro where ISBN = \'" + iSBNOriginal + "\' and retirado = false");
+		
+		List<Livro> livros = query.getResultList();
+		
+		for (int i = 0; i < delete; i++) {
+			session.remove(livros.get(i));
+		}
+		
+		tx.commit();
+		session.close();
 	}
 
 	@Override
@@ -261,7 +268,7 @@ public class LivroDAO implements LivroRepository {
 			session.update(list.get(0));
 			
 			tx.commit();
-			session.close();  
+			session.close();
 			return true;
 		} else {
 			tx.commit();
@@ -317,6 +324,19 @@ public class LivroDAO implements LivroRepository {
 		
 		session.close();
 		return (list.size() > 0) ? list.get(0) : null;
+	}
+
+	@Override
+	public void deleteOnlyTheseBooks(String iSBNOriginal, List<Prateleira> prateleiras, List<Livro> livros,
+			int delete) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteAllTheseBooks(String iSBNOriginal, List<Prateleira> prateleiras, List<Livro> livros) {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }

@@ -4,7 +4,7 @@ public interface EstanteRepository {
 	
 	public Prateleira getPrateleiraWithEmptySpace();
 	public void addEstante();
-	public int getCountOfEstantes();
+	public long getCountOfEstantes();
 	public boolean needsReorganization();
 	public void organizeLibrary();
 	boolean addBook(Livro livro);

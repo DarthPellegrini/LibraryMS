@@ -9,7 +9,7 @@ public class Estante {
 	private int id;
 	private List<Prateleira> prateleiras;
 	private Biblioteca biblioteca;
-	private final int size = 5;
+	private static final int size = 5;
 	
 	public Estante(Biblioteca b) {
 		setBiblioteca(b);
@@ -47,7 +47,7 @@ public class Estante {
 			this.getPrateleiras().add(new Prateleira(this));
 	}
 	
-	public int getSize() {
+	public static int getSize() {
 		return size;
 	}
 	

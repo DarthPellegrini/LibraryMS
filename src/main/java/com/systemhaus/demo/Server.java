@@ -7,7 +7,6 @@ import java.util.List;
 import com.systemhaus.demo.dao.EstanteDAO;
 import com.systemhaus.demo.dao.LivroDAO;
 import com.systemhaus.demo.dao.ClienteDAO;
-import com.systemhaus.demo.dao.EnderecoDAO;
 import com.systemhaus.demo.dao.memory.LivroRetiradoDAO;
 import com.systemhaus.demo.dao.RegLivrosDAO;
 import com.systemhaus.demo.domain.Biblioteca;
@@ -20,7 +19,6 @@ import com.systemhaus.demo.domain.Prateleira;
 import com.systemhaus.demo.domain.RegLivrosRepository;
 import com.systemhaus.demo.domain.Cliente;
 import com.systemhaus.demo.domain.ClienteRepository;
-import com.systemhaus.demo.domain.EnderecoRepository;
 
 public class Server {
 
@@ -28,7 +26,6 @@ public class Server {
 	private LivroRepository livroRepository;
 	private RegLivrosRepository regLivrosRepository;
 	private ClienteRepository clienteRepository;
-	private EnderecoRepository enderecoRepository;
 	private LivroRetiradoRepository livroRetiradoRepository;
 	
 	public Server () {
@@ -37,7 +34,6 @@ public class Server {
 		this.livroRepository = new LivroDAO(biblioteca);
 		this.regLivrosRepository = new RegLivrosDAO(biblioteca);
 		this.clienteRepository = new ClienteDAO(biblioteca);
-		this.enderecoRepository = new EnderecoDAO(biblioteca);
 		this.livroRetiradoRepository = new LivroRetiradoDAO(biblioteca);
 		initializeLibrary();
 	}
@@ -47,18 +43,15 @@ public class Server {
 		this.livroRepository = new LivroDAO(biblioteca);
 		this.regLivrosRepository = new RegLivrosDAO(biblioteca);
 		this.clienteRepository = new ClienteDAO(biblioteca);
-		this.enderecoRepository = new EnderecoDAO(biblioteca);
 		this.livroRetiradoRepository = new LivroRetiradoDAO(biblioteca);
 		initializeLibrary();
 	}
 	
 	public Server(EstanteRepository estanteRepository, LivroRepository livroRepository, 
-			ClienteRepository clienteRepository, EnderecoRepository enderecoRepository,
-			LivroRetiradoRepository livroRetiradoRepository) {
+			ClienteRepository clienteRepository, LivroRetiradoRepository livroRetiradoRepository) {
 		this.estanteRepository = estanteRepository;
 		this.livroRepository = livroRepository;
 		this.clienteRepository = clienteRepository;
-		this.enderecoRepository = enderecoRepository;
 		this.livroRetiradoRepository = livroRetiradoRepository;
 		initializeLibrary();
 	}
@@ -127,40 +120,28 @@ public class Server {
 		//criando uma lista para saber em quais prateleiras estão os livros a serem deletados
 		List<Prateleira> prateleiras = new ArrayList<Prateleira>();
 		List<Livro> livros = new ArrayList<Livro>();
+		
 		//primeiramente verificando se podemos deletar todos os livros (se não há nenhum retirado)
 		if(!regLivrosRepository.allTheBooksAreAvailable(iSBNOriginal) && delete == 0)
 			return false; 
-		//marcando livros para serem deletados
-		livroRepository.markBooksForDeletion(iSBNOriginal ,prateleiras, livros);
+		
 		if(delete == 0) {
 			//remoção de todos os livros com os dados pesquisados
-			livroRepository.deleteAllTheseBooks(iSBNOriginal, prateleiras, livros);
+			regLivrosRepository.deleteThisRegLivros(regLivrosRepository.findRegLivrosForThis(iSBNOriginal));
+			livroRepository.deleteAllTheseBooks(iSBNOriginal);
 		}else {
 			//remoção dos livros (no modo de edição de livro, removendo cópias que não tenham sido retiradas)
-			livroRepository.deleteOnlyTheseBooks(iSBNOriginal, prateleiras, livros, delete);
+			regLivrosRepository.remDisponivel(iSBNOriginal, delete);
+			livroRepository.deleteOnlyTheseBooks(iSBNOriginal, delete);
 		}
-		organizeLibrary();
+		
 		return true;
-	}
-	
-	/**
-	 * Método que organiza a biblioteca, preenchendo os espaços vazios deixados pela remoção de livros
-	 */
-	public void organizeLibrary() {
-		estanteRepository.organizeLibrary();	
-	}
-	
-	/*
-	 * Método que verifica se a biblioteca precisa ser reorganizada
-	 */
-	public boolean needsReorganization() {
-		return estanteRepository.needsReorganization();
 	}
 	
 	/*
 	 * Método que retorna a quantidade de estantes na biblioteca
 	 */
-	public int getCountOfEstantes() {
+	public long getCountOfEstantes() {
 		return estanteRepository.getCountOfEstantes();
 	}
 	
@@ -180,7 +161,7 @@ public class Server {
 	
 	public int addCliente(Cliente cliente) {
 		if(cliente.validate()) {
-			if(!enderecoRepository.thereAreTooManySimilarAddresses(cliente.getEndereco())) {
+			if(!clienteRepository.thereAreTooManySimilarAddresses(cliente.getEndereco())) {
 				clienteRepository.save(cliente);
 				return 0; //sucesso
 			}else return 2; //erro de muitos endereços
@@ -198,7 +179,7 @@ public class Server {
 	 * Método de edição do cliente
 	 */
 	public boolean updateClient(String cpf, Cliente cliente) {
-		if(!clienteRepository.thisCpfAlreadyExists(cliente.getCpf()) 
+		if((!clienteRepository.thisCpfAlreadyExists(cliente.getCpf()) && cliente.validate()) 
 			|| (cliente.getCpf().equals(cpf) && clienteRepository.thisCpfAlreadyExists(cliente.getCpf()))) {
 			clienteRepository.update(cliente);
 			return true;
