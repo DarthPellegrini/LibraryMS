@@ -5,7 +5,7 @@ import java.util.List;
 public interface LivroRepository {
 	
 	public void save(Livro livro);
-	public List<Livro> findBySimilarExample(Livro example, boolean findAvailable);
+	public List<Livro> findBySimilarExample(Livro example, boolean findAvailable, boolean isRetirado);
 	public void editByExample(String iSBNOriginal, Livro livro);
 	@Deprecated
 	void deleteOnlyTheseBooks(String iSBNOriginal, List<Prateleira> prateleiras, List<Livro> livros, int delete);

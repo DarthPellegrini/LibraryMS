@@ -73,7 +73,7 @@ public class LivroRetirado extends Model{
 	public Evento getRetirada() {
 		return retirada;
 	}
-	private void setRetirada(Evento retirada) {
+	public void setRetirada(Evento retirada) {
 		this.retirada = retirada;
 	}
 	public void addRetirada(Evento retirada) {
@@ -87,11 +87,11 @@ public class LivroRetirado extends Model{
 		else
 			return retirada.getDataRaw().toLocalDate();	
 	}
-	private List<Evento> getRenovacoes() {
+	public List<Evento> getRenovacoes() {
 		return renovacoes;
 	}
 
-	private void setRenovacoes(List<Evento> renovacoes) {
+	public void setRenovacoes(List<Evento> renovacoes) {
 		this.renovacoes = renovacoes;
 	}
 	public int getTotalRenovacoes() {

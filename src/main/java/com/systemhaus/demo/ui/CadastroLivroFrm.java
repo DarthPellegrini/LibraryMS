@@ -191,10 +191,10 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	protected void initComponents() {
 		iFrameCadLivro = new JInternalFrame("Cadastro de Livros", true, true);
 		iFrameCadLivro.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-		iFrameCadLivro.setBounds(190, 35, 480, 300);
+		iFrameCadLivro.setBounds(190, 35, 540, 300);
 		
 		model = new PresentationModel<Livro>(livroSelection);
-		tablePanel = new LivroSelectionPanel(livroSelection, 1, 20);
+		tablePanel = new LivroSelectionPanel(livroSelection, 1, 10);
 		
 		ValueModel ISBNAdapter = model.getModel("ISBN");
 		ValueModel tituloAdapter = model.getModel("titulo");

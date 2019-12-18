@@ -201,6 +201,7 @@ public class ServerTest {
 		assertNotEquals(sizeBeforeDelete,sizeAfterDelete);
 	}
 	//*/
+	
 	@Test
 	public void testRetiradaDeLivro() {
 		Server s = new Server();
@@ -214,7 +215,7 @@ public class ServerTest {
 		Server s = new Server();
 		
 		s.retirada(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), s.findClientWithThisCardCode("4000979800448877"));
-		assertEquals(1,s.retirada(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), s.findClientWithThisCardCode("4000979800448876")));
+		assertEquals(1,s.retirada(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false), s.findClientWithThisCardCode("4000979800448874")));
 	}
 	
 	@Test
@@ -225,7 +226,7 @@ public class ServerTest {
 		s.retirada(new Livro("9780123456792", "A arte da Guerra", "Xing crishong", "Saraiva", 1, 250, false), s.findClientWithThisCardCode("4000979800448877"));
 		s.retirada(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false), s.findClientWithThisCardCode("4000979800448876"));
 		Livro livro = new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false);
-		assertNotEquals(null,s.findLivroRetirado(s.findSimilarBooks(livro).get(0), s.findClientWithThisCardCode("4000979800448876")));
+		assertNotEquals(null,s.findSimilarLivroRetirado(s.findSimilarBooks(livro).get(0), s.findClientWithThisCardCode("4000979800448876")).get(0));
 	}
 	
 	@Test
@@ -309,5 +310,4 @@ public class ServerTest {
 		s.devolucao(lr);
 		assertEquals(1, s.devolucao(lr));
 	}
-	//*/
 }

@@ -12,7 +12,7 @@ import com.systemhaus.demo.domain.TipoEvento;
 import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.LivroRetirado;
 
-public class LivroRetiradoDAO extends LivroRetiradoRepository{
+public class LivroRetiradoDAO implements LivroRetiradoRepository{
 
 	Biblioteca biblioteca;
 	
@@ -37,7 +37,7 @@ public class LivroRetiradoDAO extends LivroRetiradoRepository{
 		livroRetirado.estenderRetirada(new Evento(TipoEvento.RENOVACAO,livroRetirado));
 	}
 	
-	@Override
+	@Deprecated
 	public LivroRetirado findLivroRetirado(Livro livro, Cliente cliente) {
 		for(ListIterator<LivroRetirado> lrIt = biblioteca.getLivrosRetirados().listIterator(biblioteca.getLivrosRetirados().size());
 				lrIt.hasPrevious();) {

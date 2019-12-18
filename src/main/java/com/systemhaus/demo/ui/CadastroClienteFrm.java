@@ -218,7 +218,7 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		cardPanel = new JPanel(new FlowLayout());
 		
 		ValueModel NomeAdapter = model.getModel("nome");
-		ValueModel CPFAdapter = model.getModel("CPF");
+		ValueModel CPFAdapter = model.getModel("cpf");
 		ValueModel TelefoneAdapter = model.getModel("telefone");
 		ValueModel CidadeAdapter = model.getModel("cidade");
 		ValueModel BairroAdapter = model.getModel("bairro");

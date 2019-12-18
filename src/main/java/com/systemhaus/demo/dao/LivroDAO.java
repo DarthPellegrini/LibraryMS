@@ -40,7 +40,7 @@ public class LivroDAO implements LivroRepository {
 	}
 	
 	@Override
-	public List<Livro> findBySimilarExample(Livro example, boolean findAvailable) {
+	public List<Livro> findBySimilarExample(Livro example, boolean findAvailable, boolean isRetirado) {
 		List<Livro> livros = new ArrayList<Livro>();
 		if ((example.getISBN().isEmpty() && example.getTitulo().isEmpty()
 			&& example.getAutor().isEmpty() && example.getEditora().isEmpty() 
@@ -62,7 +62,7 @@ public class LivroDAO implements LivroRepository {
 		if (example.getNumeroPaginas() > 0)
 			parameters += (parameters.length() == 0 ? "" : " and ") + "l.numeroPaginas = " + String.valueOf(example.getNumeroPaginas());
 		if(findAvailable)
-			parameters += (parameters.length() == 0 ? "" : " and ") + "l.retirado = false";
+			parameters += (parameters.length() == 0 ? "" : " and ") + "l.retirado = " + isRetirado;
 		
 		Query query = session.createQuery(hql+parameters);
 		livros = query.getResultList();
@@ -102,29 +102,6 @@ public class LivroDAO implements LivroRepository {
 		
 		tx.commit();
 		session.close();
-	}
-	
-	//Will disappear after db insertion
-	@Override
-	public void markBooksForDeletion(String iSBNOriginal,List<Prateleira> prateleiras, List<Livro> livros) {
-		for(ListIterator<Estante> eIt = biblioteca.getEstantes().listIterator(biblioteca.getEstantes().size());
-				eIt.hasPrevious();) {
-			Estante e = eIt.previous();
-			for(ListIterator<Prateleira> pIt = e.getPrateleiras().listIterator(e.getPrateleiras().size());
-					pIt.hasPrevious();) {
-				Prateleira p = pIt.previous();
-				for(ListIterator<Livro> lIt = p.getLivros().listIterator(p.getLivros().size());
-						lIt.hasPrevious();) {
-					Livro l = lIt.previous();
-					if ( l.getISBN().equals(iSBNOriginal) && !l.isRetirado()) {
-						if(!prateleiras.contains(p))
-							prateleiras.add(p);
-						if (!livros.contains(l))
-							livros.add(l);
-					}
-				}
-			}
-		}
 	}
 	
 	@Override
@@ -326,6 +303,7 @@ public class LivroDAO implements LivroRepository {
 		return (list.size() > 0) ? list.get(0) : null;
 	}
 
+	@Deprecated
 	@Override
 	public void deleteOnlyTheseBooks(String iSBNOriginal, List<Prateleira> prateleiras, List<Livro> livros,
 			int delete) {
@@ -333,10 +311,34 @@ public class LivroDAO implements LivroRepository {
 		
 	}
 
+	@Deprecated
 	@Override
 	public void deleteAllTheseBooks(String iSBNOriginal, List<Prateleira> prateleiras, List<Livro> livros) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	@Deprecated
+	@Override
+	public void markBooksForDeletion(String iSBNOriginal,List<Prateleira> prateleiras, List<Livro> livros) {
+		for(ListIterator<Estante> eIt = biblioteca.getEstantes().listIterator(biblioteca.getEstantes().size());
+				eIt.hasPrevious();) {
+			Estante e = eIt.previous();
+			for(ListIterator<Prateleira> pIt = e.getPrateleiras().listIterator(e.getPrateleiras().size());
+					pIt.hasPrevious();) {
+				Prateleira p = pIt.previous();
+				for(ListIterator<Livro> lIt = p.getLivros().listIterator(p.getLivros().size());
+						lIt.hasPrevious();) {
+					Livro l = lIt.previous();
+					if ( l.getISBN().equals(iSBNOriginal) && !l.isRetirado()) {
+						if(!prateleiras.contains(p))
+							prateleiras.add(p);
+						if (!livros.contains(l))
+							livros.add(l);
+					}
+				}
+			}
+		}
 	}
 	
 }

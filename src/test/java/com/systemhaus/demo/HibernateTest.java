@@ -50,7 +50,7 @@ public class HibernateTest {
 		s.retirada(s.findSimilarBooks(new Livro("9780123456789", "Mistério no trem", "Agatha Cristie", "LP&M", 1, 250, false)).get(0), s.findClientWithThisCardCode("4000979800448877"));
 		s.retirada(s.findSimilarBooks(new Livro("9780123456792", "A arte da Guerra", "Xing crishong", "Saraiva", 1, 250, false)).get(0), s.findClientWithThisCardCode("4000979800448877"));
 		s.retirada(s.findSimilarBooks(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false)).get(0), s.findClientWithThisCardCode("4000979800448876"));
-		List<LivroRetirado> l = s.findSimilarLivroRetirado(s.findSimilarBooks(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false)).get(0), s.findClientWithThisCardCode("4000979800448876"));
+		List<LivroRetirado> l = s.findSimilarLivroRetirado(s.findTakenBooks(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false)).get(0), s.findClientWithThisCardCode("4000979800448876"));
 		LivroRetirado lr = l.get(0);
 		lr.getRetirada().setData(Date.from(LocalDateTime.now().minusDays(30).atZone(ZoneId.systemDefault()).toInstant()));
 		s.estenderRetirada(lr);

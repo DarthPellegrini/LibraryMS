@@ -25,7 +25,7 @@ public class LivroDAO implements LivroRepository {
 	}
 	
 	@Override
-	public List<Livro> findBySimilarExample(Livro example, boolean findAvailable) {
+	public List<Livro> findBySimilarExample(Livro example, boolean findAvailable, boolean isRetirado) {
 		List<String> ISBNs = new ArrayList<String>();
 		List<Livro> livros = new ArrayList<Livro>();
 		String[] dadosExemplo = {

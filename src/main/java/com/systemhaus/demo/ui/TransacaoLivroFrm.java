@@ -65,7 +65,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	private PresentationModel<LivroRetirado> livroRetiradoModel;
 	private SelectionInList<LivroRetirado> livroRetiradoSelection = new SelectionInList<>();
 	private Server server;
-	private String selectedPanel;
+	private String selectedPanel = "";
 	private final boolean[] addMode = {true, true, false, false, true, true};
 	private final boolean[] editMode = {false, false, true, true, false, false};
 	private final boolean[] searchMode = {false, false, false, false, true, true};
@@ -395,7 +395,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		clienteTablePanel = new ClienteSelectionPanel(clienteSelection, 1.2, 18);
 		
 		ValueModel NomeAdapter = clienteModel.getModel("nome");
-		ValueModel CPFAdapter = clienteModel.getModel("CPF");
+		ValueModel CPFAdapter = clienteModel.getModel("cpf");
 		ValueModel TelefoneAdapter = clienteModel.getModel("telefone");
 		ValueModel CidadeAdapter = clienteModel.getModel("cidade");
 		ValueModel BairroAdapter = clienteModel.getModel("bairro");

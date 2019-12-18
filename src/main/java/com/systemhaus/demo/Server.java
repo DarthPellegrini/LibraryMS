@@ -7,7 +7,7 @@ import java.util.List;
 import com.systemhaus.demo.dao.EstanteDAO;
 import com.systemhaus.demo.dao.LivroDAO;
 import com.systemhaus.demo.dao.ClienteDAO;
-import com.systemhaus.demo.dao.memory.LivroRetiradoDAO;
+import com.systemhaus.demo.dao.LivroRetiradoDAO;
 import com.systemhaus.demo.dao.RegLivrosDAO;
 import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.EstanteRepository;
@@ -98,7 +98,11 @@ public class Server {
 	}
 	
 	public List<Livro> findSimilarBooks(Livro l){
-		return livroRepository.findBySimilarExample(l,false);
+		return livroRepository.findBySimilarExample(l,false, false);
+	}
+	
+	public List<Livro> findTakenBooks(Livro l){
+		return livroRepository.findBySimilarExample(l,true, true);
 	}
 	
 	public boolean editBook(String iSBNOriginal, Livro livro, int quantCopias) {
@@ -228,7 +232,7 @@ public class Server {
 	 */
 	
 	public List<Livro> findAvailableBooks(Livro l){
-		return livroRepository.findBySimilarExample(l,true);
+		return livroRepository.findBySimilarExample(l,true, false);
 	}
 	
 	public int retirada(Livro livro, Cliente cliente) {
@@ -239,10 +243,6 @@ public class Server {
 				// 0 = sucesso | 1 = erro de quantidade insuficiente
 			} else return 3; //erro cliente não preenchido
 		} else return 2; //erro livro não preenchido
-	}
-	
-	public LivroRetirado findLivroRetirado(Livro livro, Cliente cliente) {
-		return livroRetiradoRepository.findLivroRetirado(livro, cliente);
 	}
 	
 	public List<LivroRetirado> findSimilarLivroRetirado(Livro livro, Cliente cliente) {
