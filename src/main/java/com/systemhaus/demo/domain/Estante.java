@@ -16,7 +16,6 @@ public class Estante {
 	
 	public Estante() {
 		setPrateleiras(new ArrayList<Prateleira>());
-		initializeEstante();
 	}
 	
 	public int getId() {

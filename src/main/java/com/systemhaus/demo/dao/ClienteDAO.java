@@ -30,10 +30,7 @@ public class ClienteDAO implements ClienteRepository {
 	@Override
 	public void save(Cliente cliente) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction t = session.beginTransaction(); 
 		session.saveOrUpdate(cliente);
-		t.commit();
-		session.close();
 	}
 
 	@Transactional(readOnly = true)
@@ -70,7 +67,6 @@ public class ClienteDAO implements ClienteRepository {
 			clientes.add(cli);
 		}
 		
-		session.close();
         return clientes;
 	}
 
@@ -90,7 +86,6 @@ public class ClienteDAO implements ClienteRepository {
 		Query query = session.createQuery("from Cartao where codigo = ?");
 		query.setParameter(0, code);
 		boolean result = !query.list().isEmpty();
-		session.close();
 		return result;
 	}
 
@@ -98,20 +93,14 @@ public class ClienteDAO implements ClienteRepository {
 	@Override
 	public void delete(Cliente cliente) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction t = session.beginTransaction();
 		session.delete(cliente);
-		t.commit();
-		session.close();
 	}
 
 	@Transactional
 	@Override
 	public void update(Cliente cliente) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction t = session.beginTransaction();
 		session.update(cliente);
-		t.commit();
-		session.close();
 	}
 
 	@Transactional(readOnly = true)
@@ -120,7 +109,6 @@ public class ClienteDAO implements ClienteRepository {
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("from Cliente where cpf = \'" + CPF + "\'");
 		List<Cliente> clientes= query.list();
-		session.close();
 		return clientes.size() != 0;
 	}
 
@@ -142,7 +130,6 @@ public class ClienteDAO implements ClienteRepository {
 			clientes.add(cli);
 		}
 		
-		session.close();
 		return (clientes.size() != 0) ? clientes.get(0) : null;
 	}
 
@@ -155,7 +142,6 @@ public class ClienteDAO implements ClienteRepository {
 		
 		List<Cliente> list= query.list();
 		
-		session.close();
 		return list.size() >= 6;
 	}
 	

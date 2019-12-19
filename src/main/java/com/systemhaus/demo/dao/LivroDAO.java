@@ -27,14 +27,10 @@ public class LivroDAO implements LivroRepository {
 	@Override
 	public void save(Livro livro) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		session.save(livro);
 		
 		this.addDisponivel(livro.getISBN());
-		
-		tx.commit();
-		session.close();
 	}
 	
 	@Transactional(readOnly = true)
@@ -66,7 +62,6 @@ public class LivroDAO implements LivroRepository {
 		Query query = session.createQuery(hql+parameters);
 		livros = query.list();
 		
-		session.close();
 		return livros;
 	}
 
@@ -74,7 +69,6 @@ public class LivroDAO implements LivroRepository {
 	@Override
 	public void editByExample(String iSBNOriginal, Livro livro) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("select l.id,l.ISBN,l.titulo,l.autor,l.editora,l.edicao,l.numeroPaginas,l.retirado,l.prateleira.id, l.prateleira.estante.id"
 				+ " from Livro l where isbn = \'" + iSBNOriginal + "\'");
@@ -84,6 +78,10 @@ public class LivroDAO implements LivroRepository {
 		List<Livro> livros = new ArrayList<>();
 		for(int i=0;i<list.size()-1;i++){
 			Object[] obj = list.get(i);
+			
+			/*
+			 * TODO: fix this: estante construtor 
+			 */
 			
 			Estante e = new Estante();
 			e.setId((int)obj[9]);
@@ -99,32 +97,24 @@ public class LivroDAO implements LivroRepository {
 	        l.setAllDataFrom(livro);
 	        session.update(l);
 		}
-		
-		tx.commit();
-		session.close();
 	}
 	
 	@Transactional
 	@Override
 	public void deleteAllTheseBooks(String iSBNOriginal) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from Livro where ISBN = \'" + iSBNOriginal + "\'");
 		
 		for (Livro l : (List<Livro>)query.list()) {
 			session.delete(l);
 		}
-		
-		tx.commit();
-		session.close();
 	}
 	
 	@Transactional
 	@Override
 	public void deleteOnlyTheseBooks(String iSBNOriginal, int delete) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from Livro where ISBN = \'" + iSBNOriginal + "\' and retirado = false");
 		
@@ -133,9 +123,6 @@ public class LivroDAO implements LivroRepository {
 		for (int i = 0; i < delete; i++) {
 			session.delete(livros.get(i));
 		}
-		
-		tx.commit();
-		session.close();
 	}
 
 	@Transactional(readOnly = true)
@@ -147,7 +134,6 @@ public class LivroDAO implements LivroRepository {
 		
 		List<RegLivros> list = query.list();
 		
-		session.close();
 		return (list.size() > 0) ? list.get(0).getQuantLivrosNoCatalogo() : 0;
 	}
 	
@@ -160,7 +146,6 @@ public class LivroDAO implements LivroRepository {
 		
 		List<RegLivros> list = query.list();
 		
-		session.close();
 		return (list.size() > 0) ? list.get(0).getQuantLivrosParaRetirar() : 0;
 	}
 	
@@ -173,7 +158,6 @@ public class LivroDAO implements LivroRepository {
 		
 		List<RegLivros> list = query.list();
 		
-		session.close();
 		return (list.size() > 0) ? (list.get(0).getQuantLivrosNoCatalogo()==list.get(0).getQuantLivrosParaRetirar()) : false;
 	}
 	
@@ -186,7 +170,6 @@ public class LivroDAO implements LivroRepository {
 		
 		List<RegLivros> list = query.list();
 		
-		session.close();
 		return (list.size() > 0) ? (quantCopias >= list.get(0).getMaxDeletionNumber()) : false;
 	}
 	
@@ -196,7 +179,6 @@ public class LivroDAO implements LivroRepository {
 	@Transactional
 	public void addDisponivel(String isbn) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn + "\'");
 		
@@ -211,8 +193,6 @@ public class LivroDAO implements LivroRepository {
 			session.saveOrUpdate(reg);
 		}
 		
-		tx.commit();
-		session.close();
 	}
 	/*
 	 * Remove livros do catálogo da biblioteca
@@ -220,7 +200,6 @@ public class LivroDAO implements LivroRepository {
 	@Transactional
 	public void remDisponivel(String isbn, int quant) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn + "\'");
 		
@@ -231,8 +210,7 @@ public class LivroDAO implements LivroRepository {
 			list.get(0).setQuantLivrosParaRetirar(list.get(0).getQuantLivrosParaRetirar()-quant);
 			session.update(list.get(0));
 		}
-		tx.commit();
-		session.close();  
+		
 	}
 	/*
 	 * Remove um livro que estava retirado e foi devolvido do catálogo
@@ -240,7 +218,6 @@ public class LivroDAO implements LivroRepository {
 	@Transactional
 	public boolean remRetirado(String isbn) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn+ "\'");
 		
@@ -250,12 +227,8 @@ public class LivroDAO implements LivroRepository {
 			list.get(0).setQuantLivrosParaRetirar(list.get(0).getQuantLivrosParaRetirar()+1);
 			session.update(list.get(0));
 			
-			tx.commit();
-			session.close();
 			return true;
 		} else {
-			tx.commit();
-			session.close();
 			return false;
 		}
 	}
@@ -266,7 +239,6 @@ public class LivroDAO implements LivroRepository {
 	@Transactional
 	public boolean addRetirado(String isbn) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn+ "\'");
 		
@@ -276,12 +248,8 @@ public class LivroDAO implements LivroRepository {
 			list.get(0).setQuantLivrosParaRetirar(list.get(0).getQuantLivrosParaRetirar()-1);
 			session.update(list.get(0));
 			
-			tx.commit();
-			session.close();  
 			return true;
 		} else {
-			tx.commit();
-			session.close();
 			return false;
 		}
 	}
@@ -290,12 +258,8 @@ public class LivroDAO implements LivroRepository {
 	@Override
 	public void deleteThisRegLivros(RegLivros reg) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		session.delete(reg);
-			
-		tx.commit();
-		session.close();
 	}
 	
 	@Transactional(readOnly = true)
@@ -307,7 +271,6 @@ public class LivroDAO implements LivroRepository {
 		
 		List<RegLivros> list = query.list();
 		
-		session.close();
 		return (list.size() > 0) ? list.get(0) : null;
 	}
 

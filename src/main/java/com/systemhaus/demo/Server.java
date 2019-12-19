@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import com.systemhaus.demo.dao.EstanteDAO;
 import com.systemhaus.demo.dao.LivroDAO;
 import com.systemhaus.demo.dao.ClienteDAO;
@@ -74,6 +76,7 @@ public class Server {
 	/**
 	 * Método de inserção de livros
 	 */
+	@Transactional
 	public boolean addNewBookRoutine(Livro livro, int quantCopias) {
 		//verifica se o livro inserido possui todos os campos válidos
 		if (livro.validate() && quantCopias > 0) {

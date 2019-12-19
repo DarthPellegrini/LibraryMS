@@ -31,7 +31,6 @@ public class RegLivrosDAO implements RegLivrosRepository {
 		
 		List<RegLivros> list = query.list();
 		
-		session.close();
 		return (list.size() > 0) ? list.get(0).getQuantLivrosNoCatalogo() : 0;
 	}
 	
@@ -44,7 +43,6 @@ public class RegLivrosDAO implements RegLivrosRepository {
 		
 		List<RegLivros> list = query.list();
 		
-		session.close();
 		return (list.size() > 0) ? list.get(0).getQuantLivrosParaRetirar() : 0;
 	}
 	
@@ -57,7 +55,6 @@ public class RegLivrosDAO implements RegLivrosRepository {
 		
 		List<RegLivros> list = query.list();
 		
-		session.close();
 		return (list.size() > 0) ? (list.get(0).getQuantLivrosNoCatalogo()==list.get(0).getQuantLivrosParaRetirar()) : false;
 	}
 	
@@ -70,7 +67,6 @@ public class RegLivrosDAO implements RegLivrosRepository {
 		
 		List<RegLivros> list = query.list();
 		
-		session.close();
 		return (list.size() > 0) ? (quantCopias >= list.get(0).getMaxDeletionNumber()) : false;
 	}
 	
@@ -81,7 +77,6 @@ public class RegLivrosDAO implements RegLivrosRepository {
 	@Override
 	public void addDisponivel(String isbn) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn + "\'");
 		
@@ -92,14 +87,9 @@ public class RegLivrosDAO implements RegLivrosRepository {
 			list.get(0).setQuantLivrosParaRetirar(list.get(0).getQuantLivrosParaRetirar()+1);
 			session.update(list.get(0));
 		} else {
-			Query newQuery = session.createQuery("from Biblioteca");
-			
 			RegLivros reg = new RegLivros(isbn,1);
 			session.saveOrUpdate(reg);
 		}
-		
-		tx.commit();
-		session.close();
 	}
 	/*
 	 * Remove livros do catálogo da biblioteca
@@ -108,7 +98,6 @@ public class RegLivrosDAO implements RegLivrosRepository {
 	@Override
 	public void remDisponivel(String isbn, int quant) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn + "\'");
 		
@@ -119,8 +108,6 @@ public class RegLivrosDAO implements RegLivrosRepository {
 			list.get(0).setQuantLivrosParaRetirar(list.get(0).getQuantLivrosParaRetirar()-quant);
 			session.update(list.get(0));
 		}
-		tx.commit();
-		session.close();  
 	}
 	/*
 	 * Remove um livro que estava retirado e foi devolvido do catálogo
@@ -129,7 +116,6 @@ public class RegLivrosDAO implements RegLivrosRepository {
 	@Override
 	public boolean remRetirado(String isbn) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn+ "\'");
 		
@@ -139,12 +125,8 @@ public class RegLivrosDAO implements RegLivrosRepository {
 			list.get(0).setQuantLivrosParaRetirar(list.get(0).getQuantLivrosParaRetirar()+1);
 			session.update(list.get(0));
 			
-			tx.commit();
-			session.close();  
 			return true;
 		} else {
-			tx.commit();
-			session.close();
 			return false;
 		}
 	}
@@ -156,7 +138,6 @@ public class RegLivrosDAO implements RegLivrosRepository {
 	@Override
 	public boolean addRetirado(String isbn) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn+ "\'");
 		
@@ -166,12 +147,8 @@ public class RegLivrosDAO implements RegLivrosRepository {
 			list.get(0).setQuantLivrosParaRetirar(list.get(0).getQuantLivrosParaRetirar()-1);
 			session.update(list.get(0));
 			
-			tx.commit();
-			session.close();  
 			return true;
 		} else {
-			tx.commit();
-			session.close();
 			return false;
 		}
 	}
@@ -180,12 +157,8 @@ public class RegLivrosDAO implements RegLivrosRepository {
 	@Override
 	public void deleteThisRegLivros(RegLivros reg) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		session.delete(reg);
-			
-		tx.commit();
-		session.close();
 	}
 	
 	@Transactional(readOnly = true)
@@ -197,7 +170,6 @@ public class RegLivrosDAO implements RegLivrosRepository {
 		
 		List<RegLivros> list = query.list();
 		
-		session.close();
 		return (list.size() > 0) ? list.get(0) : null;
 	}
 }

@@ -44,7 +44,6 @@ public class EstanteDAO implements EstanteRepository {
 			}
 		}
 		
-		session.close();
 		return p;
 	}
 
@@ -63,13 +62,10 @@ public class EstanteDAO implements EstanteRepository {
 	@Override
 	public void addEstante() {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		Estante e = new Estante();
+		e.initializeEstante();
 		session.save(e);
-		
-		tx.commit();
-		session.close();
 	}
 	
 	/*
@@ -84,7 +80,6 @@ public class EstanteDAO implements EstanteRepository {
 		
 		long l = (long)query.list().get(0);
 		
-		session.close();
 		return l;
 	}
 	

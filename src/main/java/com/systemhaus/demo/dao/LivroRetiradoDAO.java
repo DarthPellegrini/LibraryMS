@@ -30,7 +30,6 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 	@Override
 	public boolean save(Livro livro, Cliente cliente) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		if (this.addRetirado(livro.getISBN())) {
 			LivroRetirado livroRetirado = new LivroRetirado(livro, cliente);
@@ -39,12 +38,8 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 			session.save(livroRetirado.getRetirada());
 			session.save(livroRetirado);
 			
-			tx.commit();
-			session.close();
 			return true;
 		}else {
-			tx.commit();
-			session.close();
 			return false;
 		}
 		
@@ -54,15 +49,12 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 	@Override
 	public void estenderRetirada(LivroRetirado livroRetirado) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		livroRetirado.estenderRetirada(new Evento(TipoEvento.RENOVACAO,livroRetirado));
 		
 		session.save(livroRetirado.getLastRenovacao());
 		session.update(livroRetirado);
 		
-		tx.commit();
-		session.close();
 	}
 	
 	@Transactional(readOnly = true)
@@ -103,7 +95,6 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 			livrosRetirados.add(livroR);
 		}
 		
-		session.close();
 		return livrosRetirados;
 	}
 	
@@ -111,7 +102,6 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 	@Override
 	public int devolver(LivroRetirado livroRetirado) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		if(livroRetirado.getDevolucao() == null) {
 			this.remRetirado(livroRetirado.getLivro().getISBN());
@@ -121,12 +111,8 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 			session.save(livroRetirado.getDevolucao());
 			session.update(livroRetirado);
 			
-			tx.commit();
-			session.close();
 			return 0;
 		}else {
-			tx.rollback();
-			session.close();
 			return 1;
 		}
 	}
@@ -137,7 +123,6 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 	@Transactional
 	public boolean remRetirado(String isbn) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn+ "\'");
 		
@@ -147,12 +132,8 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 			list.get(0).setQuantLivrosParaRetirar(list.get(0).getQuantLivrosParaRetirar()+1);
 			session.update(list.get(0));
 			
-			tx.commit();
-			session.close();
 			return true;
 		} else {
-			tx.rollback();
-			session.close();
 			return false;
 		}
 	}
@@ -163,7 +144,6 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 	@Transactional
 	public boolean addRetirado(String isbn) {
 		Session session = sessionFactory.getCurrentSession();
-		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn+ "\'");
 		
@@ -173,12 +153,8 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 			list.get(0).setQuantLivrosParaRetirar(list.get(0).getQuantLivrosParaRetirar()-1);
 			session.update(list.get(0));
 			
-			tx.commit();
-			session.close();  
 			return true;
 		} else {
-			tx.commit();
-			session.close();
 			return false;
 		}
 	}
