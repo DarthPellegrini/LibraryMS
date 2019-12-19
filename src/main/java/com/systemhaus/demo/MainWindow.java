@@ -65,7 +65,7 @@ public class MainWindow {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		fakeServer = new Server();
+		fakeServer = ServerFactory.createServer();
 		frame = new JFrame("SGBooks - Sistema de Gerenciamento de Biblioteca");
 		frame.setBounds(0, 0, 1280, 720);
 		frame.setMaximumSize(new java.awt.Dimension(1280,720));

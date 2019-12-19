@@ -3,9 +3,9 @@ package com.systemhaus.demo.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -17,16 +17,11 @@ import com.systemhaus.demo.domain.ClienteRepository;
 import com.systemhaus.demo.domain.Endereco;
 
 public class ClienteDAO implements ClienteRepository {
-
-	Biblioteca biblioteca;
-	
-	public ClienteDAO(Biblioteca biblioteca) {
-		this.biblioteca = biblioteca;
-	}
 	
 	@Override
 	public void save(Cliente cliente) {
 		Session session = SessionUtil.getInstance().getSession();
+		Biblioteca biblioteca = new Biblioteca();
 		Transaction t = session.beginTransaction();  
 		biblioteca.addCliente(cliente);
 		session.saveOrUpdate(cliente);
@@ -57,7 +52,7 @@ public class ClienteDAO implements ClienteRepository {
 			parameters += " and e.numero = " + String.valueOf(similar.getNumero());
 		
 		Query query = session.createQuery(hql+parameters);
-		List<Object[]> list= query.getResultList();
+		List<Object[]> list= query.list();
 		
 		List<Cliente> clientes = new ArrayList<>();
 		for(int i=0;i<list.size();i++){
@@ -83,9 +78,9 @@ public class ClienteDAO implements ClienteRepository {
 	@Override
 	public boolean findCardWithThisCode(String code) {
 		Session session = SessionUtil.getInstance().getSession();
-		TypedQuery<Cartao> query = session.createQuery("from Cartao where codigo = ?");
+		Query query = session.createQuery("from Cartao where codigo = ?");
 		query.setParameter(0, code);
-		boolean result = !query.getResultList().isEmpty();
+		boolean result = !query.list().isEmpty();
 		session.close();
 		return result;
 	}
@@ -111,8 +106,8 @@ public class ClienteDAO implements ClienteRepository {
 	@Override
 	public boolean thisCpfAlreadyExists(String CPF) {
 		Session session = SessionUtil.getInstance().getSession();
-		TypedQuery<Cliente> query = session.createQuery("from Cliente where cpf = \'" + CPF + "\'");
-		List<Cliente> clientes= query.getResultList();
+		Query query = session.createQuery("from Cliente where cpf = \'" + CPF + "\'");
+		List<Cliente> clientes= query.list();
 		session.close();
 		return clientes.size() != 0;
 	}
@@ -120,11 +115,11 @@ public class ClienteDAO implements ClienteRepository {
 	@Override
 	public Cliente findClientWithThisCardCode(String code) {
 		Session session = SessionUtil.getInstance().getSession();
-		TypedQuery<Object[]> query = session.createQuery("select c.id, c.nome, c.cpf, c.telefone, e, ca "
+		Query query = session.createQuery("select c.id, c.nome, c.cpf, c.telefone, e, ca "
 									+ "from Cliente c, Cartao ca, Endereco e "
 									+ "where c.cartao = ca.id and c.endereco = e.id and ca.codigo = \'" + code + "\'");
 		
-		List<Object[]> list= query.getResultList();
+		List<Object[]> list= query.list();
 		
 		List<Cliente> clientes = new ArrayList<>();
 		for(int i=0;i<list.size();i++){
@@ -144,7 +139,7 @@ public class ClienteDAO implements ClienteRepository {
 		
 		Query query = session.createQuery("from Cliente c where c.endereco = " + exemplo.getId());
 		
-		List<Cliente> list= query.getResultList();
+		List<Cliente> list= query.list();
 		
 		session.close();
 		return list.size() >= 6;

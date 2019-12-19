@@ -29,30 +29,22 @@ public class Server {
 	private LivroRetiradoRepository livroRetiradoRepository;
 	
 	public Server () {
-		Biblioteca biblioteca = new Biblioteca();
-		this.estanteRepository = new EstanteDAO(biblioteca);
-		this.livroRepository = new LivroDAO(biblioteca);
-		this.regLivrosRepository = new RegLivrosDAO(biblioteca);
-		this.clienteRepository = new ClienteDAO(biblioteca);
-		this.livroRetiradoRepository = new LivroRetiradoDAO(biblioteca);
-		initializeLibrary();
-	}
-	
-	public Server (Biblioteca biblioteca) {
-		this.estanteRepository = new EstanteDAO(biblioteca);
-		this.livroRepository = new LivroDAO(biblioteca);
-		this.regLivrosRepository = new RegLivrosDAO(biblioteca);
-		this.clienteRepository = new ClienteDAO(biblioteca);
-		this.livroRetiradoRepository = new LivroRetiradoDAO(biblioteca);
+		this.estanteRepository = new EstanteDAO();
+		this.livroRepository = new LivroDAO();
+		this.regLivrosRepository = new RegLivrosDAO();
+		this.clienteRepository = new ClienteDAO();
+		this.livroRetiradoRepository = new LivroRetiradoDAO();
 		initializeLibrary();
 	}
 	
 	public Server(EstanteRepository estanteRepository, LivroRepository livroRepository, 
-			ClienteRepository clienteRepository, LivroRetiradoRepository livroRetiradoRepository) {
+			ClienteRepository clienteRepository, LivroRetiradoRepository livroRetiradoRepository,
+			RegLivrosRepository regLivrosRepository) {
 		this.estanteRepository = estanteRepository;
 		this.livroRepository = livroRepository;
 		this.clienteRepository = clienteRepository;
 		this.livroRetiradoRepository = livroRetiradoRepository;
+		this.regLivrosRepository = regLivrosRepository;
 		initializeLibrary();
 	}
 	
@@ -61,6 +53,26 @@ public class Server {
 	 */
 	public void initializeLibrary() {
 		((EstanteDAO)estanteRepository).initializeLibrary();
+	}
+	
+	public void setClienteRepository(ClienteRepository clienteRepository) {
+		this.clienteRepository = clienteRepository;
+	}
+	
+	public void setEstanteRepository(EstanteRepository estanteRepository) {
+		this.estanteRepository = estanteRepository;
+	}
+	
+	public void setLivroRepository(LivroRepository livroRepository) {
+		this.livroRepository = livroRepository;
+	}
+	
+	public void setLivroRetiradoRepository(LivroRetiradoRepository livroRetiradoRepository) {
+		this.livroRetiradoRepository = livroRetiradoRepository;
+	}
+	
+	public void setRegLivrosRepository(RegLivrosRepository regLivrosRepository) {
+		this.regLivrosRepository = regLivrosRepository;
 	}
 	
 	/*

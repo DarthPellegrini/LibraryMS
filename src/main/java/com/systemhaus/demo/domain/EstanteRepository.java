@@ -2,10 +2,10 @@ package com.systemhaus.demo.domain;
 
 public interface EstanteRepository {
 	
-	public Prateleira getPrateleiraWithEmptySpace();
-	public void addEstante();
-	public long getCountOfEstantes();
-	public boolean needsReorganization();
-	public void organizeLibrary();
-	boolean addBook(Livro livro);
+	public abstract Prateleira getPrateleiraWithEmptySpace();
+	public abstract void addEstante();
+	public abstract long getCountOfEstantes();
+	public abstract boolean needsReorganization();
+	public abstract void organizeLibrary();
+	public abstract boolean addBook(Livro livro);
 }

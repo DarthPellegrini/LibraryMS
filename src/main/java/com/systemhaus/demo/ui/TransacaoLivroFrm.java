@@ -105,7 +105,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		JButton btnCancelar = new JButton("Cancelar");
 		panelTran.add(btnCancelar);
 		
-		JButton[] btnArray = {btnRetirar, btnPesquisar, btnRenovar, btnDevolver, btnPesquisaLivro, btnPesquisaCliente};
+		final JButton[] btnArray = {btnRetirar, btnPesquisar, btnRenovar, btnDevolver, btnPesquisaLivro, btnPesquisaCliente};
 		
 		JButton btnLivroTableConfirm = livroTablePanel.getConfirmButton();
 		JButton btnLivroTableCancel = livroTablePanel.getCancelButton();

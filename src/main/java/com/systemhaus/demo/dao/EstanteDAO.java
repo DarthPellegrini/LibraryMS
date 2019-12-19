@@ -1,9 +1,11 @@
 package com.systemhaus.demo.dao;
 
+import java.util.List;
 import java.util.ListIterator;
 
 import javax.persistence.TypedQuery;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -16,12 +18,9 @@ import com.systemhaus.demo.domain.Prateleira;
 
 public class EstanteDAO implements EstanteRepository {
 
-	private Biblioteca biblioteca;
-
-	public EstanteDAO(Biblioteca biblioteca) {
-		this.biblioteca = biblioteca;
-	}
-
+	//TODO: remover bibliotecado banco
+	private int bibliotecaID;
+	
 	@Override
 	public Prateleira getPrateleiraWithEmptySpace() {
 		Session session = SessionUtil.getInstance().getSession();
@@ -29,12 +28,12 @@ public class EstanteDAO implements EstanteRepository {
 		Prateleira p = null;
 		
 		// Not working
-		TypedQuery<Object[]> query = session.createQuery("select p.id, count(l) from Prateleira p left join p.livros l group by p.id");
-		
-		for (Object[] obj : query.getResultList()) {
+		Query query = session.createQuery("select p.id, count(l) from Prateleira p left join p.livros l group by p.id");
+		List<Object[]> result = query.list();
+		for (Object[] obj : result) {
 			if((long)obj[1] < Prateleira.getSize()) {
 				int prateleiraID = (int) obj[0];
-				p = session.get(Prateleira.class, prateleiraID);
+				p = (Prateleira) session.get(Prateleira.class, prateleiraID);
 				session.close();
 				return p;
 			}
@@ -47,20 +46,22 @@ public class EstanteDAO implements EstanteRepository {
 	public void initializeLibrary() {
 		Session session = SessionUtil.getInstance().getSession();
 		Transaction tx = session.beginTransaction();
+		Biblioteca biblioteca = new Biblioteca();
 		
-		TypedQuery<Integer> query = session.createQuery("select id from Biblioteca");
-		if (query.getResultList().size() == 0) {
+		Query query = session.createQuery("select id from Biblioteca");
+		if (query.list().size() == 0) {
 			biblioteca.getEstantes().add(new Estante(biblioteca));
 			session.save(biblioteca);
 		} else {
-			int x = query.getResultList().get(0);
-			biblioteca.setId(query.getResultList().get(0));
+			int x = (int)query.list().get(0);
+			biblioteca.setId((int)query.list().get(0));
 		}
 			
 		tx.commit();
+		bibliotecaID = biblioteca.getId();
 		session.close();
 	}
-	
+
 	@Override
 	public boolean addBook(Livro livro) {
 		Prateleira p = this.getPrateleiraWithEmptySpace();
@@ -76,6 +77,7 @@ public class EstanteDAO implements EstanteRepository {
 	public void addEstante() {
 		Session session = SessionUtil.getInstance().getSession();
 		Transaction tx = session.beginTransaction();
+		Biblioteca biblioteca = new Biblioteca();
 		
 		Estante e = new Estante(biblioteca);
 		biblioteca.getEstantes().add(e);
@@ -92,9 +94,9 @@ public class EstanteDAO implements EstanteRepository {
 	public long getCountOfEstantes() {
 		Session session = SessionUtil.getInstance().getSession();
 		
-		TypedQuery<Long> query = session.createQuery("select count(e.id) from Estante e");
+		Query query = session.createQuery("select count(e.id) from Estante e");
 		
-		long l = query.getResultList().get(0);
+		long l = (long)query.list().get(0);
 		
 		session.close();
 		return l;
@@ -103,45 +105,14 @@ public class EstanteDAO implements EstanteRepository {
 	@Deprecated
 	@Override
 	public boolean needsReorganization() {
-		for (Estante e : biblioteca.getEstantes())
-			if(!e.isFull() && e != biblioteca.getLastEstante())
-				return true;
+		//Deprecated
 		return false;
 	}
 
 	@Deprecated
 	@Override
 	public void organizeLibrary() {
-		//removendo estantes vazias
-		for(ListIterator<Estante> eIt = biblioteca.getEstantes().listIterator();
-				eIt.hasNext();) {
-			Estante e = eIt.next();
-			if (e.isEmpty())
-				eIt.remove();
-		}
-		
-		//verificando se há necessidade de reorganizar a biblioteca
-		if(this.needsReorganization())
-			for(ListIterator<Estante> eIt = biblioteca.getEstantes().listIterator(biblioteca.getEstantes().size());
-					eIt.hasPrevious();) {
-				Estante e = eIt.previous();
-				for(ListIterator<Prateleira> pIt = e.getPrateleiras().listIterator(e.getPrateleiras().size());
-						pIt.hasPrevious();) {
-					Prateleira p = pIt.previous();
-					for(ListIterator<Livro> lIt = p.getLivros().listIterator(p.getLivros().size());
-							lIt.hasPrevious();) {
-						Livro l = lIt.previous();
-						//adiciona o livro no primeiro espaço vazio
-						this.getPrateleiraWithEmptySpace().addLivro(l.copy());
-						lIt.remove();
-						if(!this.needsReorganization())
-							return;
-					}
-				}
-				//caso a estante esteja vazia, será removida
-				if(e.isEmpty())
-					eIt.remove();
-			}
+		//Deprecated
 	}
 	
 }

@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.persistence.Query;
-
+import org.hibernate.Query;
 import org.hibernate.Session;
 
 import com.systemhaus.demo.SessionUtil;
@@ -127,7 +126,7 @@ public class ClienteDAO implements ClienteRepository {
 		
 		Query query = session.createQuery("from Cliente c where c.endereco = " + exemplo.getId());
 		
-		List<Cliente> list= query.getResultList();
+		List<Cliente> list= query.list();
 		
 		session.close();
 		return list.size() >= 6;

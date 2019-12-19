@@ -5,8 +5,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.ListIterator;
 
-import javax.persistence.TypedQuery;
-
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -22,12 +21,6 @@ import com.systemhaus.demo.domain.LivroRetirado;
 
 public class LivroRetiradoDAO implements LivroRetiradoRepository{
 
-	Biblioteca biblioteca;
-	
-	public LivroRetiradoDAO(Biblioteca biblioteca) {
-		this.biblioteca = biblioteca;
-	}
-	
 	@Override
 	public boolean save(Livro livro, Cliente cliente) {
 		Session session = SessionUtil.getInstance().getSession();
@@ -36,10 +29,9 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 		if (this.addRetirado(livro.getISBN())) {
 			LivroRetirado livroRetirado = new LivroRetirado(livro, cliente);
 			livroRetirado.addRetirada(new Evento(TipoEvento.RETIRADA, livroRetirado));
-			biblioteca.addLivroRetirado(livroRetirado);
 
 			session.save(livroRetirado.getRetirada());
-			session.saveOrUpdate(livroRetirado);
+			session.save(livroRetirado);
 			
 			tx.commit();
 			session.close();
@@ -76,28 +68,28 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 		 * SE SOMENTE o CLIENTE foi informado
 		 **/ 
 		
-		TypedQuery<Object[]> query = session.createQuery(
+		Query query = session.createQuery(
 				"select lr.id, lr.retirada.id, lr.dataDevolucao, lr.livro.id from LivroRetirado lr, Evento e"
 				+ " where lr.livro.retirado = true and lr.retirada.id = e.id and e.tipoEvento != " + TipoEvento.DEVOLUCAO.ordinal()
 				+ (livro.validate() ? " and lr.livro.ISBN = \'" + livro.getISBN() + "\'" : "")
 				+ (cliente.validate() ? " and lr.cliente.id = " + cliente.getId() : ""));
 	
-		List<LivroRetirado> livrosRetirados = new ArrayList<>();
+		List<LivroRetirado> livrosRetirados = new ArrayList<LivroRetirado>();
 		
 		//TODO: fazer revisões sobre o IF para a inclusão
-		
-		for (Object[] obj : query.getResultList()) {
-			Evento retirada = session.get(Evento.class, (int)obj[1]);
+		List<Object[]> result = query.list();
+		for (Object[] obj : result) {
+			Evento retirada = (Evento) session.get(Evento.class, (int)obj[1]);
 			livro.setId((int)obj[3]);
 			LivroRetirado livroR = new LivroRetirado(livro, cliente, retirada);
 			livroR.setDataDevolucao((Date)obj[2]);
 			livroR.setId((int)obj[0]);
 			
-			TypedQuery<Evento> renQuery = session.createQuery(
+			Query renQuery = session.createQuery(
 					"from Evento where livroRetirado = " + livroR.getId() + " and tipoEvento = " + TipoEvento.RENOVACAO.ordinal());
 			
-			if(renQuery.getResultList().size() != 0) {
-				livroR.setRenovacoes(renQuery.getResultList());
+			if(renQuery.list().size() != 0) {
+				livroR.setRenovacoes(renQuery.list());
 			}
 			
 			livrosRetirados.add(livroR);
@@ -137,9 +129,9 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 		Session session = SessionUtil.getInstance().getSession();
 		Transaction tx = session.beginTransaction();
 		
-		TypedQuery<RegLivros> query = session.createQuery("from RegLivros where isbn = \'" + isbn+ "\'");
+		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn+ "\'");
 		
-		List<RegLivros> list = query.getResultList();
+		List<RegLivros> list = query.list();
 		
 		if (list.size() > 0 && list.get(0).getQuantLivrosParaRetirar() + 1 <= list.get(0).getQuantLivrosNoCatalogo()){
 			list.get(0).setQuantLivrosParaRetirar(list.get(0).getQuantLivrosParaRetirar()+1);
@@ -162,9 +154,9 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 		Session session = SessionUtil.getInstance().getSession();
 		Transaction tx = session.beginTransaction();
 		
-		TypedQuery<RegLivros> query = session.createQuery("from RegLivros where isbn = \'" + isbn+ "\'");
+		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn+ "\'");
 		
-		List<RegLivros> list = query.getResultList();
+		List<RegLivros> list = query.list();
 		
 		if (list.size() > 0 && list.get(0).getQuantLivrosParaRetirar() - 1 >= 0){
 			list.get(0).setQuantLivrosParaRetirar(list.get(0).getQuantLivrosParaRetirar()-1);

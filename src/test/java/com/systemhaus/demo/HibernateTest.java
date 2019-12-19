@@ -1,7 +1,5 @@
 package com.systemhaus.demo;
 
-import static org.junit.Assert.assertEquals;
-
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -9,24 +7,13 @@ import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-import org.hibernate.boot.Metadata;
-import org.hibernate.boot.MetadataSources;
-import org.hibernate.boot.registry.StandardServiceRegistry;
-import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.junit.Test;
 
-import com.systemhaus.demo.dao.ClienteDAO;
-import com.systemhaus.demo.dao.LivroDAO;
-import com.systemhaus.demo.dao.LivroRetiradoDAO;
 import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.Cliente;
-import com.systemhaus.demo.domain.ClienteRepository;
 import com.systemhaus.demo.domain.Livro;
-import com.systemhaus.demo.domain.LivroRepository;
 import com.systemhaus.demo.domain.LivroRetirado;
-import com.systemhaus.demo.domain.LivroRetiradoRepository;
 
 public class HibernateTest {
 	
@@ -66,34 +53,13 @@ public class HibernateTest {
 		Session session = SessionUtil.getInstance().getSession();  
 	    Transaction t = session.beginTransaction();  
 	    
-	    Biblioteca b = new Biblioteca();
-	    Server s = new Server(b);
+	    Server s = new Server();
+	    
+	    s.addNewBookRoutine(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false), 2);
+	    s.retirada(s.findSimilarBooks(new Livro("9780123456793", "Aranhas Espinhosas", "Anônimo", "Darkside", 1, 250, false)).get(0), s.findClientWithThisCardCode("4000979800448877"));
 	    
 	    t.commit();
 	    session.close();
 	}
 
-//	@Test
-//	public void testClienteDAO() {
-//		ClienteRepository cr = new ClienteDAO();
-//		cr.save(new Cliente("LeeL","02789345277","5551999999999","Rio Pardo","Higienópolis","Almirante Alexandrino",281,"4000979800448877",Date.from(LocalDate.now().plusYears(4).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant())));
-//		Cliente c = new Cliente();
-//		c.setCpf("02789345277");
-//		Cliente cli = cr.findSimilarClients(c).get(0);
-//		cli.setNome("Leozin");
-//		cli.setCpf("02789345276");
-//		cr.update(cli);
-//		c.setCpf(cli.getCpf());
-//		assertEquals(1,cr.findSimilarClients(c).size());
-//	}
-	
-//	@Test
-//	public void testDAO() {
-//		Server s = new Server();
-//		initTestServer(s);
-//		s.addNewBookRoutine(new Livro("9780123456790", "Guerra de tronos: coroa espinhosa", "George Martinho", "Saraiva", 1, 250, false), 5);
-//		Livro l = new Livro();
-//		l.setISBN("9780123456790");
-//		Livro ex = s.findSimilarBooks(l).get(0);
-//	}
 }

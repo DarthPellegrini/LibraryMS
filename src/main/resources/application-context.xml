@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd">
+        <bean name="server" class="com.systemhaus.demo.Server">
+        	<constructor-arg index = "0" type="com.systemhaus.demo.domain.EstanteRepository" ref="estanteDAO"/>
+        	<constructor-arg index = "1" type="com.systemhaus.demo.domain.LivroRepository" ref="livroDAO"/>
+        	<constructor-arg index = "2" type="com.systemhaus.demo.domain.ClienteRepository" ref="clienteDAO"/>
+        	<constructor-arg index = "3" type="com.systemhaus.demo.domain.LivroRetiradoRepository" ref="livroRetiradoDAO"/>
+        	<constructor-arg index = "4" type="com.systemhaus.demo.domain.RegLivrosRepository" ref="regLivrosDAO"/>
+        </bean> 
+        
+        <bean name="estanteDAO" class="com.systemhaus.demo.dao.EstanteDAO"/>
+        <bean name="livroDAO" class="com.systemhaus.demo.dao.LivroDAO"/>
+        <bean name="clienteDAO" class="com.systemhaus.demo.dao.ClienteDAO"/>
+        <bean name="livroRetiradoDAO" class="com.systemhaus.demo.dao.LivroRetiradoDAO"/>
+        <bean name="regLivrosDAO" class="com.systemhaus.demo.dao.RegLivrosDAO"/>
+</beans>
