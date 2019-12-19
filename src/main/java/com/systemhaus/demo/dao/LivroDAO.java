@@ -6,7 +6,6 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.systemhaus.demo.domain.Estante;
@@ -78,10 +77,6 @@ public class LivroDAO implements LivroRepository {
 		List<Livro> livros = new ArrayList<>();
 		for(int i=0;i<list.size()-1;i++){
 			Object[] obj = list.get(i);
-			
-			/*
-			 * TODO: fix this: estante construtor 
-			 */
 			
 			Estante e = new Estante();
 			e.setId((int)obj[9]);

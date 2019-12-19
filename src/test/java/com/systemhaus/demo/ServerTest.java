@@ -18,7 +18,7 @@ import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.LivroRetirado;
 
 public class ServerTest {
-	/*
+	
 	@Test
 	public void testAddNewBookRoutine() {
 		Server s = new Server();
@@ -200,7 +200,6 @@ public class ServerTest {
 		int sizeAfterDelete = list.size();
 		assertNotEquals(sizeBeforeDelete,sizeAfterDelete);
 	}
-	//*/
 	
 	@Test
 	public void testRetiradaDeLivro() {

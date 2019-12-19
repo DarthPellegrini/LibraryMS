@@ -1,7 +1,6 @@
 package com.systemhaus.demo;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -11,13 +10,11 @@ import com.systemhaus.demo.dao.LivroDAO;
 import com.systemhaus.demo.dao.ClienteDAO;
 import com.systemhaus.demo.dao.LivroRetiradoDAO;
 import com.systemhaus.demo.dao.RegLivrosDAO;
-import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.EstanteRepository;
 import com.systemhaus.demo.domain.LivroRetiradoRepository;
 import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.LivroRepository;
 import com.systemhaus.demo.domain.LivroRetirado;
-import com.systemhaus.demo.domain.Prateleira;
 import com.systemhaus.demo.domain.RegLivrosRepository;
 import com.systemhaus.demo.domain.Cliente;
 import com.systemhaus.demo.domain.ClienteRepository;
@@ -127,10 +124,6 @@ public class Server {
 	}
 	
 	public boolean deleteBook(String iSBNOriginal, int delete) {
-		//criando uma lista para saber em quais prateleiras estão os livros a serem deletados
-		List<Prateleira> prateleiras = new ArrayList<Prateleira>();
-		List<Livro> livros = new ArrayList<Livro>();
-		
 		//primeiramente verificando se podemos deletar todos os livros (se não há nenhum retirado)
 		if(!regLivrosRepository.allTheBooksAreAvailable(iSBNOriginal) && delete == 0)
 			return false; 

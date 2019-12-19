@@ -1,18 +1,12 @@
 package com.systemhaus.demo.dao;
 
 import java.util.List;
-import java.util.ListIterator;
-
-import javax.persistence.TypedQuery;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.systemhaus.demo.SessionUtil;
-import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.Estante;
 import com.systemhaus.demo.domain.EstanteRepository;
 import com.systemhaus.demo.domain.Livro;

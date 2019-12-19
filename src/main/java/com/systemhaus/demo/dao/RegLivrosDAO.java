@@ -6,11 +6,8 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.systemhaus.demo.SessionUtil;
-import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.RegLivros;
 import com.systemhaus.demo.domain.RegLivrosRepository;
 
