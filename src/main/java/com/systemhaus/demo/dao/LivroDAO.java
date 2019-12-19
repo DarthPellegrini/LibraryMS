@@ -2,14 +2,13 @@ package com.systemhaus.demo.dao;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.systemhaus.demo.SessionUtil;
-import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.Estante;
 import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.LivroRepository;
@@ -18,9 +17,16 @@ import com.systemhaus.demo.domain.RegLivros;
 
 public class LivroDAO implements LivroRepository {
 	
+	private SessionFactory sessionFactory;
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+	
+	@Transactional
 	@Override
 	public void save(Livro livro) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		
 		session.save(livro);
@@ -31,6 +37,7 @@ public class LivroDAO implements LivroRepository {
 		session.close();
 	}
 	
+	@Transactional(readOnly = true)
 	@Override
 	public List<Livro> findBySimilarExample(Livro example, boolean findAvailable, boolean isRetirado) {
 		List<Livro> livros = new ArrayList<Livro>();
@@ -39,7 +46,7 @@ public class LivroDAO implements LivroRepository {
 			&& (example.getEdicao() == 0 || example.getNumeroPaginas() == 0)) )
 			return livros;
 		
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		
 		String hql = "from Livro l where ";
 		String parameters = "";
@@ -63,13 +70,13 @@ public class LivroDAO implements LivroRepository {
 		return livros;
 	}
 
+	@Transactional
 	@Override
 	public void editByExample(String iSBNOriginal, Livro livro) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
-		Biblioteca biblioteca = new Biblioteca();
 		
-		Query query = session.createQuery("select l.id,l.ISBN,l.titulo,l.autor,l.editora,l.edicao,l.numeroPaginas,l.retirado,l.prateleira.id, l.prateleira.estante.id, l.prateleira.estante.biblioteca.id"
+		Query query = session.createQuery("select l.id,l.ISBN,l.titulo,l.autor,l.editora,l.edicao,l.numeroPaginas,l.retirado,l.prateleira.id, l.prateleira.estante.id"
 				+ " from Livro l where isbn = \'" + iSBNOriginal + "\'");
 		
 		List<Object[]> list= query.list();
@@ -78,12 +85,8 @@ public class LivroDAO implements LivroRepository {
 		for(int i=0;i<list.size()-1;i++){
 			Object[] obj = list.get(i);
 			
-			biblioteca.setId((int)obj[10]);
-			Estante e = new Estante(biblioteca);
+			Estante e = new Estante();
 			e.setId((int)obj[9]);
-			List<Estante> estantes = new ArrayList<>();
-			estantes.add(e);
-			biblioteca.setEstantes(estantes);
 			Prateleira p = new Prateleira(e);
 			p.setId((int)obj[8]);
 			e.addPrateleira(p);
@@ -101,9 +104,10 @@ public class LivroDAO implements LivroRepository {
 		session.close();
 	}
 	
+	@Transactional
 	@Override
 	public void deleteAllTheseBooks(String iSBNOriginal) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from Livro where ISBN = \'" + iSBNOriginal + "\'");
@@ -116,9 +120,10 @@ public class LivroDAO implements LivroRepository {
 		session.close();
 	}
 	
+	@Transactional
 	@Override
 	public void deleteOnlyTheseBooks(String iSBNOriginal, int delete) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from Livro where ISBN = \'" + iSBNOriginal + "\' and retirado = false");
@@ -133,9 +138,10 @@ public class LivroDAO implements LivroRepository {
 		session.close();
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public int returnBookCount(String iSBN) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + iSBN + "\'");
 		
@@ -145,9 +151,10 @@ public class LivroDAO implements LivroRepository {
 		return (list.size() > 0) ? list.get(0).getQuantLivrosNoCatalogo() : 0;
 	}
 	
+	@Transactional(readOnly = true)
 	@Override
 	public int returnAvailableBookCount(String iSBN) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + iSBN + "\'");
 		
@@ -157,9 +164,10 @@ public class LivroDAO implements LivroRepository {
 		return (list.size() > 0) ? list.get(0).getQuantLivrosParaRetirar() : 0;
 	}
 	
+	@Transactional(readOnly = true)
 	@Override
 	public boolean allTheBooksAreAvailable(String iSBN) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + iSBN + "\'");
 		
@@ -169,9 +177,10 @@ public class LivroDAO implements LivroRepository {
 		return (list.size() > 0) ? (list.get(0).getQuantLivrosNoCatalogo()==list.get(0).getQuantLivrosParaRetirar()) : false;
 	}
 	
+	@Transactional(readOnly = true)
 	@Override
 	public boolean havingOnlyThisAmountOfCopiesWontCauseProblems(String iSBN, int quantCopias){
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + iSBN + "\'");
 		
@@ -184,8 +193,9 @@ public class LivroDAO implements LivroRepository {
 	/*
 	 * Adiciona um livro no catálogo na biblioteca
 	 */
+	@Transactional
 	public void addDisponivel(String isbn) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn + "\'");
@@ -197,9 +207,7 @@ public class LivroDAO implements LivroRepository {
 			list.get(0).setQuantLivrosParaRetirar(list.get(0).getQuantLivrosParaRetirar()+1);
 			session.update(list.get(0));
 		} else {
-			Query newQuery = session.createQuery("from Biblioteca");
-			
-			RegLivros reg = new RegLivros(isbn,1, (Biblioteca)newQuery.list().get(0));
+			RegLivros reg = new RegLivros(isbn,1);
 			session.saveOrUpdate(reg);
 		}
 		
@@ -209,8 +217,9 @@ public class LivroDAO implements LivroRepository {
 	/*
 	 * Remove livros do catálogo da biblioteca
 	 */
+	@Transactional
 	public void remDisponivel(String isbn, int quant) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn + "\'");
@@ -228,8 +237,9 @@ public class LivroDAO implements LivroRepository {
 	/*
 	 * Remove um livro que estava retirado e foi devolvido do catálogo
 	 */
+	@Transactional
 	public boolean remRetirado(String isbn) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn+ "\'");
@@ -253,8 +263,9 @@ public class LivroDAO implements LivroRepository {
 	/*
 	 * Adiciona um exemplar que estava disponível e foi retirado
 	 */
+	@Transactional
 	public boolean addRetirado(String isbn) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn+ "\'");
@@ -275,9 +286,10 @@ public class LivroDAO implements LivroRepository {
 		}
 	}
 	
+	@Transactional
 	@Override
 	public void deleteThisRegLivros(RegLivros reg) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		
 		session.delete(reg);
@@ -286,9 +298,10 @@ public class LivroDAO implements LivroRepository {
 		session.close();
 	}
 	
+	@Transactional(readOnly = true)
 	@Override
 	public RegLivros findRegLivrosForThis(String isbn) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn + "\'");
 		

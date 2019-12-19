@@ -8,22 +8,15 @@ public class Estante {
 	// cada estante terá no máximo 5 prateleiras
 	private int id;
 	private List<Prateleira> prateleiras;
-	private Biblioteca biblioteca;
 	private static final int size = 5;
 	
-	public Estante(Biblioteca b) {
-		setBiblioteca(b);
-		setPrateleiras(new ArrayList<Prateleira>());
-		initializeEstante();
-	}
-
-	public Estante(List<Prateleira> prateleiras, Biblioteca b) {
-		setBiblioteca(b);
+	public Estante(List<Prateleira> prateleiras) {
 		setPrateleiras(prateleiras);
 	}
 	
 	public Estante() {
 		setPrateleiras(new ArrayList<Prateleira>());
+		initializeEstante();
 	}
 	
 	public int getId() {
@@ -32,14 +25,6 @@ public class Estante {
 
 	public void setId(int id) {
 		this.id = id;
-	}
-
-	public Biblioteca getBiblioteca() {
-		return biblioteca;
-	}
-
-	public void setBiblioteca(Biblioteca biblioteca) {
-		this.biblioteca = biblioteca;
 	}
 
 	public void initializeEstante() {

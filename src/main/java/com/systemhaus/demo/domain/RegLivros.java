@@ -6,26 +6,23 @@ public class RegLivros {
 	private String isbn;
 	private int quantLivrosNoCatalogo;
 	private int quantLivrosParaRetirar;
-	private Biblioteca biblioteca;
 	
 	public RegLivros() {
 		
 	}
 
-	public RegLivros(String isbn, int quantLivrosNoCatalogo, Biblioteca biblioteca) {
+	public RegLivros(String isbn, int quantLivrosNoCatalogo) {
 		super();
 		this.setIsbn(isbn);
 		this.setQuantLivrosNoCatalogo(quantLivrosNoCatalogo);
 		this.setQuantLivrosParaRetirar(quantLivrosNoCatalogo);
-		this.setBiblioteca(biblioteca);
 	}
 	
-	public RegLivros(String isbn, int quantLivrosNoCatalogo, int quantLivrosParaRetirar, Biblioteca biblioteca) {
+	public RegLivros(String isbn, int quantLivrosNoCatalogo, int quantLivrosParaRetirar) {
 		super();
 		this.setIsbn(isbn);
 		this.setQuantLivrosNoCatalogo(quantLivrosNoCatalogo);
 		this.setQuantLivrosParaRetirar(quantLivrosParaRetirar);
-		this.setBiblioteca(biblioteca);
 	}
 
 	public int getId() {
@@ -62,13 +59,5 @@ public class RegLivros {
 	
 	public int getMaxDeletionNumber() {
 		return this.getQuantLivrosNoCatalogo()-this.getQuantLivrosParaRetirar();
-	}
-
-	public Biblioteca getBiblioteca() {
-		return biblioteca;
-	}
-
-	public void setBiblioteca(Biblioteca biblioteca) {
-		this.biblioteca = biblioteca;
 	}
 }

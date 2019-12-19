@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.systemhaus.demo.SessionUtil;
 import com.systemhaus.demo.domain.Biblioteca;
@@ -14,9 +16,16 @@ import com.systemhaus.demo.domain.RegLivrosRepository;
 
 public class RegLivrosDAO implements RegLivrosRepository {
 
+	private SessionFactory sessionFactory;
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+	
+	@Transactional(readOnly = true)
 	@Override
 	public int returnBookCount(String iSBN) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + iSBN + "\'");
 		
@@ -26,9 +35,10 @@ public class RegLivrosDAO implements RegLivrosRepository {
 		return (list.size() > 0) ? list.get(0).getQuantLivrosNoCatalogo() : 0;
 	}
 	
+	@Transactional(readOnly = true)
 	@Override
 	public int returnAvailableBookCount(String iSBN) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + iSBN + "\'");
 		
@@ -38,9 +48,10 @@ public class RegLivrosDAO implements RegLivrosRepository {
 		return (list.size() > 0) ? list.get(0).getQuantLivrosParaRetirar() : 0;
 	}
 	
+	@Transactional(readOnly = true)
 	@Override
 	public boolean allTheBooksAreAvailable(String iSBN) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + iSBN + "\'");
 		
@@ -50,9 +61,10 @@ public class RegLivrosDAO implements RegLivrosRepository {
 		return (list.size() > 0) ? (list.get(0).getQuantLivrosNoCatalogo()==list.get(0).getQuantLivrosParaRetirar()) : false;
 	}
 	
+	@Transactional(readOnly = true)
 	@Override
 	public boolean havingOnlyThisAmountOfCopiesWontCauseProblems(String iSBN, int quantCopias){
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + iSBN + "\'");
 		
@@ -65,9 +77,10 @@ public class RegLivrosDAO implements RegLivrosRepository {
 	/*
 	 * Adiciona um livro no catálogo na biblioteca
 	 */
+	@Transactional
 	@Override
 	public void addDisponivel(String isbn) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn + "\'");
@@ -81,7 +94,7 @@ public class RegLivrosDAO implements RegLivrosRepository {
 		} else {
 			Query newQuery = session.createQuery("from Biblioteca");
 			
-			RegLivros reg = new RegLivros(isbn,1, (Biblioteca)newQuery.list().get(0));
+			RegLivros reg = new RegLivros(isbn,1);
 			session.saveOrUpdate(reg);
 		}
 		
@@ -91,9 +104,10 @@ public class RegLivrosDAO implements RegLivrosRepository {
 	/*
 	 * Remove livros do catálogo da biblioteca
 	 */
+	@Transactional
 	@Override
 	public void remDisponivel(String isbn, int quant) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn + "\'");
@@ -111,9 +125,10 @@ public class RegLivrosDAO implements RegLivrosRepository {
 	/*
 	 * Remove um livro que estava retirado e foi devolvido do catálogo
 	 */
+	@Transactional
 	@Override
 	public boolean remRetirado(String isbn) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn+ "\'");
@@ -137,9 +152,10 @@ public class RegLivrosDAO implements RegLivrosRepository {
 	/*
 	 * Adiciona um exemplar que estava disponível e foi retirado
 	 */
+	@Transactional
 	@Override
 	public boolean addRetirado(String isbn) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn+ "\'");
@@ -160,9 +176,10 @@ public class RegLivrosDAO implements RegLivrosRepository {
 		}
 	}
 	
+	@Transactional
 	@Override
 	public void deleteThisRegLivros(RegLivros reg) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		
 		session.delete(reg);
@@ -171,9 +188,10 @@ public class RegLivrosDAO implements RegLivrosRepository {
 		session.close();
 	}
 	
+	@Transactional(readOnly = true)
 	@Override
 	public RegLivros findRegLivrosForThis(String isbn) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn + "\'");
 		

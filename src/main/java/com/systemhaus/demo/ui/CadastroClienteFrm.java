@@ -139,7 +139,7 @@ public class CadastroClienteFrm extends SkeletonFrm{
 
 		btnSalvarCliente.addActionListener(l -> {
 			if (allFieldsAreFilled()) {
-				if(server.editClient(clienteCPF,model.getBean())){
+				if(server.updateClient(clienteCPF,model.getBean())){
 					JOptionPane.showMessageDialog(null, "Cliente modificado com sucesso!");
 					this.clearDataAndSetButtons(true, btnArray, addMode);
 					clienteCPF = "";
@@ -151,7 +151,7 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		
 		btnDeletarCliente.addActionListener(l -> {
 			if (allFieldsAreFilled()) {
-				server.deleteClient(clienteCPF);
+				server.deleteClient(model.getBean());
 				JOptionPane.showMessageDialog(null, "Cliente deletado com sucesso!");
 				this.clearDataAndSetButtons(true, btnArray, addMode);
 			}else

@@ -89,7 +89,7 @@ public class Biblioteca {
 	public void addDisponivel(String key) {
 		RegLivros reg = findRegLivrosForThis(key);
 		if(reg == null) {
-			reg = new RegLivros(key,1,this);
+			reg = new RegLivros(key,1);
 			regLivros.add(reg);
 		}else {
 			reg.setQuantLivrosNoCatalogo(reg.getQuantLivrosNoCatalogo()+1);

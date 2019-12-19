@@ -11,10 +11,7 @@
         
         <property name = "isbn" column = "isbn" type = "string" unique="true"/>
         <property name = "quantLivrosNoCatalogo" column = "quant_cat" type = "int"/>
-        <property name = "quantLivrosParaRetirar" column = "quant_disp" type = "int"/>
-		<many-to-one name="biblioteca" class="com.systemhaus.demo.domain.Biblioteca" fetch="select">
-            <column name="biblioteca_id" not-null="true" />
-        </many-to-one>     
+        <property name = "quantLivrosParaRetirar" column = "quant_disp" type = "int"/>  
         
     </class>
 </hibernate-mapping>

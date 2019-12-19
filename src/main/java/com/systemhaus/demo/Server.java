@@ -34,7 +34,6 @@ public class Server {
 		this.regLivrosRepository = new RegLivrosDAO();
 		this.clienteRepository = new ClienteDAO();
 		this.livroRetiradoRepository = new LivroRetiradoDAO();
-		initializeLibrary();
 	}
 	
 	public Server(EstanteRepository estanteRepository, LivroRepository livroRepository, 
@@ -45,14 +44,6 @@ public class Server {
 		this.clienteRepository = clienteRepository;
 		this.livroRetiradoRepository = livroRetiradoRepository;
 		this.regLivrosRepository = regLivrosRepository;
-		initializeLibrary();
-	}
-	
-	/*
-	 * Inicializa a bilioteca, ocorre somente uma vez, na criação do banco de dados
-	 */
-	public void initializeLibrary() {
-		((EstanteDAO)estanteRepository).initializeLibrary();
 	}
 	
 	public void setClienteRepository(ClienteRepository clienteRepository) {

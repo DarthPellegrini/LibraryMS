@@ -7,7 +7,9 @@ import javax.persistence.TypedQuery;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.systemhaus.demo.SessionUtil;
 import com.systemhaus.demo.domain.Biblioteca;
@@ -18,17 +20,23 @@ import com.systemhaus.demo.domain.Endereco;
 
 public class ClienteDAO implements ClienteRepository {
 	
+	private SessionFactory sessionFactory;
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+	
+	@Transactional
 	@Override
 	public void save(Cliente cliente) {
-		Session session = SessionUtil.getInstance().getSession();
-		Biblioteca biblioteca = new Biblioteca();
-		Transaction t = session.beginTransaction();  
-		biblioteca.addCliente(cliente);
+		Session session = sessionFactory.getCurrentSession();
+		Transaction t = session.beginTransaction(); 
 		session.saveOrUpdate(cliente);
 		t.commit();
 		session.close();
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public List<Cliente> findSimilarClients(Cliente similar) {
 		if(similar.getNome().isEmpty() && similar.getCpf().isEmpty() 
@@ -37,7 +45,7 @@ public class ClienteDAO implements ClienteRepository {
 				&& similar.getNumero() == 0)
 			return new ArrayList<Cliente>();
 		
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		
 		String hql = "select c.id, c.nome, c.cpf, c.telefone, e, ca from Cliente c, Endereco e, Cartao ca where "
 				+ "c.endereco = e.id and c.cartao = ca.id";
@@ -75,9 +83,10 @@ public class ClienteDAO implements ClienteRepository {
 		c.setCodCartao(code);
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public boolean findCardWithThisCode(String code) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("from Cartao where codigo = ?");
 		query.setParameter(0, code);
 		boolean result = !query.list().isEmpty();
@@ -85,36 +94,40 @@ public class ClienteDAO implements ClienteRepository {
 		return result;
 	}
 
+	@Transactional
 	@Override
 	public void delete(Cliente cliente) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction t = session.beginTransaction();
 		session.delete(cliente);
 		t.commit();
 		session.close();
 	}
 
+	@Transactional
 	@Override
 	public void update(Cliente cliente) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction t = session.beginTransaction();
 		session.update(cliente);
 		t.commit();
 		session.close();
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public boolean thisCpfAlreadyExists(String CPF) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("from Cliente where cpf = \'" + CPF + "\'");
 		List<Cliente> clientes= query.list();
 		session.close();
 		return clientes.size() != 0;
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public Cliente findClientWithThisCardCode(String code) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("select c.id, c.nome, c.cpf, c.telefone, e, ca "
 									+ "from Cliente c, Cartao ca, Endereco e "
 									+ "where c.cartao = ca.id and c.endereco = e.id and ca.codigo = \'" + code + "\'");
@@ -133,9 +146,10 @@ public class ClienteDAO implements ClienteRepository {
 		return (clientes.size() != 0) ? clientes.get(0) : null;
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public boolean thereAreTooManySimilarAddresses(Endereco exemplo) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		
 		Query query = session.createQuery("from Cliente c where c.endereco = " + exemplo.getId());
 		

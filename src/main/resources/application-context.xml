@@ -1,8 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:tx="http://www.springframework.org/schema/tx"
     xsi:schemaLocation="http://www.springframework.org/schema/beans
-        http://www.springframework.org/schema/beans/spring-beans.xsd">
+        				http://www.springframework.org/schema/beans/spring-beans.xsd
+        				http://www.springframework.org/schema/tx
+        				http://www.springframework.org/schema/tx/spring-tx.xsd">
+        
+        <bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource"
+			destroy-method="close">
+			<property name="driverClass" value="org.postgresql.Driver" />
+			<property name="user" value="postgres" />
+			<property name="password" value="password" />
+			<property name="jdbcUrl" value="jdbc:postgresql://localhost:5432/leonardo" />
+		</bean>
+        
+        <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
+	        <property name="dataSource" ref="dataSource"/>
+	        <property name="mappingLocations">
+	            <list>
+	                <value>classpath:src/main/resources/mappings/*.hbm.xml</value>
+	            </list>
+	        </property>
+	        <property name="hibernateProperties">
+	            <value>
+            		hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
+	            	connection_pool_size=1
+					hbm2ddl.auto=update
+					show_sql=true
+	            </value>
+	        </property>
+	    </bean>
+        
+        <bean id="txManager"
+            class="org.springframework.orm.hibernate3.HibernateTransactionManager">
+	        <property name="sessionFactory" ref="sessionFactory"/>
+	    </bean>
+        
+        <tx:annotation-driven proxy-target-class="true" transaction-manager="txManager"/>
+        
         <bean name="server" class="com.systemhaus.demo.Server">
         	<constructor-arg index = "0" type="com.systemhaus.demo.domain.EstanteRepository" ref="estanteDAO"/>
         	<constructor-arg index = "1" type="com.systemhaus.demo.domain.LivroRepository" ref="livroDAO"/>
@@ -11,9 +47,9 @@
         	<constructor-arg index = "4" type="com.systemhaus.demo.domain.RegLivrosRepository" ref="regLivrosDAO"/>
         </bean> 
         
-        <bean name="estanteDAO" class="com.systemhaus.demo.dao.EstanteDAO"/>
-        <bean name="livroDAO" class="com.systemhaus.demo.dao.LivroDAO"/>
-        <bean name="clienteDAO" class="com.systemhaus.demo.dao.ClienteDAO"/>
-        <bean name="livroRetiradoDAO" class="com.systemhaus.demo.dao.LivroRetiradoDAO"/>
-        <bean name="regLivrosDAO" class="com.systemhaus.demo.dao.RegLivrosDAO"/>
+        <bean name="estanteDAO" class="com.systemhaus.demo.dao.EstanteDAO" autowire="byType"/>
+        <bean name="livroDAO" class="com.systemhaus.demo.dao.LivroDAO" autowire="byType"/>
+        <bean name="clienteDAO" class="com.systemhaus.demo.dao.ClienteDAO" autowire="byType"/>
+        <bean name="livroRetiradoDAO" class="com.systemhaus.demo.dao.LivroRetiradoDAO" autowire="byType"/>
+        <bean name="regLivrosDAO" class="com.systemhaus.demo.dao.RegLivrosDAO" autowire="byType"/>
 </beans>

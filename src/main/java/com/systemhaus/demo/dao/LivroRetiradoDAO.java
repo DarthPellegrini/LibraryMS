@@ -3,14 +3,13 @@ package com.systemhaus.demo.dao;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.ListIterator;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.springframework.transaction.annotation.Transactional;
 
-import com.systemhaus.demo.SessionUtil;
-import com.systemhaus.demo.domain.Biblioteca;
 import com.systemhaus.demo.domain.Cliente;
 import com.systemhaus.demo.domain.Evento;
 import com.systemhaus.demo.domain.LivroRetiradoRepository;
@@ -21,9 +20,16 @@ import com.systemhaus.demo.domain.LivroRetirado;
 
 public class LivroRetiradoDAO implements LivroRetiradoRepository{
 
+	private SessionFactory sessionFactory;
+
+	public void setSessionFactory(SessionFactory sessionFactory) {
+		this.sessionFactory = sessionFactory;
+	}
+	
+	@Transactional
 	@Override
 	public boolean save(Livro livro, Cliente cliente) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		
 		if (this.addRetirado(livro.getISBN())) {
@@ -44,9 +50,10 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 		
 	}
 	
+	@Transactional
 	@Override
 	public void estenderRetirada(LivroRetirado livroRetirado) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		
 		livroRetirado.estenderRetirada(new Evento(TipoEvento.RENOVACAO,livroRetirado));
@@ -58,9 +65,10 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 		session.close();
 	}
 	
+	@Transactional(readOnly = true)
 	@Override
 	public List<LivroRetirado> findSimilarLivroRetirado(Livro livro, Cliente cliente) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		
 		/* alterar query para verificar quais parâmetros serão utilizados, 
 		 * SE AMBOS o livro E o cliente foram informados
@@ -99,9 +107,10 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 		return livrosRetirados;
 	}
 	
+	@Transactional
 	@Override
 	public int devolver(LivroRetirado livroRetirado) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		
 		if(livroRetirado.getDevolucao() == null) {
@@ -125,8 +134,9 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 	/*
 	 * Remove um livro que estava retirado e foi devolvido do catálogo
 	 */
+	@Transactional
 	public boolean remRetirado(String isbn) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn+ "\'");
@@ -150,8 +160,9 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 	/*
 	 * Adiciona um exemplar que estava disponível e foi retirado
 	 */
+	@Transactional
 	public boolean addRetirado(String isbn) {
-		Session session = SessionUtil.getInstance().getSession();
+		Session session = sessionFactory.getCurrentSession();
 		Transaction tx = session.beginTransaction();
 		
 		Query query = session.createQuery("from RegLivros where isbn = \'" + isbn+ "\'");
