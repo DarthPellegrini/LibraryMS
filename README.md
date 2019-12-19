@@ -1,2 +1,2 @@
 # LibraryMS
-A Small Library Management System using Swing
+A Small Library Management System using Spring and Hibernate, Designed as a Case Study for a Internship.
