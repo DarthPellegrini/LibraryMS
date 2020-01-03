@@ -1,11 +1,17 @@
 package com.systemhaus.demo.dao;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.transform.AliasToBeanResultTransformer;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.systemhaus.demo.domain.Estante;
@@ -13,6 +19,20 @@ import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.LivroRepository;
 import com.systemhaus.demo.domain.Prateleira;
 import com.systemhaus.demo.domain.RegLivros;
+import com.systemhaus.demo.report.LivroView;
+
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.export.ExporterInput;
+import net.sf.jasperreports.export.OutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class LivroDAO implements LivroRepository {
 	
@@ -20,6 +40,68 @@ public class LivroDAO implements LivroRepository {
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
+	}
+	
+	@Transactional(readOnly = true)
+	@Override
+	public void generateLivroReport() {
+		 Session session = sessionFactory.getCurrentSession();
+		 
+		 Query query = session.createQuery(
+				"select distinct l.ISBN as ISBN, l.titulo as titulo, l.autor as autor, l.editora as editora, l.edicao as edicao, " +
+		 		"l.numeroPaginas as numeroPaginas, rl.quantLivrosNoCatalogo as quantLivrosNoCatalogo, " +
+		 		"rl.quantLivrosParaRetirar as quantLivrosParaRetirar " + 
+		 		"from Livro l, RegLivros rl " +
+		 		"where l.ISBN = rl.isbn " +
+		 		"order by l.ISBN");
+		 
+		 query.setResultTransformer(new AliasToBeanResultTransformer(LivroView.class));
+		 
+		 List<LivroView> result = query.list();
+		 	
+		 try {
+			JRBeanCollectionDataSource beanCollection =  new JRBeanCollectionDataSource(result);
+			
+			InputStream inputStream = new ClassPathResource("Livros.jrxml").getInputStream();
+			
+		 	// First, compile jrxml file
+	        JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
+	 
+	        // Parameters for report
+	        Map<String, Object> parameters = new HashMap<String, Object>();
+	 
+	        JasperPrint print = JasperFillManager.fillReport(jasperReport,
+	                parameters, beanCollection);
+	 
+	        JasperViewer.viewReport(print,false);
+	        
+	        String rootPath = System.getProperty("user.dir");
+	        
+	        // Make sure the output directory exists.
+	        File outDir = new File(rootPath +"/reports");
+	        outDir.mkdirs();
+	 
+	        // PDF Exportor.
+	        JRPdfExporter exporter = new JRPdfExporter();
+	 
+	        ExporterInput exporterInput = new SimpleExporterInput(print);
+	        // ExporterInput
+	        exporter.setExporterInput(exporterInput);
+	 
+	        // ExporterOutput
+	        OutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(
+	                rootPath + "/reports/Livros.pdf");
+	        // Output
+	        exporter.setExporterOutput(exporterOutput);
+	 
+	        SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
+	        exporter.setConfiguration(configuration);
+	        exporter.exportReport();
+	        
+	        System.out.print("Done!");
+		 }catch(Exception e) {
+			 e.printStackTrace();
+		 }
 	}
 	
 	@Transactional

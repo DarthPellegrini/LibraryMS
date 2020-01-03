@@ -82,6 +82,13 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		JButton btnTableConfirm = tablePanel.getConfirmButton();
 		JButton btnTableCancel = tablePanel.getCancelButton();
 		
+		JButton btnTest = new JButton("Gerar Relatório");
+		panelLivroButtonBar.add(btnTest);
+		
+		btnTest.addActionListener(l -> {
+			server.testJasperReports();
+		});
+		
 		JButton[] btnArray = {btnAdicionarLivro, btnPesquisarLivro, btnSalvarLivro, 
 				btnDeletarLivro, btnCancelarLivro};
 		

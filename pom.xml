@@ -64,6 +64,10 @@
 		  <artifactId>c3p0</artifactId>
 		  <version>0.9.5.4</version>
 		</dependency>
+		 <dependency>
+	        <groupId>net.sf.jasperreports</groupId>
+	        <artifactId>jasperreports</artifactId>
+	        <version>6.11.0</version>
+	    </dependency>
 	</dependencies>
-
 </project>
