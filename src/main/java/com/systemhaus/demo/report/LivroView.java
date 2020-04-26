@@ -18,7 +18,7 @@ public class LivroView {
 	public LivroView(String iSBN, String titulo, String autor, String editora, int edicao, int numeroPaginas,
 			int quantLivrosNoCatalogo, int quantLivrosParaRetirar) {
 		super();
-		ISBN = iSBN;
+		this.ISBN = iSBN;
 		this.titulo = titulo;
 		this.autor = autor;
 		this.editora = editora;

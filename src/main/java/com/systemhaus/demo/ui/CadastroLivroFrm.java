@@ -82,7 +82,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		JButton btnTableConfirm = tablePanel.getConfirmButton();
 		JButton btnTableCancel = tablePanel.getCancelButton();
 		
-		JButton btnTest = new JButton("test");
+		JButton btnTest = new JButton("Gerar Relatório");
 		panelLivroButtonBar.add(btnTest);
 		
 		btnTest.addActionListener(l -> {
@@ -197,7 +197,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	protected void initComponents() {
 		iFrameCadLivro = new JInternalFrame("Cadastro de Livros", true, true);
 		iFrameCadLivro.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-		iFrameCadLivro.setBounds(190, 35, 540, 300);
+		iFrameCadLivro.setBounds(190, 35, 580, 300);
 		
 		model = new PresentationModel<Livro>(livroSelection);
 		tablePanel = new LivroSelectionPanel(livroSelection, 1, 10);

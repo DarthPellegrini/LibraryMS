@@ -73,7 +73,7 @@ WHERE
 ORDER BY
 	l.isbn]]>
 	</queryString>
-	<field name="isbn" class="java.lang.String">
+	<field name="ISBN" class="java.lang.String">
 		<property name="com.jaspersoft.studio.field.label" value="isbn"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="livro"/>
 	</field>
@@ -93,15 +93,15 @@ ORDER BY
 		<property name="com.jaspersoft.studio.field.label" value="edicao"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="livro"/>
 	</field>
-	<field name="numeropaginas" class="java.lang.Integer">
+	<field name="numeroPaginas" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.label" value="numeropaginas"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="livro"/>
 	</field>
-	<field name="quant_cat" class="java.lang.Integer">
+	<field name="quantLivrosNoCatalogo" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.label" value="quant_cat"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="reg_livros"/>
 	</field>
-	<field name="quant_disp" class="java.lang.Integer">
+	<field name="quantLivrosParaRetirar" class="java.lang.Integer">
 		<property name="com.jaspersoft.studio.field.label" value="quant_disp"/>
 		<property name="com.jaspersoft.studio.field.tree.path" value="reg_livros"/>
 	</field>
@@ -212,7 +212,7 @@ ORDER BY
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="1fb1b71e-9498-4d39-b6b6-f94fc40f3161"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{isbn}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{ISBN}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="90" y="0" width="110" height="40" uuid="656cc6ff-85e8-4242-a630-1519832672f5">
@@ -247,21 +247,21 @@ ORDER BY
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ae990b1a-54a2-41a5-9ba4-48a87c2170d4"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{numeropaginas}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{numeroPaginas}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="440" y="0" width="50" height="40" uuid="98adc082-0d85-46fc-ac84-3b186f4eed1a">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="4a6327dc-43ae-41c7-b80c-261a753f49ee"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{quant_cat}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{quantLivrosNoCatalogo}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="490" y="0" width="66" height="40" uuid="bf61672a-fd62-4aa2-9843-efe5ca499b1e">
 					<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="37aba590-96b1-4200-9a8a-242d03da7b0e"/>
 				</reportElement>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{quant_disp}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{quantLivrosParaRetirar}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
