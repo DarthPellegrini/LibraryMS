@@ -268,6 +268,10 @@ public class Server {
 		return clienteRepository.findClientWithThisCardCode(code);
 	}
 	
+	public void testJasperReports() {
+		livroRepository.generateLivroReport();
+	}
+	
 	/**
 	 * Converte String para Inteiro com retorno automático de 0 no caso de caracteres inválidos
 	 * @param s inteiro a ser convertido

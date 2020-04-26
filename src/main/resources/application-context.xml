@@ -11,8 +11,8 @@
 			destroy-method="close">
 			<property name="driverClass" value="org.postgresql.Driver" />
 			<property name="user" value="postgres" />
-			<property name="password" value="password" />
-			<property name="jdbcUrl" value="jdbc:postgresql://localhost:5432/leonardo" />
+			<property name="password" value="postgres" />
+			<property name="jdbcUrl" value="jdbc:postgresql://localhost:5432/postgres" />
 		</bean>
         
         <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">

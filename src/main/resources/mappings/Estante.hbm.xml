@@ -4,7 +4,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
 
 <hibernate-mapping>
-   <class name = "com.systemhaus.demo.domain.Estante" table = "estante">
+   <class name = "com.systemhaus.demo.domain.Estante" table = "estante" schema="libraryms">
       
       <meta attribute = "class-description">
          Classe da estante que contém as prateleiras. 

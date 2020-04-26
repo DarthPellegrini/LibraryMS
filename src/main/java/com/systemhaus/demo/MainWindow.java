@@ -21,10 +21,11 @@ import com.systemhaus.demo.ui.TransacaoLivroFrm;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+
 public class MainWindow {
 
 	private JFrame frame;
-	private Server fakeServer;
+	private Server server;
 	
 	/**
 	 * Launch the application.
@@ -59,13 +60,14 @@ public class MainWindow {
 	 */
 	public MainWindow() {
 		initialize();
+		//server.testJasperReports();
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		fakeServer = ServerFactory.createServer();
+		server = ServerFactory.createServer();
 		frame = new JFrame("SGBooks - Sistema de Gerenciamento de Biblioteca");
 		frame.setBounds(0, 0, 1280, 720);
 		frame.setMaximumSize(new java.awt.Dimension(1280,720));
@@ -136,21 +138,21 @@ public class MainWindow {
 		 */
 		btnLivro.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JInternalFrame cadastroLivro = new CadastroLivroFrm().createForm(fakeServer);
+				JInternalFrame cadastroLivro = new CadastroLivroFrm().createForm(server);
 				desktopPane.add(cadastroLivro);
 				cadastroLivro.setVisible(true);
 			}
 		});
 		btnUser.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JInternalFrame cadastroUser = new CadastroClienteFrm().createForm(fakeServer);
+				JInternalFrame cadastroUser = new CadastroClienteFrm().createForm(server);
 				desktopPane.add(cadastroUser);
 				cadastroUser.setVisible(true);
 			}
 		});
 		btnTran.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JInternalFrame transacaoLivro = new TransacaoLivroFrm().createForm(fakeServer);
+				JInternalFrame transacaoLivro = new TransacaoLivroFrm().createForm(server);
 				desktopPane.add(transacaoLivro);
 				transacaoLivro.setVisible(true);
 			}

@@ -82,13 +82,19 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		JButton btnTableConfirm = tablePanel.getConfirmButton();
 		JButton btnTableCancel = tablePanel.getCancelButton();
 		
+		JButton btnTest = new JButton("test");
+		panelLivroButtonBar.add(btnTest);
+		
+		btnTest.addActionListener(l -> {
+			server.testJasperReports();
+		});
+		
 		JButton[] btnArray = {btnAdicionarLivro, btnPesquisarLivro, btnSalvarLivro, 
 				btnDeletarLivro, btnCancelarLivro};
 		
 		btnAdicionarLivro.addActionListener(l -> {
 			//validação dos campos
 			if (allFieldsAreFilled()) {
-				//TODO: criar mensagens de erro para cada tipo de erro diferente
 				if(server.addNewBookRoutine(model.getBean(), server.strToInt(txtfQuant.getText()))){
 					JOptionPane.showMessageDialog(null, "Livro(s) inserido(s) com sucesso!");
 					this.clearDataAndSetButtons(true, btnArray, addMode);

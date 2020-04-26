@@ -6,6 +6,7 @@ import java.util.List;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.transform.AliasToBeanResultTransformer;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.systemhaus.demo.domain.Estante;
@@ -13,6 +14,7 @@ import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.LivroRepository;
 import com.systemhaus.demo.domain.Prateleira;
 import com.systemhaus.demo.domain.RegLivros;
+import com.systemhaus.demo.report.LivroView;
 
 public class LivroDAO implements LivroRepository {
 	
@@ -20,6 +22,25 @@ public class LivroDAO implements LivroRepository {
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
+	}
+	
+	@Transactional(readOnly = true)
+	@Override
+	public void generateLivroReport() {
+		 Session session = sessionFactory.getCurrentSession();
+		 
+		 Query query = session.createQuery(""
+		 		+ "select distinct l.ISBN, l.autor, l.editora, l.edicao, "
+		 		+ "l.numeroPaginas, rl.quantLivrosNoCatalogo, rl.quantLivrosParaRetirar \n" + 
+		 		"from Livro l, RegLivros rl\n" + 
+		 		"where l.ISBN = rl.isbn\n" + 
+		 		"order by l.ISBN");
+		 
+		 query.setResultTransformer(new AliasToBeanResultTransformer(LivroView.class));
+		 
+		 List<LivroView> result = query.list();
+		 
+		 session.close();
 	}
 	
 	@Transactional

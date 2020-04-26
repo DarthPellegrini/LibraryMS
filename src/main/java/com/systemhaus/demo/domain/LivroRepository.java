@@ -21,6 +21,7 @@ public interface LivroRepository {
 	public abstract RegLivros findRegLivrosForThis(String isbn);
 	public abstract void deleteAllTheseBooks(String iSBNOriginal);
 	public abstract void deleteOnlyTheseBooks(String iSBNOriginal, int delete);
+	public abstract void generateLivroReport();
 	
 	
 }

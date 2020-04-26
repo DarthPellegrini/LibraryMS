@@ -1,0 +1,51 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<project name = "JasperReportExample" basedir = ".">
+   <description>Previews our JasperReport XML Design</description>
+   <property name = "file.name" value = "jasper_report_template" />
+   
+   <!-- Directory where the JasperReports project file was extracted
+   needs to be changed to match the local environment -->
+   <property name = "jasper.dir" value = "../" />
+   <property name = "dist.dir" value = "${jasper.dir}/dist" />
+   <property name = "lib.dir" value = "${jasper.dir}/lib" />
+   <property name = "src.dir" value = "src" />
+   <property name = "classes.dir" value = "classes" />
+   <property name = "main-class" value = "com.systemhaus.demo.MainWindow" />
+
+   <path id = "classpath">
+      <pathelement location = "./" />
+      <pathelement location = "${classes.dir}" />
+	  
+      <fileset dir = "${lib.dir}">
+         <include name = "**/*.jar" />
+      </fileset>
+	  
+      <fileset dir = "${dist.dir}">
+         <include name = "**/*.jar" />
+      </fileset>
+   </path>
+   
+   <target name = "compile" depends = "clean-sample">
+      <mkdir dir = "${classes.dir}"/>
+		
+      <javac srcdir = "${src.dir}" destdir = "${classes.dir}" 
+         classpathref = "classpath" />
+   </target>
+   
+   <target name = "run" depends = "compile">
+      <echo message = "Running class : ${main-class}"/>
+	  
+      <java fork = "true" classname = "${main-class}">
+         <classpath>
+            <path refid = "classpath" />
+         </classpath>
+      </java>
+   </target>
+   
+   <target name = "clean-sample">
+      <delete dir = "${classes.dir}" />
+      <delete file = "./${file.name}.jasper" />
+      <delete file = "./${file.name}.jrprint" />
+   </target>
+   
+</project>

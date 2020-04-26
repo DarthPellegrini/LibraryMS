@@ -4,7 +4,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
 
 <hibernate-mapping>
-   <class name = "com.systemhaus.demo.domain.Cartao" table = "cartao">
+   <class name = "com.systemhaus.demo.domain.Cartao" table = "cartao" schema="libraryms">
       
       <meta attribute = "class-description">
          Classe do cartão do cliente. 
