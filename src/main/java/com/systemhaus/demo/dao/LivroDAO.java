@@ -95,8 +95,6 @@ public class LivroDAO implements LivroRepository {
 	        SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
 	        exporter.setConfiguration(configuration);
 	        exporter.exportReport();
-	        
-	        System.out.print("Done!");
 		 }catch(Exception e) {
 			 e.printStackTrace();
 		 }

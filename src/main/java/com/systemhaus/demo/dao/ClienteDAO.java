@@ -65,6 +65,7 @@ public class ClienteDAO implements ClienteRepository {
         return clientes;
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public void createValidCode(Cliente c) {
 		String code = "";
