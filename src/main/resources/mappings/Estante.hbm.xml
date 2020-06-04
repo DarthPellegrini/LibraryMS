@@ -19,6 +19,7 @@
             </key>
             <one-to-many class="com.systemhaus.demo.domain.Prateleira" />
         </bag>
+        <property name = "numero" column = "numero" type = "int"/>
       
    </class>
 </hibernate-mapping>

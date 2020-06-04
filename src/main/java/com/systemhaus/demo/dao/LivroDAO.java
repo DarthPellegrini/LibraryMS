@@ -142,6 +142,24 @@ public class LivroDAO implements LivroRepository {
 		return livros;
 	}
 
+	@Transactional(readOnly = true)
+	@Override
+	public Livro initializeLivro(Livro livro) {
+		Session session = sessionFactory.getCurrentSession();
+		
+		Query query = session.createQuery("select l.prateleira.id, l.prateleira.estante.id from Livro l where l.id = " + livro.getId());
+		
+		Object[] data = (Object[])query.list().get(0);
+		
+		Estante e = (Estante)session.load(Estante.class, (int)data[1]);
+		Prateleira p = (Prateleira)session.load(Prateleira.class, (int)data[0]);
+		e.addPrateleira(p);
+		livro.setPrateleira(p);
+		p.addLivro(livro);
+		
+		return livro;
+	}
+	
 	@Transactional
 	@Override
 	public void editByExample(String iSBNOriginal, Livro livro) {

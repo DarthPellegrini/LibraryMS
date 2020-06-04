@@ -31,6 +31,8 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	private JTextField txtfEdicao;
 	private JTextField txtfAutor;
 	private JTextField txtfEditora;
+	private JTextField txtfEstante;
+	private JTextField txtfPrateleira;
 	private String livroISBN;
 	private Server server;
 	private JPanel contentPanel;
@@ -110,8 +112,11 @@ public class CadastroLivroFrm extends SkeletonFrm{
 				livroSelection.setList(new ArrayListModel<>(livros));
 				if(livros.size() == 1) {
 					this.tablePanel.setSelectionToLastObject();
+					server.initializeLivro(model.getBean());
 					livroISBN = model.getBean().getISBN();
 					txtfQuant.setText(String.valueOf(server.returnBookCount(livroISBN)));
+					txtfPrateleira.setText(String.valueOf(model.getBean().getPrateleira().getNumero()));
+					txtfEstante.setText(String.valueOf(model.getBean().getPrateleira().getEstante().getNumero()));
 					this.clearDataAndSetButtons(false, btnArray, editMode);
 				}else {
 					this.clearDataAndSetButtons(false, btnArray, searchMode);
@@ -152,8 +157,11 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		
 		btnTableConfirm.addActionListener(l -> {
 			changePanel(contentPanel,"data");
+			server.initializeLivro(model.getBean());
 			livroISBN = model.getBean().getISBN();
 			txtfQuant.setText(String.valueOf(server.returnBookCount(livroISBN)));
+			txtfPrateleira.setText(String.valueOf(model.getBean().getPrateleira().getNumero()));
+			txtfEstante.setText(String.valueOf(model.getBean().getPrateleira().getEstante().getNumero()));
 			this.clearDataAndSetButtons(false, btnArray, editMode);
 		});
 		
@@ -167,29 +175,32 @@ public class CadastroLivroFrm extends SkeletonFrm{
 
 	protected JPanel createMainPanel() {
 		DefaultFormBuilder builder = new DefaultFormBuilder(
-				new FormLayout("right:pref, 3dlu, pref:grow","18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,"));
+				new FormLayout("right:pref, 3dlu, pref:grow, 6dlu, right:pref, 3dlu, pref:grow","18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,"));
 		builder.border(new EmptyBorder(5, 5, 5, 5));
 
-		builder.append("ISBN:", txtfIsbn);
+		builder.append("ISBN:", txtfIsbn, 5);
 		builder.nextLine();
 		
-		builder.append("Título:",txtfTitulo);
+		builder.append("Título:",txtfTitulo, 5);
 		builder.nextLine();
 		
-		builder.append("Autor:", txtfAutor);
+		builder.append("Autor:", txtfAutor, 5);
 		builder.nextLine();
 		
-		builder.append("Editora:", txtfEditora);
+		builder.append("Editora:", txtfEditora, 5);
 		builder.nextLine();
 		
 		builder.append("Edição:", txtfEdicao);
-		builder.nextLine();
 		
 		builder.append("Nº de Páginas:", txtfNPag);
 		builder.nextLine();
 		
-		builder.append("Quantidade:", txtfQuant);
+		builder.append("Quantidade:", txtfQuant, 5);
 		builder.nextLine();
+		
+		builder.append("Estante:",txtfEstante);
+		
+		builder.append("Prateleira:",txtfPrateleira);
 		
 		return builder.build();
 	}
@@ -222,6 +233,12 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		txtfNPag = BasicComponentFactory.createIntegerField(numPagAdapter, 0);
 		
 		txtfQuant = new JTextField();
+		
+		txtfEstante = new JTextField();
+		txtfEstante.setEditable(false);
+		
+		txtfPrateleira = new JTextField();
+		txtfPrateleira.setEditable(false);
 		
 		dataPanel = createMainPanel();
 		

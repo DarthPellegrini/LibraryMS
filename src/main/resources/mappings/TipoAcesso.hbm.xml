@@ -1,0 +1,21 @@
+<?xml version = "1.0" encoding = "utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD//EN"
+"http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping>
+   <class name = "com.systemhaus.demo.domain.TipoAcesso" table = "tipo_acesso" schema="libraryms">
+      
+      <meta attribute = "class-description">
+         Classe dos tipos de acesso.
+      </meta>
+      
+      <id name = "id" type = "int" column = "tipo_acesso_id">
+         <generator class="sequence"/>
+      </id>
+      
+      <property name = "nivelAcesso" column = "nr_tipo_acesso" type = "int"/>
+      <property name = "descAcesso" column = "tx_descricao" type = "string"/>
+   
+   </class>
+</hibernate-mapping>

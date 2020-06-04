@@ -29,6 +29,8 @@
 		<mapping resource="mappings/Cartao.hbm.xml"/>
 		<mapping resource="mappings/LivroRetirado.hbm.xml"/>
 		<mapping resource="mappings/Evento.hbm.xml"/>
+		<mapping resource="mappings/Login.hbm.xml"/>
+		<mapping resource="mappings/TipoAcesso.hbm.xml"/>
 		
     </session-factory>
 </hibernate-configuration>

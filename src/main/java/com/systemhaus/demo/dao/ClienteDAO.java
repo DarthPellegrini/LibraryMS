@@ -142,8 +142,10 @@ public class ClienteDAO implements ClienteRepository {
 	}
 	
 	@Override
+	@Deprecated
 	public void edit(String CPF, Cliente cliente) {}
 
 	@Override
+	@Deprecated
 	public void delete(String CPF) {}
 }

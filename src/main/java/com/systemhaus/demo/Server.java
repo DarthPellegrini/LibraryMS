@@ -1,5 +1,8 @@
 package com.systemhaus.demo;
 
+import com.systemhaus.demo.domain.Login;
+import com.systemhaus.demo.domain.LoginRepository;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -9,6 +12,7 @@ import com.systemhaus.demo.dao.EstanteDAO;
 import com.systemhaus.demo.dao.LivroDAO;
 import com.systemhaus.demo.dao.ClienteDAO;
 import com.systemhaus.demo.dao.LivroRetiradoDAO;
+import com.systemhaus.demo.dao.LoginDAO;
 import com.systemhaus.demo.dao.RegLivrosDAO;
 import com.systemhaus.demo.domain.EstanteRepository;
 import com.systemhaus.demo.domain.LivroRetiradoRepository;
@@ -26,6 +30,9 @@ public class Server {
 	private RegLivrosRepository regLivrosRepository;
 	private ClienteRepository clienteRepository;
 	private LivroRetiradoRepository livroRetiradoRepository;
+	private LoginRepository loginRepository;
+	private MainWindow mainWindow; 
+	private Login login = new Login();
 	
 	public Server () {
 		this.estanteRepository = new EstanteDAO();
@@ -33,16 +40,18 @@ public class Server {
 		this.regLivrosRepository = new RegLivrosDAO();
 		this.clienteRepository = new ClienteDAO();
 		this.livroRetiradoRepository = new LivroRetiradoDAO();
+		this.loginRepository = new LoginDAO();
 	}
 	
 	public Server(EstanteRepository estanteRepository, LivroRepository livroRepository, 
 			ClienteRepository clienteRepository, LivroRetiradoRepository livroRetiradoRepository,
-			RegLivrosRepository regLivrosRepository) {
+			RegLivrosRepository regLivrosRepository, LoginRepository loginRepository) {
 		this.estanteRepository = estanteRepository;
 		this.livroRepository = livroRepository;
 		this.clienteRepository = clienteRepository;
 		this.livroRetiradoRepository = livroRetiradoRepository;
 		this.regLivrosRepository = regLivrosRepository;
+		this.loginRepository = loginRepository;
 	}
 	
 	public void setClienteRepository(ClienteRepository clienteRepository) {
@@ -63,6 +72,10 @@ public class Server {
 	
 	public void setRegLivrosRepository(RegLivrosRepository regLivrosRepository) {
 		this.regLivrosRepository = regLivrosRepository;
+	}
+	
+	public void serLoginRepository(LoginRepository loginRepository) {
+		this.loginRepository = loginRepository;
 	}
 	
 	/*
@@ -146,6 +159,10 @@ public class Server {
 	 */
 	public long getCountOfEstantes() {
 		return estanteRepository.getCountOfEstantes();
+	}
+	
+	public Livro initializeLivro(Livro livro) {
+		return livroRepository.initializeLivro(livro);
 	}
 	
 	/*
@@ -272,6 +289,26 @@ public class Server {
 		livroRepository.generateLivroReport();
 	}
 	
+	/*
+	 * PARTE 4
+	 * Métodos de Login
+	 */
+	
+	/*
+	 * Só frisando, NÃO SE USA PASSWORD COMO STRING PURA SOLTA NO CÓDIGO
+	 * PELAMORDEDEUS USE CRIPTOGRAFIA E UM MÉTODO SEGURO DE LOGIN
+	 */
+	public Boolean logIn(String user, String pass) {
+		login.setUser(user); login.setPass(pass);
+		login.setTipoAcesso(loginRepository.logIn(login));
+		if (null != login.getTipoAcesso()) {
+			mainWindow.setEnabled(true);
+			login.setLogged(true);
+			return true;
+		} else
+			return false;
+	}
+	
 	/**
 	 * Converte String para Inteiro com retorno automático de 0 no caso de caracteres inválidos
 	 * @param s inteiro a ser convertido
@@ -286,5 +323,16 @@ public class Server {
 		}
 		return i;
 	}
+
+	protected void setMainWindow(MainWindow mainWindow) {
+		this.mainWindow = mainWindow;
+	}
 	
+	public Boolean isUserLoggedIn() {
+		return this.login.isLogged();
+	}
+	
+	public int getUserAccessLevel() {
+		return this.login.getTipoAcesso().getNivelAcesso();
+	}
 }

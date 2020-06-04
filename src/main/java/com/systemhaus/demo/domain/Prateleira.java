@@ -10,10 +10,16 @@ public class Prateleira {
 	private Estante estante;
 	private List<Livro> livros;
 	private static final int size = 20;
+	private int numero;
 
 	public Prateleira(Estante e) {
 		setEstante(e);
 		setLivros(new ArrayList<Livro>());
+	}
+	
+	public Prateleira(Estante e, int numero) {
+		this(e);
+		this.numero = numero;
 	}
 	
 	public Prateleira(List<Livro> livros, Estante e) {
@@ -74,6 +80,14 @@ public class Prateleira {
 	
 	public boolean isEmpty() {
 		return this.livros.size() == 0;
+	}
+
+	public int getNumero() {
+		return numero;
+	}
+
+	public void setNumero(int numero) {
+		this.numero = numero;
 	}
 	
 }

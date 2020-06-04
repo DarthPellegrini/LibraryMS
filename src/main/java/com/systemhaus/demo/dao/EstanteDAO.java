@@ -11,6 +11,7 @@ import com.systemhaus.demo.domain.Estante;
 import com.systemhaus.demo.domain.EstanteRepository;
 import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.Prateleira;
+import static java.lang.Math.toIntExact;
 
 public class EstanteDAO implements EstanteRepository {
 
@@ -20,6 +21,7 @@ public class EstanteDAO implements EstanteRepository {
 		this.sessionFactory = sessionFactory;
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
 	@Override
 	public Prateleira getPrateleiraWithEmptySpace() {
@@ -57,7 +59,7 @@ public class EstanteDAO implements EstanteRepository {
 	public void addEstante() {
 		Session session = sessionFactory.getCurrentSession();
 		
-		Estante e = new Estante();
+		Estante e = new Estante(toIntExact(getCountOfEstantes()));
 		e.initializeEstante();
 		session.save(e);
 	}

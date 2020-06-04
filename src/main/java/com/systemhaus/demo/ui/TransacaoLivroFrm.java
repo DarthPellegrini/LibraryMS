@@ -41,6 +41,8 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	private JTextField txtfQuantDisp;
 	private JTextField txtfAutor;
 	private JTextField txtfEditora;
+	private JTextField txtfEstante;
+	private JTextField txtfPrateleira;
 	private JTextField txtfRetirado;
 	private LivroSelectionPanel livroTablePanel;
 	private PresentationModel<Livro> livroModel;
@@ -370,6 +372,12 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		txtfRetirado = new JTextField(); 
 		txtfRetirado.setEditable(false);
 		
+		txtfEstante = new JTextField();
+		txtfEstante.setEditable(false);
+		
+		txtfPrateleira = new JTextField();
+		txtfPrateleira.setEditable(false);
+		
 		txtfQuant = new JTextField();
 		txtfQuant.setEditable(false);
 		
@@ -455,36 +463,38 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	
 	private JPanel createLivroPanel() {
 		DefaultFormBuilder builder = new DefaultFormBuilder(
-				new FormLayout("right:pref, 3dlu, 127dlu, 3dlu, pref", 
+				new FormLayout("right:pref, 3dlu, 63dlu, 6dlu, right:pref, 3dlu, 63dlu", 
 								"18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu"));
 		builder.border(new EmptyBorder(5, 5, 5, 5));
 		
-		builder.append("ISBN:",txtfIsbn);
+		builder.append("ISBN:",txtfIsbn, 5);
 		builder.nextLine();
 		
-		builder.append("Título:", txtfTitulo);
+		builder.append("Título:", txtfTitulo, 5);
 		builder.nextLine();
 		
-		builder.append("Autor:", txtfAutor);
+		builder.append("Autor:", txtfAutor, 5);
 		builder.nextLine();
 		
-		builder.append("Editora:", txtfEditora);
+		builder.append("Editora:", txtfEditora, 5);
 		builder.nextLine();
 		
 		builder.append("Edicao:", txtfEdicao);
+		
+		builder.append("Nº Pag:", txtfNPag);
 		builder.nextLine();
 		
-		builder.append("Nº de Páginas:", txtfNPag);
+		builder.append("Retirado", txtfRetirado, 5);
 		builder.nextLine();
 		
-		builder.append("Retirado", txtfRetirado);
+		builder.append("Quant:", txtfQuant);
+		
+		builder.append("Disp:", txtfQuantDisp);
 		builder.nextLine();
 		
-		builder.append("Quantidade:", txtfQuant);
-		builder.nextLine();
+		builder.append("Estante:",txtfEstante);
 		
-		builder.append("Quant. Disponível:", txtfQuantDisp);
-		builder.nextLine();
+		builder.append("Prateleira:",txtfPrateleira);
 		
 		return builder.build();
 	}
@@ -559,9 +569,13 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	}
 	
 	private final void setRemainingDataForLivro() {
+		server.initializeLivro(livroModel.getBean());
 		txtfQuant.setText(String.valueOf(server.returnBookCount(livroModel.getBean().getISBN())));
 		txtfQuantDisp.setText(String.valueOf(server.returnAvailableBookCount(livroModel.getBean().getISBN())));
 		txtfRetirado.setText(livroModel.getBean().isRetirado() ? "Retirado" : "Disponível");
+		txtfPrateleira.setText(String.valueOf(livroModel.getBean().getPrateleira().getNumero()));
+		txtfEstante.setText(String.valueOf(livroModel.getBean().getPrateleira().getEstante().getNumero()));
+		txtfEscolhaLivro.setText("");
 	}
 	
 	private final void setRemainingDataForBothModels() {
@@ -570,6 +584,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 			setRemainingDataForLivro();
 		} else {
 			clienteTablePanel.setSelectionToANewObject(livroRetiradoModel.getBean().getCliente());
+			txtfEscolhaCliente.setText("");
 		}
 	}
 	

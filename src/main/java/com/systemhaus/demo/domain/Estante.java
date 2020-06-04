@@ -9,6 +9,7 @@ public class Estante {
 	private int id;
 	private List<Prateleira> prateleiras;
 	private static final int size = 5;
+	private int numero;
 	
 	public Estante(List<Prateleira> prateleiras) {
 		setPrateleiras(prateleiras);
@@ -16,6 +17,11 @@ public class Estante {
 	
 	public Estante() {
 		setPrateleiras(new ArrayList<Prateleira>());
+	}
+	
+	public Estante(int numero) {
+		this();
+		this.numero = numero;
 	}
 	
 	public int getId() {
@@ -27,8 +33,10 @@ public class Estante {
 	}
 
 	public void initializeEstante() {
-		for (int i = 0; i < size; i++)
-			this.getPrateleiras().add(new Prateleira(this));
+		for (int i = 0; i < size; i++) {
+			this.getPrateleiras().add(new Prateleira(this,i));
+			
+		}
 	}
 	
 	public static int getSize() {
@@ -69,5 +77,13 @@ public class Estante {
 			if (!p.isFull())
 				return false;
 		return true;
+	}
+
+	public int getNumero() {
+		return numero;
+	}
+
+	public void setNumero(int numero) {
+		this.numero = numero;
 	}
 }

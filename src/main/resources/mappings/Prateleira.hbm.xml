@@ -22,6 +22,7 @@
             </key>
             <one-to-many class="com.systemhaus.demo.domain.Livro" />
         </bag>
+        <property name = "numero" column = "numero" type = "int"/>
       
    </class>
 </hibernate-mapping>

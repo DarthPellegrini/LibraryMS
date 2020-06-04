@@ -44,6 +44,7 @@
         	<constructor-arg index = "2" type="com.systemhaus.demo.domain.ClienteRepository" ref="clienteDAO"/>
         	<constructor-arg index = "3" type="com.systemhaus.demo.domain.LivroRetiradoRepository" ref="livroRetiradoDAO"/>
         	<constructor-arg index = "4" type="com.systemhaus.demo.domain.RegLivrosRepository" ref="regLivrosDAO"/>
+        	<constructor-arg index = "5" type="com.systemhaus.demo.domain.LoginRepository" ref="loginDAO"/>
         </bean> 
         
         <bean name="estanteDAO" class="com.systemhaus.demo.dao.EstanteDAO" autowire="byType"/>
@@ -51,4 +52,5 @@
         <bean name="clienteDAO" class="com.systemhaus.demo.dao.ClienteDAO" autowire="byType"/>
         <bean name="livroRetiradoDAO" class="com.systemhaus.demo.dao.LivroRetiradoDAO" autowire="byType"/>
         <bean name="regLivrosDAO" class="com.systemhaus.demo.dao.RegLivrosDAO" autowire="byType"/>
+        <bean name="loginDAO" class="com.systemhaus.demo.dao.LoginDAO" autowire="byType"/>
 </beans>

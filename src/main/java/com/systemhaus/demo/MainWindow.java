@@ -16,6 +16,7 @@ import java.awt.Cursor;
 import javax.swing.JInternalFrame;
 
 import com.systemhaus.demo.ui.CadastroLivroFrm;
+import com.systemhaus.demo.ui.LoginFrm;
 import com.systemhaus.demo.ui.CadastroClienteFrm;
 import com.systemhaus.demo.ui.TransacaoLivroFrm;
 
@@ -26,6 +27,9 @@ public class MainWindow {
 
 	private JFrame frame;
 	private Server server;
+	private JButton btnLivro;
+	private JButton btnUser;
+	private JButton btnTran;
 	
 	/**
 	 * Launch the application.
@@ -60,7 +64,7 @@ public class MainWindow {
 	 */
 	public MainWindow() {
 		initialize();
-		//server.testJasperReports();
+		this.createLoginFrm();
 	}
 
 	/**
@@ -68,9 +72,10 @@ public class MainWindow {
 	 */
 	private void initialize() {
 		server = ServerFactory.createServer();
+		server.setMainWindow(this); //bad practice, judge not the man, but his time constraints
 		frame = new JFrame("SGBooks - Sistema de Gerenciamento de Biblioteca");
 		frame.setBounds(0, 0, 1280, 720);
-		frame.setMaximumSize(new java.awt.Dimension(1280,720));
+		frame.setMaximumSize(new java.awt.Dimension(1920,1080));
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JDesktopPane desktopPane = new JDesktopPane();
@@ -96,7 +101,7 @@ public class MainWindow {
 		//loading image and scaling it to the button size
 		Image imgBook = new ImageIcon(getClass().getResource("/book.png")).getImage(); 
 	    ImageIcon imageBook = new ImageIcon(imgBook.getScaledInstance( 35,35,  java.awt.Image.SCALE_SMOOTH ));
-		JButton btnLivro = new JButton("",imageBook);
+		btnLivro = new JButton("",imageBook);
 		btnLivro.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnLivro.setBounds(60, 35, 45, 45);
 		desktopPane.add(btnLivro);
@@ -109,7 +114,7 @@ public class MainWindow {
 		//loading image and scaling it to the button size
 		Image imgUser = new ImageIcon(getClass().getResource("/user.png")).getImage(); 
 	    ImageIcon imageUser = new ImageIcon(imgUser.getScaledInstance( 35,35,  java.awt.Image.SCALE_SMOOTH ));
-		JButton btnUser = new JButton("", imageUser);
+		btnUser = new JButton("", imageUser);
 		btnUser.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnUser.setBounds(60, 115, 45, 45);
 		desktopPane.add(btnUser);
@@ -122,7 +127,7 @@ public class MainWindow {
 		//loading image and scaling it to the button size
 		Image imgTran = new ImageIcon(getClass().getResource("/transaction.png")).getImage(); 
 	    ImageIcon imageTran = new ImageIcon(imgTran.getScaledInstance( 35,35,  java.awt.Image.SCALE_SMOOTH ));
-		JButton btnTran = new JButton("",imageTran);
+		btnTran = new JButton("",imageTran);
 		btnTran.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		btnTran.setBounds(60, 195, 45, 45);
 		desktopPane.add(btnTran);
@@ -158,5 +163,19 @@ public class MainWindow {
 			}
 		});
 		
+		setEnabled(false);
 	}
+	
+	public void createLoginFrm() {
+		JInternalFrame loginFrm = new LoginFrm().createForm(server);
+		((JDesktopPane)frame.getContentPane().getComponent(0)).add(loginFrm);
+		loginFrm.setVisible(true);
+	}
+	
+	public void setEnabled(boolean bool) {
+		btnLivro.setEnabled(bool);
+		btnUser.setEnabled(bool);
+		btnTran.setEnabled(bool);
+	}
+	
 }
