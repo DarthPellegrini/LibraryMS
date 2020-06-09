@@ -121,7 +121,7 @@ public class LivroDAO implements LivroRepository {
 		
 		Session session = sessionFactory.getCurrentSession();
 		
-		String hql = "from Livro l where ";
+		String hql = "from Livro l join fetch l.prateleira p join fetch p.estante e where ";
 		String parameters = "";
 		String data[] = {example.getISBN(), example.getTitulo(), example.getAutor(), example.getEditora()};
 		String dataIndex[] = {"l.ISBN","l.titulo","l.autor","l.editora"};
@@ -188,6 +188,13 @@ public class LivroDAO implements LivroRepository {
 	        l.setAllDataFrom(livro);
 	        session.update(l);
 		}
+	}
+	
+	@Transactional
+	@Override
+	public void update(Livro livro) {
+		Session session = sessionFactory.getCurrentSession();
+		session.update(livro);
 	}
 	
 	@Transactional
@@ -369,15 +376,13 @@ public class LivroDAO implements LivroRepository {
 	@Override
 	public void deleteOnlyTheseBooks(String iSBNOriginal, List<Prateleira> prateleiras, List<Livro> livros,
 			int delete) {
-		// TODO Auto-generated method stub
-		
+		//Deprecated
 	}
 
 	@Deprecated
 	@Override
 	public void deleteAllTheseBooks(String iSBNOriginal, List<Prateleira> prateleiras, List<Livro> livros) {
-		// TODO Auto-generated method stub
-		
+		//Deprecated
 	}
 	
 	@Deprecated

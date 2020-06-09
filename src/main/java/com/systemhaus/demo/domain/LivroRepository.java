@@ -23,6 +23,7 @@ public interface LivroRepository {
 	public abstract void deleteOnlyTheseBooks(String iSBNOriginal, int delete);
 	public abstract void generateLivroReport();
 	public abstract Livro initializeLivro(Livro livro);
+	public abstract void update(Livro livro);
 	
 	
 }

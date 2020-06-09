@@ -112,7 +112,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 				livroSelection.setList(new ArrayListModel<>(livros));
 				if(livros.size() == 1) {
 					this.tablePanel.setSelectionToLastObject();
-					server.initializeLivro(model.getBean());
+					//server.initializeLivro(model.getBean());
 					livroISBN = model.getBean().getISBN();
 					txtfQuant.setText(String.valueOf(server.returnBookCount(livroISBN)));
 					txtfPrateleira.setText(String.valueOf(model.getBean().getPrateleira().getNumero()));

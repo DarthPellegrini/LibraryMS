@@ -132,7 +132,8 @@ public class Server {
 			if(quantCopias < quantNoAcervo) 
 				this.deleteBook(iSBNOriginal,quantNoAcervo-quantCopias);
 		//alteração dos dados
-		livroRepository.editByExample(iSBNOriginal, livro);
+		livroRepository.update(livro);
+		//livroRepository.editByExample(iSBNOriginal, livro);
 		return true;
 	}
 	

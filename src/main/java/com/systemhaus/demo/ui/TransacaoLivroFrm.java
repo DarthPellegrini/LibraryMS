@@ -269,8 +269,9 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 			if (livroModel.getBean().validate() && clienteModel.getBean().validate())
 				switch (server.devolucao(livroRetiradoModel.getBean())) {
 					case 0:
-						clearDataAndSetButtons(true, btnArray, addMode);
 						JOptionPane.showMessageDialog(null, "O livro devolvido com sucesso!");
+						this.selectedPanel = "clr";
+						clearDataAndSetButtons(true, btnArray, addMode);
 						break;
 					case 1:
 						JOptionPane.showMessageDialog(null, "Este livro já foi devolvido!");
@@ -568,7 +569,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	}
 	
 	private final void setRemainingDataForLivro() {
-		server.initializeLivro(livroModel.getBean());
+		//server.initializeLivro(livroModel.getBean());
 		txtfQuant.setText(String.valueOf(server.returnBookCount(livroModel.getBean().getISBN())));
 		txtfQuantDisp.setText(String.valueOf(server.returnAvailableBookCount(livroModel.getBean().getISBN())));
 		txtfRetirado.setText(livroModel.getBean().isRetirado() ? "Retirado" : "Disponível");

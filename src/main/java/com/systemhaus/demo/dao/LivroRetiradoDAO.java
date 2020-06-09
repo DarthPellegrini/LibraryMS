@@ -1,7 +1,5 @@
 package com.systemhaus.demo.dao;
 
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.hibernate.Query;
@@ -56,45 +54,22 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 		
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Transactional(readOnly = true)
 	@Override
 	public List<LivroRetirado> findSimilarLivroRetirado(Livro livro, Cliente cliente) {
 		Session session = sessionFactory.getCurrentSession();
 		
-		/* alterar query para verificar quais parâmetros serão utilizados, 
-		 * SE AMBOS o livro E o cliente foram informados
-		 * SE SOMENTE o LIVRO foi informado
-		 * SE SOMENTE o CLIENTE foi informado
-		 **/ 
-		
 		Query query = session.createQuery(
-				"select lr.id, lr.retirada.id, lr.dataDevolucao, lr.livro.id from LivroRetirado lr, Evento e"
-				+ " where lr.livro.retirado = true and lr.retirada.id = e.id and e.tipoEvento != " + TipoEvento.DEVOLUCAO.ordinal()
+				"from LivroRetirado lr join fetch lr.retirada join fetch lr.renovacoes join fetch lr.cliente cl join fetch lr.livro l join fetch l.prateleira p join fetch p.estante join fetch cl.cartao join fetch cl.endereco"
+				+ " where lr.livro.retirado = true "
+				//+ " and lr.livro.id = l.id and lr.cliente.id = cl.id and cl.cartao.id = ca.id and cl.endereco.id = en.id "
 				+ (livro.validate() ? " and lr.livro.ISBN = \'" + livro.getISBN() + "\'" : "")
 				+ (cliente.validate() ? " and lr.cliente.id = " + cliente.getId() : ""));
 	
-		List<LivroRetirado> livrosRetirados = new ArrayList<LivroRetirado>();
+		List<LivroRetirado> result = (List<LivroRetirado>)query.list();
 		
-		//TODO: fazer revisões sobre o IF para a inclusão
-		List<Object[]> result = query.list();
-		for (Object[] obj : result) {
-			Evento retirada = (Evento) session.get(Evento.class, (int)obj[1]);
-			livro.setId((int)obj[3]);
-			LivroRetirado livroR = new LivroRetirado(livro, cliente, retirada);
-			livroR.setDataDevolucao((Date)obj[2]);
-			livroR.setId((int)obj[0]);
-			
-			Query renQuery = session.createQuery(
-					"from Evento where livroRetirado = " + livroR.getId() + " and tipoEvento = " + TipoEvento.RENOVACAO.ordinal());
-			
-			if(renQuery.list().size() != 0) {
-				livroR.setRenovacoes(renQuery.list());
-			}
-			
-			livrosRetirados.add(livroR);
-		}
-		
-		return livrosRetirados;
+		return result;
 	}
 	
 	@Transactional
