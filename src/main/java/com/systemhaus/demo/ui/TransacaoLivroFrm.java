@@ -501,33 +501,32 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	
 	private JPanel createClientePanel() {
 		DefaultFormBuilder builder = new DefaultFormBuilder(
-				new FormLayout("right:pref, 3dlu, 127dlu, 3dlu, pref", 
+				new FormLayout("right:pref, 3dlu, 63dlu, 6dlu, right:pref, 3dlu, 63dlu", 
 								"18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu"));
 		builder.border(new EmptyBorder(5, 5, 5, 5));
 		
-		builder.append("Nome:", txtfNome);
+		builder.append("Nome:", txtfNome, 5);
 		builder.nextLine();
 		
-		builder.append("CPF:", txtfCpf);
+		builder.append("CPF:", txtfCpf, 5);
 		builder.nextLine();
 		
-		builder.append("Telefone:", txtfTelefone);
+		builder.append("Telefone:", txtfTelefone, 5);
 		builder.nextLine();
 		
-		builder.append("Cidade:", txtfCidade);
+		builder.append("Cidade:", txtfCidade, 5);
 		builder.nextLine();
 		
-		builder.append("Bairro:", txtfBairro);
+		builder.append("Bairro:", txtfBairro, 5);
 		builder.nextLine();
 		
-		builder.append("Rua:", txtfRua);
+		builder.append("Rua:", txtfRua, 5);
 		builder.nextLine();
 		
-		builder.append("Número:", txtfNumero);
+		builder.append("Número:", txtfNumero, 5);
 		builder.nextLine();
 		
 		builder.append("Cód. Cartão:", txtfCodCartao);
-		builder.nextLine();
 		
 		builder.append("Validade:", txtfValidade);
 		builder.nextLine();
@@ -606,6 +605,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 				this.livroTablePanel.clearList();
 				this.livroTablePanel.setSelectionToANewObject();
 				txtfRetirado.setText(""); txtfQuant.setText(""); txtfQuantDisp.setText("");
+				txtfPrateleira.setText("");	txtfEstante.setText("");
 			}
 			if(selectedPanel.contains("c")) {
 				txtfEscolhaCliente.setText("");

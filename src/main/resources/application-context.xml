@@ -12,7 +12,7 @@
 			<property name="driverClass" value="org.postgresql.Driver" />
 			<property name="user" value="postgres" />
 			<property name="password" value="postgres" />
-			<property name="jdbcUrl" value="jdbc:postgresql://localhost:5432/postgres" />
+			<property name="jdbcUrl" value="jdbc:postgresql://localhost:5432/postgres?currentSchema=libraryms" />
 		</bean>
         
         <bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean">
@@ -27,6 +27,7 @@
             		hibernate.dialect=org.hibernate.dialect.PostgreSQLDialect
 					hbm2ddl.auto=update
 					show_sql=true
+					format_sql=true
 	            </value>
 	        </property>
 	    </bean>

@@ -12,7 +12,7 @@
       
       
       <id name = "id" type = "int" column = "cliente_id">
-         <generator class="sequence"/>
+         <generator class="native"/>
       </id>
       <property name = "cpf" type = "string" column = "cpf" unique="true"/>
       <property name = "nome" column = "nome" type = "string"/>

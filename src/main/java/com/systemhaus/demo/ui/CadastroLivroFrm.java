@@ -253,6 +253,8 @@ public class CadastroLivroFrm extends SkeletonFrm{
 			this.tablePanel.clearList();
 			this.tablePanel.setSelectionToANewObject();
 			txtfQuant.setText("");
+			txtfPrateleira.setText("");
+			txtfEstante.setText("");
 		}
 		for(int i = 0; i < btnArray.length; i++)
 			btnArray[i].setEnabled(modeList[i]);

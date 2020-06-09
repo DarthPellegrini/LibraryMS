@@ -172,37 +172,37 @@ public class CadastroClienteFrm extends SkeletonFrm{
 	
 	protected JPanel createMainPanel() {
 		DefaultFormBuilder builder = new DefaultFormBuilder(
-				new FormLayout("right:pref, 3dlu, pref:grow", "18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu"));
+				new FormLayout("right:pref, 3dlu, pref:grow, 6dlu, right:pref, 3dlu, pref:grow", "18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,18dlu,26dlu"));
 		builder.border(new EmptyBorder(5, 5, 5, 5));
 		
-		builder.append("Nome:",txtfNome);
+		builder.append("Nome:",txtfNome, 5);
 		builder.nextLine();
 		
-		builder.append("CPF:",txtfCpf);
+		builder.append("CPF:",txtfCpf, 5);
 		builder.nextLine();
 		
-		builder.append("Telefone:",txtfTelefone);
+		builder.append("Telefone:",txtfTelefone, 5);
 		builder.nextLine();
 		
-		builder.append("Cidade:",txtfCidade);
+		builder.append("Cidade:",txtfCidade, 5);
 		builder.nextLine();
 		
-		builder.append("Bairro:",txtfBairro);
+		builder.append("Bairro:",txtfBairro, 5);
 		builder.nextLine();
 		
-		builder.append("Rua:",txtfRua);
+		builder.append("Rua:",txtfRua, 5);
 		builder.nextLine();
 		
-		builder.append("Número:",txtfNumero);
+		builder.append("Número:",txtfNumero, 5);
 		builder.nextLine();
 		
-		builder.append("Cód. do Cartão:",txtfCodCartao);
-		builder.nextLine();
+		builder.append("Cód. Cartão:",txtfCodCartao);
 		
 		builder.append("Data de Validade:",txtfValidade);
 		builder.nextLine();
 		
-		builder.append(cardPanel, 3);
+		builder.nextColumn();
+		builder.append(cardPanel,3);
 		builder.nextLine();
 		
 		return builder.build();
@@ -214,7 +214,7 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		iFrameCadUser.setBounds(190, 35, 735, 380);
 		
 		model = new PresentationModel<Cliente>(clienteSelection);
-		tablePanel = new ClienteSelectionPanel(clienteSelection, 1, 18);
+		tablePanel = new ClienteSelectionPanel(clienteSelection, 1, 16);
 		cardPanel = new JPanel(new FlowLayout());
 		
 		ValueModel NomeAdapter = model.getModel("nome");
