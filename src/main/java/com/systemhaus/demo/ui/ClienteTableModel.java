@@ -12,7 +12,7 @@ public class ClienteTableModel extends AbstractTableAdapter<Cliente>{
 	private static final long serialVersionUID = 1L;
 
 	public ClienteTableModel(SelectionInList<Cliente> selection) {
-		super(selection, "Nome", "CPF", "Telefone", "Cidade", "Bairro", "Rua", "NÃºmero", "CartÃ£o", "Validade");
+		super(selection, "Nome", "CPF", "Telefone", "Cidade", "Bairro", "Rua", "Número", "Cartão", "Validade");
 	}
 	
 	@Override

@@ -11,7 +11,7 @@
 			destroy-method="close">
 			<property name="driverClass" value="org.postgresql.Driver" />
 			<property name="user" value="postgres" />
-			<property name="password" value="postgres" />
+			<property name="password" value="root"/>
 			<property name="jdbcUrl" value="jdbc:postgresql://localhost:5432/postgres?currentSchema=libraryms" />
 		</bean>
         

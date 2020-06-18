@@ -4,7 +4,7 @@
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
 
 <hibernate-mapping>
-   <class name = "com.systemhaus.demo.domain.TipoAcesso" table = "tipo_acesso" schema="libraryms">
+   <class name = "com.systemhaus.demo.domain.TipoAcesso" table = "tipoacesso" schema="libraryms">
       
       <meta attribute = "class-description">
          Classe dos tipos de acesso.

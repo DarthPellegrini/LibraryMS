@@ -5,7 +5,7 @@ public class Login {
 	private int id;
 	private String user; //nome do usuário
 	private String pass; //senha (totalmente visívil, método NÃO RECOMENDADO, somente será feito assim por ser um projeto pequeno, sem uso no mundo real
-	private TipoAcesso tipoAcesso; //nível de autenticação
+	private TipoAcesso tipo_acesso; //nível de autenticação
 	private Boolean logged = false;
 	
 	public int getId() {
@@ -27,10 +27,10 @@ public class Login {
 		this.pass = pass;
 	}
 	public TipoAcesso getTipoAcesso() {
-		return tipoAcesso;
+		return tipo_acesso;
 	}
-	public void setTipoAcesso(TipoAcesso tipoAcesso) {
-		this.tipoAcesso = tipoAcesso;
+	public void setTipoAcesso(TipoAcesso tipo_acesso) {
+		this.tipo_acesso = tipo_acesso;
 	}
 	public Boolean isLogged() {
 		return logged;

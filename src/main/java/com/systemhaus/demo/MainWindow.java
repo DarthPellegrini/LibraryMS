@@ -95,7 +95,7 @@ public class MainWindow {
 		menuBar.add(mntmSobre);
 		
 		/*
-		 * Criação e personalização de Ícones e Labels 
+		 * CriaÃ§Ã£o e personalizaÃ§Ã£o de Ã�cones e Labels 
 		 */
 		
 		//loading image and scaling it to the button size
@@ -137,7 +137,7 @@ public class MainWindow {
 		lblRetiradasdevolues.setBounds(10, 246, 150, 15);
 		desktopPane.add(lblRetiradasdevolues);
 		
-		//TODO: remodelar depois em uma classe que cuidará dos Listeners de eventos
+		//TODO: remodelar depois em uma classe que cuidarÃ¡ dos Listeners de eventos
 		/*
 		 * Funcionalidades da tela
 		 */

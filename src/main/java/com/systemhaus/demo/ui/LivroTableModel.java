@@ -8,7 +8,7 @@ import com.systemhaus.demo.domain.Livro;
 public class LivroTableModel extends AbstractTableAdapter<Livro> {
 	
 	public LivroTableModel(SelectionInList<Livro> selection) {
-		super(selection, "ISBN","TÃ­tulo","Autor","Editora","EdiÃ§Ã£o","NÂº PÃ¡ginas","Disponibilidade");
+		super(selection, "ISBN","Título","Autor","Editora","Edição","Nº de Páginas","Disponibilidade");
 	}
 
 	@Override
@@ -21,7 +21,7 @@ public class LivroTableModel extends AbstractTableAdapter<Livro> {
 		case 3: return livro.getEditora();
 		case 4: return livro.getEdicao();
 		case 5: return livro.getNumeroPaginas();
-		case 6: return livro.isRetirado() ? "IndisponÃ­vel" : "DisponÃ­vel";
+		case 6: return livro.isRetirado() ? "Indisponível" : "Disponível";
 		}
 		return null;
 	}
