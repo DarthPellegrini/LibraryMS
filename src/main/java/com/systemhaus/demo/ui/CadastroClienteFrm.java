@@ -85,7 +85,7 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		JButton btnTableConfirm = tablePanel.getConfirmButton();
 		JButton btnTableCancel = tablePanel.getCancelButton();
 		
-		JButton btnRedefinirCartao = new JButton("Gerar novo cart„o");
+		JButton btnRedefinirCartao = new JButton("Gerar novo cart√£o");
 		cardPanel.add(btnRedefinirCartao);
 		
 		JButton[] btnArray = {btnAdicionarCliente, btnPesquisarCliente, btnSalvarCliente, btnDeletarCliente, btnCancelarCliente};
@@ -111,19 +111,19 @@ public class CadastroClienteFrm extends SkeletonFrm{
 						this.clearDataAndSetButtons(true, btnArray, addMode);
 						break;
 					case 1:
-						JOptionPane.showMessageDialog(null, "Os dados n„o foram inseridos corretamente, por favor, verifique se:\n# O cpf contÈm apenas n˙meros (ex: 09934567832).\n# O telefone est· inserido como 55 DDD 9 n˙mero (ex: 55 51 9 12345678), sem espaÁos.");
+						JOptionPane.showMessageDialog(null, "Os dados n√£o foram inseridos corretamente, por favor, verifique se:\n# O cpf cont√©m apenas n√∫meros (ex: 09934567832).\n# O telefone est√° inserido como 55 DDD 9 n√∫mero (ex: 5551912345678), sem espa√ßos.");
 						break;	
 					case 2:
-						JOptionPane.showMessageDialog(null, "J· existem muitos clientes nesse endereÁo, por favor, insira outro!");
+						JOptionPane.showMessageDialog(null, "J√° existem muitos clientes nesse endere√ßo, por favor, insira outro!");
 						break;
 					case 3:
-						JOptionPane.showMessageDialog(null, "J· existe um cliente com esse cpf, por favor, insira outro!");
+						JOptionPane.showMessageDialog(null, "J√° existe um cliente com esse cpf, por favor, insira outro!");
 						break;
 				}
 				} else JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
 
 			} else {
-							JOptionPane.showMessageDialog(null, "VocÍ n„o tem permiss„o para realizar esta aÁ„o!");
+							JOptionPane.showMessageDialog(null, "Voc√™ n√£o tem permiss√£o para realizar esta a√ß√£o!");
 			}
 		});
 		
@@ -151,11 +151,11 @@ public class CadastroClienteFrm extends SkeletonFrm{
 					this.clearDataAndSetButtons(true, btnArray, addMode);
 					clienteCPF = "";
 				}else
-					JOptionPane.showMessageDialog(null, "Ocorreu um erro na modificaÁ„o do cliente!");
+					JOptionPane.showMessageDialog(null, "Ocorreu um erro na modifica√ß√£o do cliente!");
 			}else
 				JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
 			} else {
-				JOptionPane.showMessageDialog(null, "VocÍ n„o tem permiss„o para realizar esta aÁ„o!");
+				JOptionPane.showMessageDialog(null, "Voc√™ n√£o tem permiss√£o para realizar esta a√ß√£o!");
 			}
 		});
 		
@@ -169,7 +169,7 @@ public class CadastroClienteFrm extends SkeletonFrm{
 			}else
 				JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
 			} else {
-				JOptionPane.showMessageDialog(null, "VocÍ n„o tem permiss„o para realizar esta aÁ„o!");
+				JOptionPane.showMessageDialog(null, "Voc√™ n√£o tem permiss√£o para realizar esta a√ß√£o!");
 			}
 		});
 		
@@ -182,7 +182,7 @@ public class CadastroClienteFrm extends SkeletonFrm{
 			if(server.getUserAccessLevel()	>	2) {
 			server.generateNewCodigoCartao(model.getBean());
 			} else {
-				JOptionPane.showMessageDialog(null, "VocÍ n„o tem permiss„o para realizar esta aÁ„o!");
+				JOptionPane.showMessageDialog(null, "Voc√™ n√£o tem permiss√£o para realizar esta a√ß√£o!");
 			}
 		});
 		
@@ -212,10 +212,10 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		builder.append("Rua:",txtfRua, 5);
 		builder.nextLine();
 		
-		builder.append("n˙mero:",txtfNumero, 5);
+		builder.append("N√∫mero:",txtfNumero, 5);
 		builder.nextLine();
 		
-		builder.append("CÛd. cart„o:",txtfCodCartao);
+		builder.append("C√≥d. cart√£o:",txtfCodCartao);
 		
 		builder.append("Data de Validade:",txtfValidade);
 		builder.nextLine();
@@ -262,12 +262,12 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		
 		txtfCodCartao = BasicComponentFactory.createTextField(CodCartaoAdapter);
 		txtfCodCartao.setEditable(false);
-		txtfCodCartao.setToolTipText("CÛdigo gerado automaticamente pelo bot„o 'Gerar novo cart„o'");
+		txtfCodCartao.setToolTipText("C√≥digo gerado automaticamente pelo bot√£o 'Gerar novo cart√£o'");
 		
 		txtfValidade = BasicComponentFactory.createFormattedTextField(ValidadeAdapter, 
 				new DateFormatter(new SimpleDateFormat("MM/yy")));
 		txtfValidade.setEditable(false);
-		txtfValidade.setToolTipText("Data gerada automaticamente pelo bot„o 'Gerar novo cart„o'");
+		txtfValidade.setToolTipText("Data gerada automaticamente pelo bot√£o 'Gerar novo cart√£o'");
 		
 		dataPanel = createMainPanel();
 		

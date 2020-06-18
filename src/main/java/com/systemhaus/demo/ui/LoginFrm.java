@@ -47,7 +47,7 @@ public class LoginFrm extends SkeletonFrm{
 		builder.appendTitle("LOGIN");
 		builder.nextLine(2);
 		
-		builder.append("Usu�rio:",txtfUser,2);
+		builder.append("Usuário:",txtfUser,2);
 		builder.nextLine(2);
 		
 		builder.append("Senha:",passfSenha,2);
@@ -81,10 +81,10 @@ public class LoginFrm extends SkeletonFrm{
 					ifLogin.setClosable(true);
 					ifLogin.doDefaultCloseAction();
 				} else {
-					JOptionPane.showMessageDialog(null, "Campo de Usu�rio ou Senha inv�lidos!");
+					JOptionPane.showMessageDialog(null, "Campo de Usuário ou Senha inválidos!");
 				}
 			} else {
-				JOptionPane.showMessageDialog(null, "Campo de Usu�rio ou Senha não foi preenchido!");
+				JOptionPane.showMessageDialog(null, "Campo de Usuário ou Senha não foi preenchido!");
 			}
 		});
 	}

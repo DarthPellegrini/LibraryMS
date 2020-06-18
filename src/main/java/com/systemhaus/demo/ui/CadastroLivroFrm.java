@@ -84,7 +84,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		JButton btnTableConfirm = tablePanel.getConfirmButton();
 		JButton btnTableCancel = tablePanel.getCancelButton();
 		
-		JButton btnTest = new JButton("Gerar Relatório");
+		JButton btnTest = new JButton("Gerar RelatÃ³rio");
 		panelLivroButtonBar.add(btnTest);
 		
 		btnTest.addActionListener(l -> {
@@ -102,11 +102,11 @@ public class CadastroLivroFrm extends SkeletonFrm{
 					JOptionPane.showMessageDialog(null, "Livro(s) inserido(s) com sucesso!");
 					this.clearDataAndSetButtons(true, btnArray, addMode);
 				}else
-					JOptionPane.showMessageDialog(null, "Ocorreu um erro na inserção do livro!");
+					JOptionPane.showMessageDialog(null, "Ocorreu um erro na inserÃ§Ã£o do livro!");
 			}else
 				JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
 			} else {
-				JOptionPane.showMessageDialog(null, "Você não tem permissão para realizar esta ação!");
+				JOptionPane.showMessageDialog(null, "VocÃª nÃ£o tem permissÃ£o para realizar esta aÃ§Ã£o!");
 			}
 		});
 		
@@ -139,11 +139,11 @@ public class CadastroLivroFrm extends SkeletonFrm{
 					this.clearDataAndSetButtons(true, btnArray, addMode);
 					livroISBN = "";
 				}else
-					JOptionPane.showMessageDialog(null, "Ocorreu um erro na modificação do(s) livro(s)!");
+					JOptionPane.showMessageDialog(null, "Ocorreu um erro na modificaÃ§Ã£o do(s) livro(s)!");
 			}else
 				JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
 			} else {
-				JOptionPane.showMessageDialog(null, "Você não tem permissão para realizar esta ação!");
+				JOptionPane.showMessageDialog(null, "VocÃª nÃ£o tem permissÃ£o para realizar esta aÃ§Ã£o!");
 			}
 		});
 		
@@ -154,11 +154,11 @@ public class CadastroLivroFrm extends SkeletonFrm{
 					JOptionPane.showMessageDialog(null, "Livro(s) deletado(s) com sucesso!");
 					this.clearDataAndSetButtons(true, btnArray, addMode);
 				}else
-					JOptionPane.showMessageDialog(null, "Ocorreu um erro na remoção do(s) livro(s)!");
+					JOptionPane.showMessageDialog(null, "Ocorreu um erro na remoÃ§Ã£o do(s) livro(s)!");
 			else
 				JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
 			} else {
-				JOptionPane.showMessageDialog(null, "Você não tem permissão para realizar esta ação!");
+				JOptionPane.showMessageDialog(null, "VocÃª nÃ£o tem permissÃ£o para realizar esta aÃ§Ã£o!");
 			}
 		});
 		
@@ -193,7 +193,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		builder.append("ISBN:", txtfIsbn, 5);
 		builder.nextLine();
 		
-		builder.append("Título:",txtfTitulo, 5);
+		builder.append("TÃ­tulo:",txtfTitulo, 5);
 		builder.nextLine();
 		
 		builder.append("Autor:", txtfAutor, 5);
@@ -202,9 +202,9 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		builder.append("Editora:", txtfEditora, 5);
 		builder.nextLine();
 		
-		builder.append("Edição:", txtfEdicao);
+		builder.append("EdiÃ§Ã£o:", txtfEdicao);
 		
-		builder.append("Nº de Páginas:", txtfNPag);
+		builder.append("NÂº de PÃ¡ginas:", txtfNPag);
 		builder.nextLine();
 		
 		builder.append("Quantidade:", txtfQuant, 5);

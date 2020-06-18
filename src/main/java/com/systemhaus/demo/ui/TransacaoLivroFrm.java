@@ -128,7 +128,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 				case "ISBN":
 					livroModel.getBean().setISBN(txtfEscolhaLivro.getText());
 					break;
-				case "Título":
+				case "Tï¿½tulo":
 					livroModel.getBean().setTitulo(txtfEscolhaLivro.getText());
 					break;
 				case "Autor":
@@ -137,10 +137,10 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 				case "Editora":
 					livroModel.getBean().setEditora(txtfEscolhaLivro.getText());
 					break;
-				case "Edição":
+				case "Ediï¿½ï¿½o":
 					livroModel.getBean().setEdicao(server.strToInt(txtfEscolhaLivro.getText()));
 					break;
-				case "Nº de Páginas":
+				case "Nï¿½ de Pï¿½ginas":
 					livroModel.getBean().setNumeroPaginas(server.strToInt(txtfEscolhaLivro.getText()));
 					break;
 			}
@@ -151,7 +151,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 				livros = server.findSimilarBooks(livroModel.getBean());
 				if (!livros.isEmpty()) {
 					setDataFromGivenBookList(livros,btnArray);
-					JOptionPane.showMessageDialog(null, "Nenhum livro buscado está disponível para retirada, somente devolução!");
+					JOptionPane.showMessageDialog(null, "Nenhum livro buscado estï¿½ disponï¿½vel para retirada, somente devoluï¿½ï¿½o!");
 				} else {
 					JOptionPane.showMessageDialog(null, "Nenhum livro encontrado!");
 				}
@@ -180,7 +180,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 				case "Rua":
 					clienteModel.getBean().setRua(txtfEscolhaCliente.getText());
 					break;
-				case "Número":
+				case "Nï¿½mero":
 					clienteModel.getBean().setNumero(server.strToInt(txtfEscolhaCliente.getText()));
 					break;
 			}
@@ -208,17 +208,17 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 						clearDataAndSetButtons(true, btnArray, addMode);
 						break;
 					case 1:
-						JOptionPane.showMessageDialog(null, "O livro buscado não possui cópias disponíveis.");
+						JOptionPane.showMessageDialog(null, "O livro buscado nÃ£o possui cÃ³pias disponÃ­veis.");
 						break;
 					case 2:
-						JOptionPane.showMessageDialog(null, "O livro buscado não foi encontrado.");
+						JOptionPane.showMessageDialog(null, "O livro buscado nÃ£o foi encontrado.");
 						break;
 					case 3:
-						JOptionPane.showMessageDialog(null, "O cliente buscado não foi encontrado.");
+						JOptionPane.showMessageDialog(null, "O cliente buscado nÃ£o foi encontrado.");
 						break;
 				}
 			} else {
-				JOptionPane.showMessageDialog(null, "Você não tem permissão para realizar esta ação!");
+				JOptionPane.showMessageDialog(null, "VocÃª nÃ£o tem permissÃ£o para realizar esta aÃ§Ã£o!");
 			}
 		});
 		
@@ -237,13 +237,13 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 					}
 				}else {
 					if(livroModel.getBean().validate() && clienteModel.getBean().validate())
-						JOptionPane.showMessageDialog(null, "Não há nenhum exemplar deste livro que tenha sido retirado por este cliente!");
+						JOptionPane.showMessageDialog(null, "nÃ£o hÃ¡ nenhum exemplar deste livro que tenha sido retirado por este cliente!");
 					else
 						if(clienteModel.getBean().validate())
-							JOptionPane.showMessageDialog(null, "Não há nenhum livro retirado por este cliente!");
+							JOptionPane.showMessageDialog(null, "nÃ£o hÃ¡ nenhum livro retirado por este cliente!");
 						else
 							if(livroModel.getBean().validate())
-								JOptionPane.showMessageDialog(null, "Não há nenhum exemplar deste livro que tenha sido retirado!");
+								JOptionPane.showMessageDialog(null, "nÃ£o hÃ¡ nenhum exemplar deste livro que tenha sido retirado!");
 				}
 			}else
 				JOptionPane.showMessageDialog(null, "Por favor, pesquise por:"
@@ -254,24 +254,23 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		
 		btnRenovar.addActionListener(l -> {
 			if(server.getUserAccessLevel()	>	0) {
-			int returnData = server.estenderRetirada(livroRetiradoModel.getBean());
-			switch(returnData) {
-				case 0:
-					JOptionPane.showMessageDialog(null, "O livro foi renovado com sucesso!");
-					this.selectedPanel = "clr";
-					clearDataAndSetButtons(true, btnArray, addMode);
-					break;
-				case 1: //limite
-					JOptionPane.showMessageDialog(null, "Este livro já foi renovado muitas vezes, por favor, devolva-o e retire outro exemplar.");
-					break;
-				default: //too soon
-					JOptionPane.showMessageDialog(null, "Este livro foi movimentado recentemente, por favor, espere mais " + returnData + " dias para poder renová-lo.");
-					break;
-			}
+				int returnData = server.estenderRetirada(livroRetiradoModel.getBean());
+				switch(returnData) {
+					case 0:
+						JOptionPane.showMessageDialog(null, "O livro foi renovado com sucesso!");
+						this.selectedPanel = "clr";
+						clearDataAndSetButtons(true, btnArray, addMode);
+						break;
+					case 1: //limite
+						JOptionPane.showMessageDialog(null, "Este livro jÃ¡ foi renovado muitas vezes, por favor, devolva-o e retire outro exemplar.");
+						break;
+					default: //too soon
+						JOptionPane.showMessageDialog(null, "Este livro foi movimentado recentemente, por favor, espere mais " + returnData + " dias para poder renovÃª-lo.");
+						break;
+				}
 			} else {
-				JOptionPane.showMessageDialog(null, "Você não tem permissão para realizar esta ação!");
+				JOptionPane.showMessageDialog(null, "VocÃª nÃ£o tem permissÃ£o para realizar esta aÃ§Ã£o!");
 			}
-			//TODO: testes unitÃ¡rios
 		});
 		
 		btnDevolver.addActionListener(l -> {
@@ -284,12 +283,12 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 							clearDataAndSetButtons(true, btnArray, addMode);
 							break;
 						case 1:
-							JOptionPane.showMessageDialog(null, "Este livro já foi devolvido!");
+							JOptionPane.showMessageDialog(null, "Este livro jÃ¡ foi devolvido!");
 							break;
 					}
 				}
 			} else {
-				JOptionPane.showMessageDialog(null, "Você não tem permissão para realizar esta ação!");
+				JOptionPane.showMessageDialog(null, "VocÃª nÃ£o tem permissÃ£o para realizar esta aÃ§Ã£o!");
 			}
 		});
 		
@@ -338,7 +337,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	}
 	
 	protected void initComponents() {
-		ifTranBook = new JInternalFrame("Retiradas & Devoluções",false, true);
+		ifTranBook = new JInternalFrame("Retiradas & DevoluÃ§Ãµes",false, true);
 		ifTranBook.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
 		ifTranBook.setBounds(190, 35, 900, 420);
 		
@@ -348,11 +347,11 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		
 		cbEscolhaLivro = new JComboBox<String>();
 		cbEscolhaLivro.addItem("ISBN");
-		cbEscolhaLivro.addItem("Título");
+		cbEscolhaLivro.addItem("TÃ­tulo");
 		cbEscolhaLivro.addItem("Autor");
 		cbEscolhaLivro.addItem("Editora");
-		cbEscolhaLivro.addItem("Edição");
-		cbEscolhaLivro.addItem("Nº de Páginas");
+		cbEscolhaLivro.addItem("EdiÃ§Ã£o");
+		cbEscolhaLivro.addItem("NÂº de PÃ¡ginas");
 		txtfEscolhaLivro = new JTextField();
 		btnPesquisaLivro = new JButton("Pesquisar");
 		
@@ -410,7 +409,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		cbEscolhaCliente.addItem("Cidade");
 		cbEscolhaCliente.addItem("Bairro");
 		cbEscolhaCliente.addItem("Rua");
-		cbEscolhaCliente.addItem("Número");
+		cbEscolhaCliente.addItem("NÃºmero");
 		txtfEscolhaCliente = new JTextField();
 		btnPesquisaCliente = new JButton("Pesquisar");
 		
@@ -485,7 +484,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		builder.append("ISBN:",txtfIsbn, 5);
 		builder.nextLine();
 		
-		builder.append("Título:", txtfTitulo, 5);
+		builder.append("TÃ­tulo:", txtfTitulo, 5);
 		builder.nextLine();
 		
 		builder.append("Autor:", txtfAutor, 5);
@@ -496,7 +495,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		
 		builder.append("Edicao:", txtfEdicao);
 		
-		builder.append("Nº Pag:", txtfNPag);
+		builder.append("NÂº Pag:", txtfNPag);
 		builder.nextLine();
 		
 		builder.append("Retirado", txtfRetirado, 5);
@@ -538,10 +537,10 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		builder.append("Rua:", txtfRua, 5);
 		builder.nextLine();
 		
-		builder.append("Número:", txtfNumero, 5);
+		builder.append("NÃºmero:", txtfNumero, 5);
 		builder.nextLine();
 		
-		builder.append("Cód. Cartão:", txtfCodCartao);
+		builder.append("CÃ³d. CartÃ£o:", txtfCodCartao);
 		
 		builder.append("Validade:", txtfValidade);
 		builder.nextLine();
@@ -586,7 +585,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		//server.initializeLivro(livroModel.getBean());
 		txtfQuant.setText(String.valueOf(server.returnBookCount(livroModel.getBean().getISBN())));
 		txtfQuantDisp.setText(String.valueOf(server.returnAvailableBookCount(livroModel.getBean().getISBN())));
-		txtfRetirado.setText(livroModel.getBean().isRetirado() ? "Retirado" : "Disponível");
+		txtfRetirado.setText(livroModel.getBean().isRetirado() ? "Retirado" : "DisponÃ­vel");
 		txtfPrateleira.setText(String.valueOf(livroModel.getBean().getPrateleira().getNumero()));
 		txtfEstante.setText(String.valueOf(livroModel.getBean().getPrateleira().getEstante().getNumero()));
 		txtfEscolhaLivro.setText("");
