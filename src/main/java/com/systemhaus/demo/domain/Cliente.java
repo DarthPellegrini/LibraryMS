@@ -28,6 +28,7 @@ public class Cliente extends Model{
 	private String telefone;
 	private Endereco endereco;
 	private Cartao cartao;
+	private boolean ativo;
 	
 	public Cliente(String nome, String cpf, String telefone, 
 			String cidade, String bairro, String rua, int numero, 
@@ -192,6 +193,14 @@ public class Cliente extends Model{
 
 	public LocalDate getValidadeAsLocalDate() {
 		return cartao.getValidadeAsLocalDate();
+	}
+
+	public boolean isAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(boolean ativo) {
+		this.ativo = ativo;
 	}
 	
 }

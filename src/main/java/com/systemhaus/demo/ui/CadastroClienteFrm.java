@@ -163,9 +163,11 @@ public class CadastroClienteFrm extends SkeletonFrm{
 			if(server.getUserAccessLevel()	>	2) {
 		
 			if (allFieldsAreFilled()) {
-				server.deleteClient(model.getBean());
-				JOptionPane.showMessageDialog(null, "Cliente deletado com sucesso!");
-				this.clearDataAndSetButtons(true, btnArray, addMode);
+				if(server.deleteClient(model.getBean())) {
+					JOptionPane.showMessageDialog(null, "Cliente deletado com sucesso!");
+					this.clearDataAndSetButtons(true, btnArray, addMode);
+				}else
+					JOptionPane.showMessageDialog(null, "Este cliente não pode ser deletado pois ainda possui devoluções pendentes!");
 			}else
 				JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
 			} else {

@@ -12,13 +12,14 @@
       
       
       <id name = "id" type = "int" column = "cliente_id">
-         <generator class="native"/>
+         <generator class="sequence"/>
       </id>
       <property name = "cpf" type = "string" column = "cpf" unique="true"/>
       <property name = "nome" column = "nome" type = "string"/>
       <property name = "telefone" column = "telefone" type = "string"/>
       <many-to-one name="endereco" foreign-key="endereco" class="com.systemhaus.demo.domain.Endereco" cascade="all"/>
       <many-to-one name="cartao" foreign-key="cartao" class="com.systemhaus.demo.domain.Cartao" unique="true" cascade="all"/>      
+      <property name = "ativo" column = "ativo" type = "boolean"/>
  
    </class>
 </hibernate-mapping>

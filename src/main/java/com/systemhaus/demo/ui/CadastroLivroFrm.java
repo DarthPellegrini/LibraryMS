@@ -169,7 +169,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		
 		btnTableConfirm.addActionListener(l -> {
 			changePanel(contentPanel,"data");
-			server.initializeLivro(model.getBean());
+			//server.initializeLivro(model.getBean());
 			livroISBN = model.getBean().getISBN();
 			txtfQuant.setText(String.valueOf(server.returnBookCount(livroISBN)));
 			txtfPrateleira.setText(String.valueOf(model.getBean().getPrateleira().getNumero()));

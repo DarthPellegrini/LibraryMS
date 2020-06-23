@@ -25,6 +25,7 @@ public class Livro extends Model{
 	private int edicao; //edição do livro
 	private int numeroPaginas; //número de páginas
 	private boolean retirado; //boolean que define se o livro está ou não retirado
+	private boolean ativo; //boolean que define se o registro do livro está ativo (pode ser pesquisado)
 	
 	public Livro(String iSBN, String titulo, String autor, String editora, int edicao, int numeroPaginas, boolean retirado, Prateleira p) {
 		super();
@@ -36,6 +37,7 @@ public class Livro extends Model{
 		setEdicao(edicao);
 		setNumeroPaginas(numeroPaginas);
 		this.retirado = retirado;
+		this.ativo = true;
 	}
 	
 	public Livro(String iSBN, String titulo, String autor, String editora, int edicao, int numeroPaginas, boolean retirado) {
@@ -47,10 +49,12 @@ public class Livro extends Model{
 		setEdicao(edicao);
 		setNumeroPaginas(numeroPaginas);
 		this.retirado = retirado;
+		this.ativo = true;
 	}
 	
 	public Livro() {
 		this.clear();
+		this.ativo = true;
 	}
 	
 	public int getId() {
@@ -183,5 +187,14 @@ public class Livro extends Model{
 		this.edicao = 0;
 		this.numeroPaginas = 0;
 		this.retirado = false;
+		this.ativo = true;
+	}
+
+	public boolean isAtivo() {
+		return ativo;
+	}
+
+	public void setAtivo(boolean ativo) {
+		this.ativo = ativo;
 	}
 }

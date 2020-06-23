@@ -63,6 +63,7 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 		Query query = session.createQuery(
 				"from LivroRetirado lr join fetch lr.retirada join fetch lr.renovacoes join fetch lr.cliente cl join fetch lr.livro l join fetch l.prateleira p join fetch p.estante join fetch cl.cartao join fetch cl.endereco"
 				+ " where lr.livro.retirado = true "
+				+ " and cl.ativo = true and l.ativo = true"
 				//+ " and lr.livro.id = l.id and lr.cliente.id = cl.id and cl.cartao.id = ca.id and cl.endereco.id = en.id "
 				+ (livro.validate() ? " and lr.livro.ISBN = \'" + livro.getISBN() + "\'" : "")
 				+ (cliente.validate() ? " and lr.cliente.id = " + cliente.getId() : ""));

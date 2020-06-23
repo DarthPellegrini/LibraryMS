@@ -42,15 +42,6 @@ public class LivroRetirado extends Model{
 		this.setDevolucao(null);
 		this.dataDevolucao = null;
 	}
-	
-	public LivroRetirado(Livro livro, Cliente cliente, Evento retirada) {
-		this.setLivro(livro);
-		this.setCliente(cliente);
-		this.setRetirada(retirada);
-		this.setRenovacoes(new ArrayList<Evento>());
-		this.setDevolucao(null);
-		setDataDevolucao(retirada.getData());
-	}
 
 	public int getId() {
 		return id;
@@ -78,7 +69,12 @@ public class LivroRetirado extends Model{
 	}
 	public void addRetirada(Evento retirada) {
 		this.setRetirada(retirada);
-		this.setDataDevolucao(retirada.getData());
+		this.setDataDevolucao(Date.from(
+						Instant.ofEpochMilli(
+						retirada.getData().getTime())
+						.atZone(ZoneId.systemDefault())
+						.toLocalDateTime().plusDays(7)
+						.atZone(ZoneId.systemDefault()).toInstant()));
 	}
 	
 	public LocalDate getDataRetiradaAsLocalDate() {
@@ -136,11 +132,7 @@ public class LivroRetirado extends Model{
 	}
 	
 	public void setDataDevolucao(Date date) {
-		this.dataDevolucao = Date.from(
-								Instant.ofEpochMilli(date.getTime())
-						      .atZone(ZoneId.systemDefault())
-						      .toLocalDateTime().plusDays(7)
-						      .atZone(ZoneId.systemDefault()).toInstant());
+		this.dataDevolucao = date;
 	}
 
 	

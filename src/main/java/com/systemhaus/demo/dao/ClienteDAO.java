@@ -39,9 +39,9 @@ public class ClienteDAO implements ClienteRepository {
 		
 		Session session = sessionFactory.getCurrentSession();
 		
-		String hql = "select c.id, c.nome, c.cpf, c.telefone, e, ca from Cliente c, Endereco e, Cartao ca where "
+		String hql = "select c.id, c.nome, c.cpf, c.telefone, c.ativo, e, ca from Cliente c, Endereco e, Cartao ca where "
 				+ "c.endereco = e.id and c.cartao = ca.id";
-		String parameters = "";
+		String parameters = " c.ativo = true ";
 		String data[] = {similar.getNome(),similar.getCpf(),similar.getTelefone(),similar.getCidade(),similar.getBairro(),similar.getRua()};
 		String dataIndex[] = {"c.nome","c.cpf","c.telefone","e.cidade","e.bairro","e.rua"};
 		
@@ -89,7 +89,8 @@ public class ClienteDAO implements ClienteRepository {
 	@Override
 	public void delete(Cliente cliente) {
 		Session session = sessionFactory.getCurrentSession();
-		session.delete(cliente);
+		cliente.setAtivo(false);
+		session.update(cliente);
 	}
 
 	@Transactional
@@ -103,7 +104,7 @@ public class ClienteDAO implements ClienteRepository {
 	@Override
 	public boolean thisCpfAlreadyExists(String CPF) {
 		Session session = sessionFactory.getCurrentSession();
-		Query query = session.createQuery("from Cliente where cpf = \'" + CPF + "\'");
+		Query query = session.createQuery("from Cliente where ativo = true and cpf = \'" + CPF + "\'");
 		List<Cliente> clientes= query.list();
 		return clientes.size() != 0;
 	}
@@ -114,7 +115,7 @@ public class ClienteDAO implements ClienteRepository {
 		Session session = sessionFactory.getCurrentSession();
 		Query query = session.createQuery("select c.id, c.nome, c.cpf, c.telefone, e, ca "
 									+ "from Cliente c, Cartao ca, Endereco e "
-									+ "where c.cartao = ca.id and c.endereco = e.id and ca.codigo = \'" + code + "\'");
+									+ "where c.ativo = ativo = true and c.cartao = ca.id and c.endereco = e.id and ca.codigo = \'" + code + "\'");
 		
 		List<Object[]> list= query.list();
 		
@@ -134,7 +135,7 @@ public class ClienteDAO implements ClienteRepository {
 	public boolean thereAreTooManySimilarAddresses(Endereco exemplo) {
 		Session session = sessionFactory.getCurrentSession();
 		
-		Query query = session.createQuery("from Cliente c where c.endereco = " + exemplo.getId());
+		Query query = session.createQuery("from Cliente c where c.ativo = true and c.endereco = " + exemplo.getId());
 		
 		List<Cliente> list= query.list();
 		

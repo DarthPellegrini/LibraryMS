@@ -35,7 +35,6 @@ public class EstanteDAO implements EstanteRepository {
 			if((long)obj[1] < Prateleira.getSize()) {
 				int prateleiraID = (int) obj[0];
 				p = (Prateleira) session.get(Prateleira.class, prateleiraID);
-				session.close();
 				return p;
 			}
 		}
@@ -43,8 +42,10 @@ public class EstanteDAO implements EstanteRepository {
 		return p;
 	}
 
+	@Transactional(readOnly = true)
 	@Override
 	public boolean addBook(Livro livro) {
+		Session session = sessionFactory.getCurrentSession();
 		Prateleira p = this.getPrateleiraWithEmptySpace();
 		if (p == null)
 			return false;
@@ -54,7 +55,7 @@ public class EstanteDAO implements EstanteRepository {
 		}
 	}
 	
-	@Transactional(readOnly = true)
+	@Transactional
 	@Override
 	public void addEstante() {
 		Session session = sessionFactory.getCurrentSession();

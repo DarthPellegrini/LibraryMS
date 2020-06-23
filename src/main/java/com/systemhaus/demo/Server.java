@@ -3,6 +3,7 @@ package com.systemhaus.demo;
 import com.systemhaus.demo.domain.Login;
 import com.systemhaus.demo.domain.LoginRepository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -97,6 +98,7 @@ public class Server {
 					estanteRepository.addBook(copy);
 				}
 				livroRepository.save(copy);
+				regLivrosRepository.addDisponivel(copy.getISBN());
 			}
 		} else {
 			return false;
@@ -133,7 +135,6 @@ public class Server {
 				this.deleteBook(iSBNOriginal,quantNoAcervo-quantCopias);
 		//alteração dos dados
 		livroRepository.update(livro);
-		//livroRepository.editByExample(iSBNOriginal, livro);
 		return true;
 	}
 	
@@ -224,8 +225,12 @@ public class Server {
 	/*
 	 * Método de exclusão do cliente
 	 */
-	public void deleteClient(Cliente cliente) {
-		clienteRepository.delete(cliente);
+	public boolean deleteClient(Cliente cliente) {
+		if(livroRetiradoRepository.findSimilarLivroRetirado(null, cliente).size() == 0) {
+			clienteRepository.delete(cliente);
+			return true;
+		} else
+			return false;
 	}
 	
 	/*
@@ -245,7 +250,7 @@ public class Server {
 	
 	/*
 	 * PARTE 3
-	 * Métodos relacionados às inserções
+	 * Métodos relacionados às transações
 	 */
 	
 	public List<Livro> findAvailableBooks(Livro l){
@@ -267,7 +272,7 @@ public class Server {
 	}
 	
 	public int estenderRetirada(LivroRetirado livroRetirado) {
-		if (livroRetirado.getTotalRenovacoes() < 3) {
+		if (livroRetirado.getTotalRenovacoes() < 3 && livroRetirado.getDataDevolucaoAsLocalDate().isBefore(LocalDate.now())) {
 			LocalDateTime dataUltimaMovimentacao = (livroRetirado.getTotalRenovacoes() == 0 
 					? livroRetirado.getRetirada().getDataRaw() 
 					: livroRetirado.getLastRenovacao().getDataRaw());

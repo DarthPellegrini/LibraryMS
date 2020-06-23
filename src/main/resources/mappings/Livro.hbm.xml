@@ -24,6 +24,7 @@
       <property name = "edicao" column = "edicao" type = "int"/>
       <property name = "numeroPaginas" column = "numeroPaginas" type = "int"/>
       <property name = "retirado" column = "retirado" type = "boolean"/>
+      <property name = "ativo" column = "ativo" type = "boolean"/>
    
    </class>
 </hibernate-mapping>
