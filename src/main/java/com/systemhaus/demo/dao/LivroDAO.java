@@ -125,7 +125,7 @@ public class LivroDAO implements LivroRepository {
 		String data[] = {example.getISBN(), example.getTitulo(), example.getAutor(), example.getEditora()};
 		String dataIndex[] = {"l.ISBN","l.titulo","l.autor","l.editora"};
 		
-		parameters += " and l.ativo = true ";
+		//parameters += " l.ativo = true ";
 		
 		for (int i = 0; i < data.length; i++) 
 			if(!data[i].isEmpty())

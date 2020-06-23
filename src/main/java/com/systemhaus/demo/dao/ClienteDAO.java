@@ -39,9 +39,9 @@ public class ClienteDAO implements ClienteRepository {
 		
 		Session session = sessionFactory.getCurrentSession();
 		
-		String hql = "select c.id, c.nome, c.cpf, c.telefone, c.ativo, e, ca from Cliente c, Endereco e, Cartao ca where "
+		String hql = "select c.id, c.nome, c.cpf, c.telefone, e, ca from Cliente c, Endereco e, Cartao ca where "
 				+ "c.endereco = e.id and c.cartao = ca.id";
-		String parameters = " c.ativo = true ";
+		String parameters = " and c.ativo = true ";
 		String data[] = {similar.getNome(),similar.getCpf(),similar.getTelefone(),similar.getCidade(),similar.getBairro(),similar.getRua()};
 		String dataIndex[] = {"c.nome","c.cpf","c.telefone","e.cidade","e.bairro","e.rua"};
 		

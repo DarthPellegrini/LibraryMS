@@ -44,6 +44,7 @@ public class Cliente extends Model{
 		this.getEndereco().setRua(rua);
 		this.getEndereco().setNumero(numero);
 		this.getCartao().setCodigo(codigo);
+		this.setAtivo(true);
 	}
 	
 	public Cliente(String nome, String cpf, String telefone, Endereco endereco, Cartao cartao) {
@@ -53,12 +54,14 @@ public class Cliente extends Model{
 		this.setNome(nome);
 		this.setCpf(cpf);
 		this.setTelefone(telefone);
+		this.setAtivo(true);
 	}
 	
 	public Cliente() {
 		super();
 		this.endereco = new Endereco();
 		this.cartao = new Cartao();
+		this.setAtivo(true);
 		this.clear();
 	}
 	

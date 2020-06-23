@@ -226,7 +226,7 @@ public class Server {
 	 * Método de exclusão do cliente
 	 */
 	public boolean deleteClient(Cliente cliente) {
-		if(livroRetiradoRepository.findSimilarLivroRetirado(null, cliente).size() == 0) {
+		if(livroRetiradoRepository.findSimilarLivroRetirado(new Livro(), cliente).size() == 0) {
 			clienteRepository.delete(cliente);
 			return true;
 		} else
