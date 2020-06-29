@@ -106,7 +106,7 @@ public class LivroDAO implements LivroRepository {
 	public void save(Livro livro) {
 		Session session = sessionFactory.getCurrentSession();
 		
-		session.saveOrUpdate(livro);
+		session.save(livro);
 	}
 	
 	@Transactional(readOnly = true)

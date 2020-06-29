@@ -74,9 +74,9 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 	
 	
 	public JInternalFrame createForm(Server server) {
+		this.server = server;
 		initComponents();
 		initLayout();
-		this.server = server;
 		return ifTranBook;
 	}
 

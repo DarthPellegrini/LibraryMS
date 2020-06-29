@@ -14,6 +14,7 @@ import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.text.DateFormatter;
 
+import com.github.javafaker.Faker;
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.BasicComponentFactory;
 import com.jgoodies.binding.list.SelectionInList;
@@ -43,14 +44,14 @@ public class CadastroClienteFrm extends SkeletonFrm{
 	private ClienteSelectionPanel tablePanel;
 	private PresentationModel<Cliente> model;
 	private SelectionInList<Cliente> clienteSelection = new SelectionInList<>();
-	private final boolean[] addMode = {true, true, false, false, false};
+	private final boolean[] addMode = {true, true, false, false, true};
 	private final boolean[] editMode = {false, false, true, true, true};
 	private final boolean[] searchMode = {false, false, false, false, true};
 	
 	public JInternalFrame createForm(Server server) {
+		this.server = server;
 		initComponents();
 		initLayout();
-		this.server = server;
 		return iFrameCadUser;
 	}
 
@@ -79,7 +80,6 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		panelCliente.add(btnDeletarCliente);
 		
 		JButton btnCancelarCliente = new JButton("Cancelar");
-		btnCancelarCliente.setEnabled(false);
 		panelCliente.add(btnCancelarCliente);
 		
 		JButton btnTableConfirm = tablePanel.getConfirmButton();
@@ -187,6 +187,22 @@ public class CadastroClienteFrm extends SkeletonFrm{
 				JOptionPane.showMessageDialog(null, "Você não tem permissão para realizar esta ação!");
 			}
 		});
+		
+		if(server.getUserAccessLevel() == 4) {
+			JButton btnGenerateData = new JButton("Gerar dados");
+			panelCliente.add(btnGenerateData);
+			
+			btnGenerateData.addActionListener(l ->{
+				Faker faker = new Faker(new java.util.Locale("pt-BR"));
+				model.getBean().setNome(faker.name().fullName());
+				model.getBean().setCpf(faker.number().digits(11));
+				model.getBean().setTelefone("55519"+faker.number().digits(8));
+				model.getBean().setCidade(faker.address().city());
+				model.getBean().setBairro(faker.address().city());
+				model.getBean().setRua(faker.address().streetName());
+				model.getBean().setNumero(faker.number().numberBetween(1,1000));
+			});
+		}
 		
 		return panelCliente;
 	}

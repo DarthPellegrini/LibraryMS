@@ -8,7 +8,7 @@ import com.systemhaus.demo.domain.LivroRetirado;
 public class LivroRetiradoTableModel extends AbstractTableAdapter<LivroRetirado> {
 
 	public LivroRetiradoTableModel(SelectionInList<LivroRetirado> selection) {
-		super(selection, "ISBN","Título","Cliente","Cartao","Data de Retirada","Nº Renovações","Data real de Devolução","Data para Devolução");
+		super(selection, "ISBN","TÃ­tulo","Cliente","CartÃ£o","Data de Retirada","NÂº RenovaÃ§Ãµes","Data real de DevoluÃ§Ã£o","Data para DevoluÃ§Ã£o");
 	}
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {

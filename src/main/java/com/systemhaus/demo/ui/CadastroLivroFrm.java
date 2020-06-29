@@ -12,6 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
+import com.github.javafaker.Book;
+import com.github.javafaker.Faker;
 import com.jgoodies.binding.PresentationModel;
 import com.jgoodies.binding.adapter.BasicComponentFactory;
 import com.jgoodies.binding.list.SelectionInList;
@@ -41,14 +43,14 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	private LivroSelectionPanel tablePanel;
 	private PresentationModel<Livro> model;
 	private SelectionInList<Livro> livroSelection = new SelectionInList<>();
-	private final boolean[] addMode = {true, true, false, false, false};
+	private final boolean[] addMode = {true, true, false, false, true};
 	private final boolean[] editMode = {false, false, true, true, true};
 	private final boolean[] searchMode = {false, false, false, false, true};
 	
 	public JInternalFrame createForm(Server server) {
+		this.server = server;
 		initComponents();
 		initLayout();
-		this.server = server;
 		return iFrameCadLivro;
 	}
 
@@ -78,7 +80,6 @@ public class CadastroLivroFrm extends SkeletonFrm{
 		panelLivroButtonBar.add(btnDeletarLivro);
 		
 		JButton btnCancelarLivro = new JButton("Cancelar");
-		btnCancelarLivro.setEnabled(false);
 		panelLivroButtonBar.add(btnCancelarLivro);
 		
 		JButton btnTableConfirm = tablePanel.getConfirmButton();
@@ -182,6 +183,22 @@ public class CadastroLivroFrm extends SkeletonFrm{
 			this.clearDataAndSetButtons(true, btnArray, addMode);
 		});
 		
+		if(server.getUserAccessLevel() == 4) {
+			JButton btnGenerateData = new JButton("Gerar dados");
+			panelLivroButtonBar.add(btnGenerateData);
+			
+			btnGenerateData.addActionListener(l ->{
+				Faker faker = new Faker(new java.util.Locale("pt-BR"));
+				model.getBean().setISBN("978"+faker.number().digits(10));
+				model.getBean().setTitulo(faker.book().title());
+				model.getBean().setAutor(faker.book().author());
+				model.getBean().setEditora(faker.book().publisher());
+				model.getBean().setEdicao(faker.number().numberBetween(1,10));
+				model.getBean().setNumeroPaginas(faker.number().numberBetween(10,3000));
+				txtfQuant.setText(String.valueOf(faker.number().numberBetween(1,100)));
+			});
+		}
+		
 		return panelLivroButtonBar;
 	}
 
@@ -220,7 +237,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 	protected void initComponents() {
 		iFrameCadLivro = new JInternalFrame("Cadastro de Livros", true, true);
 		iFrameCadLivro.setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-		iFrameCadLivro.setBounds(190, 35, 580, 300);
+		iFrameCadLivro.setBounds(190, 35, 680, 300);
 		
 		model = new PresentationModel<Livro>(livroSelection);
 		tablePanel = new LivroSelectionPanel(livroSelection, 1, 10);
