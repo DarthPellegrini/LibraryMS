@@ -61,7 +61,7 @@ public class LivroDAO implements LivroRepository {
 		 try {
 			JRBeanCollectionDataSource beanCollection =  new JRBeanCollectionDataSource(result);
 			
-			InputStream inputStream = new ClassPathResource("Livros.jrxml").getInputStream();
+			InputStream inputStream = new ClassPathResource("reports/LivroRep.jrxml").getInputStream();
 			
 		 	// First, compile jrxml file
 	        JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
@@ -89,7 +89,7 @@ public class LivroDAO implements LivroRepository {
 	 
 	        // ExporterOutput
 	        OutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(
-	                rootPath + "/reports/Livros.pdf");
+	                rootPath + "/reports/LivroRep.pdf");
 	        // Output
 	        exporter.setExporterOutput(exporterOutput);
 	 

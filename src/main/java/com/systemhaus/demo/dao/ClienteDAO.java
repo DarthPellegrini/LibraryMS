@@ -1,17 +1,37 @@
 package com.systemhaus.demo.dao;
 
+import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.transform.AliasToBeanResultTransformer;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.systemhaus.demo.domain.Cartao;
 import com.systemhaus.demo.domain.Cliente;
 import com.systemhaus.demo.domain.ClienteRepository;
 import com.systemhaus.demo.domain.Endereco;
+import com.systemhaus.demo.report.ClienteView;
+
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.export.ExporterInput;
+import net.sf.jasperreports.export.OutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class ClienteDAO implements ClienteRepository {
 	
@@ -19,6 +39,66 @@ public class ClienteDAO implements ClienteRepository {
 
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
+	}
+	
+	@Transactional(readOnly = true)
+	@Override
+	public void generateClienteReport() {
+		 Session session = sessionFactory.getCurrentSession();
+		 Query query = session.createQuery(
+				"select c.nome as nome, c.cpf as CPF, c.telefone as telefone, " +  
+				"e.cidade as cidade, e.bairro as bairro, e.rua as rua, e.numero as numero, " +
+				"ca.codigo as codigo, ca.validade as validade " + 
+				"from Cliente c, Endereco e, Cartao ca " + 
+				"where c.ativo = true " + 
+				"and e.id = c.endereco.id " + 
+				"and ca.id  = c.cartao.id ");
+		 
+		 query.setResultTransformer(new AliasToBeanResultTransformer(ClienteView.class));
+		 
+		 List<ClienteView> result = query.list();
+		 	
+		 try {
+			JRBeanCollectionDataSource beanCollection =  new JRBeanCollectionDataSource(result);
+			
+			InputStream inputStream = new ClassPathResource("reports/ClienteRep.jrxml").getInputStream();
+			
+		 	// First, compile jrxml file
+	        JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
+	 
+	        // Parameters for report
+	        Map<String, Object> parameters = new HashMap<String, Object>();
+	 
+	        JasperPrint print = JasperFillManager.fillReport(jasperReport,
+	                parameters, beanCollection);
+	 
+	        JasperViewer.viewReport(print,false);
+	        
+	        String rootPath = System.getProperty("user.dir");
+	        
+	        // Make sure the output directory exists.
+	        File outDir = new File(rootPath +"/reports");
+	        outDir.mkdirs();
+	 
+	        // PDF Exportor.
+	        JRPdfExporter exporter = new JRPdfExporter();
+	 
+	        ExporterInput exporterInput = new SimpleExporterInput(print);
+	        // ExporterInput
+	        exporter.setExporterInput(exporterInput);
+	 
+	        // ExporterOutput
+	        OutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(
+	                rootPath + "/reports/ClienteRep.pdf");
+	        // Output
+	        exporter.setExporterOutput(exporterOutput);
+	 
+	        SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
+	        exporter.setConfiguration(configuration);
+	        exporter.exportReport();
+		 }catch(Exception e) {
+			 e.printStackTrace();
+		 }
 	}
 	
 	@Transactional

@@ -88,6 +88,13 @@ public class CadastroClienteFrm extends SkeletonFrm{
 		JButton btnRedefinirCartao = new JButton("Gerar novo cartão");
 		cardPanel.add(btnRedefinirCartao);
 		
+		JButton btnReport = new JButton("Gerar Relatório");
+		panelCliente.add(btnReport);
+		
+		btnReport.addActionListener(l -> {
+			server.generateClienteReport();
+		});
+		
 		JButton[] btnArray = {btnAdicionarCliente, btnPesquisarCliente, btnSalvarCliente, btnDeletarCliente, btnCancelarCliente};
 		
 		btnTableConfirm.addActionListener(l -> {

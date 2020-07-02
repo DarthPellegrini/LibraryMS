@@ -1,5 +1,6 @@
 package com.systemhaus.demo.domain;
 
+import java.text.SimpleDateFormat;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -135,5 +136,42 @@ public class LivroRetirado extends Model{
 		this.dataDevolucao = date;
 	}
 
+	/*
+	 * Essa parte abaixo deveria estar em uma VIEW, mas como é a noite anterior a data de entrega
+	 * vou cometer esse pecado e fazer tudo no domain
+	 * NÃO SE FAZ ISSO EM UM SOFTWARE DE VERDADE, ISSO É SÓ UM PROJETO DE TESTE
+	 */
+	
+	public String getDataDevolucaoEsperada() {
+		return  new SimpleDateFormat("dd/MM/yy").format(this.getDataDevolucao());
+	}
+	
+	public String getDataDevolucaoReal() {
+		return null != this.getDevolucao() ? new SimpleDateFormat("dd/MM/yy").format(this.getDevolucao().getData()) : "";
+	}
+	
+	public String getDataLastRenovacao() {
+		return  null != this.getLastRenovacao() ? new SimpleDateFormat("dd/MM/yy").format(this.getLastRenovacao().getData()) : "";
+	}
+	
+	public String getDataRetirada() {
+		return null != this.getRetirada() ? new SimpleDateFormat("dd/MM/yy").format(this.getRetirada().getData()) : "";
+	}
+	
+	public String getNome(){
+		return this.getCliente().getNome();
+	}
+	
+	public String getCPF(){
+		return this.getCliente().getCpf();
+	}
+	
+	public String getISBN(){
+		return this.getLivro().getISBN();
+	}
+	
+	public String getTitulo(){
+		return this.getLivro().getTitulo();
+	}
 	
 }

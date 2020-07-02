@@ -167,6 +167,10 @@ public class Server {
 		return livroRepository.initializeLivro(livro);
 	}
 	
+	public void generateLivroReport() {
+		livroRepository.generateLivroReport();
+	}
+	
 	/*
 	 * PARTE 2
 	 * Métodos relacionados à inserção de Clientes
@@ -248,6 +252,10 @@ public class Server {
 		clienteRepository.createValidCode(cliente);
 	}
 	
+	public void generateClienteReport() {
+		clienteRepository.generateClienteReport();
+	}
+	
 	/*
 	 * PARTE 3
 	 * Métodos relacionados às transações
@@ -291,8 +299,16 @@ public class Server {
 		return clienteRepository.findClientWithThisCardCode(code);
 	}
 	
-	public void testJasperReports() {
-		livroRepository.generateLivroReport();
+	public void generateLivroRetiradoReport() {
+		livroRetiradoRepository.generateLivroRetiradoPendenteReport();
+	}
+	
+	public void generateLivroRetiradoHistoricoReport() {
+		livroRetiradoRepository.generateLivroRetiradoHistoricoReport();;
+	}
+	
+	public void generateLivroRetiradoAtrasadoReport() {
+		livroRetiradoRepository.generateLivroRetiradoAtrasadoReport();;
 	}
 	
 	/*

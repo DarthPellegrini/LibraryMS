@@ -12,4 +12,10 @@ public interface LivroRetiradoRepository {
 
 	public abstract List<LivroRetirado> findSimilarLivroRetirado(Livro livro, Cliente cliente);
 
+	public abstract void generateLivroRetiradoPendenteReport();
+	
+	public abstract void generateLivroRetiradoHistoricoReport();
+	
+	public abstract void generateLivroRetiradoAtrasadoReport();
+
 }

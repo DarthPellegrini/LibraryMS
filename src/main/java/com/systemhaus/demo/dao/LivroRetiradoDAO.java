@@ -1,10 +1,19 @@
 package com.systemhaus.demo.dao;
 
+import java.io.File;
+import java.io.InputStream;
+import java.sql.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.type.StandardBasicTypes;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.systemhaus.demo.domain.Cliente;
@@ -12,6 +21,20 @@ import com.systemhaus.demo.domain.Evento;
 import com.systemhaus.demo.domain.LivroRetiradoRepository;
 import com.systemhaus.demo.domain.RegLivros;
 import com.systemhaus.demo.domain.TipoEvento;
+
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRPdfExporter;
+import net.sf.jasperreports.export.ExporterInput;
+import net.sf.jasperreports.export.OutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
+import net.sf.jasperreports.export.SimplePdfExporterConfiguration;
+import net.sf.jasperreports.view.JasperViewer;
+
 import com.systemhaus.demo.domain.Livro;
 import com.systemhaus.demo.domain.LivroRetirado;
 
@@ -23,6 +46,169 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 		this.sessionFactory = sessionFactory;
 	}
 	
+	@Transactional(readOnly = true)
+	@Override
+	public void generateLivroRetiradoPendenteReport() {
+		 Session session = sessionFactory.getCurrentSession();
+		 Query query = session.createQuery(
+					"from LivroRetirado lr join fetch lr.cliente cl join fetch lr.livro l"
+					+ " where lr.livro.retirado = true"
+					+ " and cl.ativo = true and l.ativo = true");
+		 
+		 List<LivroRetirado> result = (List<LivroRetirado>)query.list();
+		 	
+		 try {
+			JRBeanCollectionDataSource beanCollection =  new JRBeanCollectionDataSource(result);
+		
+			InputStream inputStream = new ClassPathResource("reports/LivroRetiradoRep.jrxml").getInputStream();
+			
+		 	// First, compile jrxml file
+	        JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
+	 
+	        // Parameters for report
+	        Map<String, Object> parameters = new HashMap<String, Object>();
+	 
+	        JasperPrint print = JasperFillManager.fillReport(jasperReport,
+	                parameters, beanCollection);
+	 
+	        JasperViewer.viewReport(print,false);
+	        
+	        String rootPath = System.getProperty("user.dir");
+	        
+	        // Make sure the output directory exists.
+	        File outDir = new File(rootPath +"/reports");
+	        outDir.mkdirs();
+	 
+	        // PDF Exportor.
+	        JRPdfExporter exporter = new JRPdfExporter();
+	 
+	        ExporterInput exporterInput = new SimpleExporterInput(print);
+	        // ExporterInput
+	        exporter.setExporterInput(exporterInput);
+	 
+	        // ExporterOutput
+	        OutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(
+	                rootPath + "/reports/LivroRetiradoRep.pdf");
+	        // Output
+	        exporter.setExporterOutput(exporterOutput);
+	 
+	        SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
+	        exporter.setConfiguration(configuration);
+	        exporter.exportReport();
+		 }catch(Exception e) {
+			 e.printStackTrace();
+		 }
+	}
+	
+	@Transactional(readOnly = true)
+	@Override
+	public void generateLivroRetiradoHistoricoReport() {
+		 Session session = sessionFactory.getCurrentSession();
+		 Query query = session.createQuery(
+					"from LivroRetirado lr join fetch lr.cliente cl join fetch lr.livro l"
+							+ " where lr.livro.retirado = false"
+							+ " and cl.ativo = true and l.ativo = true");
+		
+		 List<LivroRetirado> result = (List<LivroRetirado>)query.list();
+		 	
+		 try {
+			JRBeanCollectionDataSource beanCollection =  new JRBeanCollectionDataSource(result);
+			
+			InputStream inputStream = new ClassPathResource("reports/LivroRetiradoHistoricoRep.jrxml").getInputStream();
+			
+		 	// First, compile jrxml file
+	        JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
+	 
+	        // Parameters for report
+	        Map<String, Object> parameters = new HashMap<String, Object>();
+	 
+	        JasperPrint print = JasperFillManager.fillReport(jasperReport,
+	                parameters, beanCollection);
+	 
+	        JasperViewer.viewReport(print,false);
+	        
+	        String rootPath = System.getProperty("user.dir");
+	        
+	        // Make sure the output directory exists.
+	        File outDir = new File(rootPath +"/reports");
+	        outDir.mkdirs();
+	 
+	        // PDF Exportor.
+	        JRPdfExporter exporter = new JRPdfExporter();
+	 
+	        ExporterInput exporterInput = new SimpleExporterInput(print);
+	        // ExporterInput
+	        exporter.setExporterInput(exporterInput);
+	 
+	        // ExporterOutput
+	        OutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(
+	                rootPath + "/reports/LivroRetiradoHistoricoRep.pdf");
+	        // Output
+	        exporter.setExporterOutput(exporterOutput);
+	 
+	        SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
+	        exporter.setConfiguration(configuration);
+	        exporter.exportReport();
+		 }catch(Exception e) {
+			 e.printStackTrace();
+		 }
+	}
+	
+	@Transactional(readOnly = true)
+	@Override
+	public void generateLivroRetiradoAtrasadoReport() {
+		 Session session = sessionFactory.getCurrentSession();
+		 Query query = session.createQuery(
+					"from LivroRetirado lr join fetch lr.cliente cl join fetch lr.livro l"
+					+ " where lr.livro.retirado = true and lr.dataDevolucao > :dataDev"
+					+ " and cl.ativo = true and l.ativo = true");
+				 
+		 query.setParameter("dataDev",  Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()), StandardBasicTypes.DATE);
+		
+		 List<LivroRetirado> result = (List<LivroRetirado>)query.list();
+		 	
+		 try {
+			JRBeanCollectionDataSource beanCollection =  new JRBeanCollectionDataSource(result);
+			
+			InputStream inputStream = new ClassPathResource("reports/LivroRetiradoAtrasadoRep.jrxml").getInputStream();
+			
+		 	// First, compile jrxml file
+	        JasperReport jasperReport = JasperCompileManager.compileReport(inputStream);
+	 
+	        // Parameters for report
+	        Map<String, Object> parameters = new HashMap<String, Object>();
+	 
+	        JasperPrint print = JasperFillManager.fillReport(jasperReport,
+	                parameters, beanCollection);
+	 
+	        JasperViewer.viewReport(print,false);
+	        
+	        String rootPath = System.getProperty("user.dir");
+	        
+	        // Make sure the output directory exists.
+	        File outDir = new File(rootPath +"/reports");
+	        outDir.mkdirs();
+	 
+	        // PDF Exportor.
+	        JRPdfExporter exporter = new JRPdfExporter();
+	 
+	        ExporterInput exporterInput = new SimpleExporterInput(print);
+	        // ExporterInput
+	        exporter.setExporterInput(exporterInput);
+	 
+	        // ExporterOutput
+	        OutputStreamExporterOutput exporterOutput = new SimpleOutputStreamExporterOutput(
+	                rootPath + "/reports/LivroRetiradoAtrasadoRep.pdf");
+	        // Output
+	        exporter.setExporterOutput(exporterOutput);
+	 
+	        SimplePdfExporterConfiguration configuration = new SimplePdfExporterConfiguration();
+	        exporter.setConfiguration(configuration);
+	        exporter.exportReport();
+		 }catch(Exception e) {
+			 e.printStackTrace();
+		 }
+	}
 	@Transactional
 	@Override
 	public boolean save(Livro livro, Cliente cliente) {
@@ -64,7 +250,6 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 				"from LivroRetirado lr join fetch lr.retirada join fetch lr.renovacoes join fetch lr.cliente cl join fetch lr.livro l join fetch l.prateleira p join fetch p.estante join fetch cl.cartao join fetch cl.endereco"
 				+ " where lr.livro.retirado = true "
 				+ " and cl.ativo = true and l.ativo = true"
-				//+ " and lr.livro.id = l.id and lr.cliente.id = cl.id and cl.cartao.id = ca.id and cl.endereco.id = en.id "
 				+ (livro.validate() ? " and lr.livro.ISBN = \'" + livro.getISBN() + "\'" : "")
 				+ (cliente.validate() ? " and lr.cliente.id = " + cliente.getId() : ""));
 	

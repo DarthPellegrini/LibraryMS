@@ -17,5 +17,6 @@ public interface ClienteRepository {
 	public abstract void delete(String CPF);
 	@Deprecated
 	public abstract void edit(String CPF, Cliente cliente);
+	public abstract void generateClienteReport();
 	
 }

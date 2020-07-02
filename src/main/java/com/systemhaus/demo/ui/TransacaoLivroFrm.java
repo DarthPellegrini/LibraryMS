@@ -107,6 +107,27 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 		JButton btnCancelar = new JButton("Cancelar");
 		panelTran.add(btnCancelar);
 		
+		JButton btnReport = new JButton("Gerar Relatório");
+		panelTran.add(btnReport);
+		
+		btnReport.addActionListener(l -> {
+			server.generateLivroRetiradoReport();
+		});
+		
+		JButton btnReportHist = new JButton("Gerar Histórico");
+		panelTran.add(btnReportHist);
+		
+		btnReportHist.addActionListener(l -> {
+			server.generateLivroRetiradoHistoricoReport();
+		});
+		
+		JButton btnReportAtrasados = new JButton("Devoluções Atrasadas");
+		panelTran.add(btnReportAtrasados);
+		
+		btnReportAtrasados.addActionListener(l -> {
+			server.generateLivroRetiradoAtrasadoReport();
+		});
+		
 		final JButton[] btnArray = {btnRetirar, btnPesquisar, btnRenovar, btnDevolver, btnPesquisaLivro, btnPesquisaCliente};
 		
 		JButton btnLivroTableConfirm = livroTablePanel.getConfirmButton();
