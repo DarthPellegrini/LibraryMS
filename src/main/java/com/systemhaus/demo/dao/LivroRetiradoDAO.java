@@ -7,8 +7,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 
+import org.hibernate.Filter;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -50,6 +52,9 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 	@Override
 	public void generateLivroRetiradoPendenteReport() {
 		 Session session = sessionFactory.getCurrentSession();
+		 Filter filter = session.enableFilter("tipoEventoFilter");
+	     filter.setParameter("tipoEventoFilterParam", TipoEvento.RENOVACAO.ordinal());
+	        
 		 Query query = session.createQuery(
 					"from LivroRetirado lr join fetch lr.cliente cl join fetch lr.livro l"
 					+ " where lr.livro.retirado = true"
@@ -104,6 +109,9 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 	@Override
 	public void generateLivroRetiradoHistoricoReport() {
 		 Session session = sessionFactory.getCurrentSession();
+		 Filter filter = session.enableFilter("tipoEventoFilter");
+	     filter.setParameter("tipoEventoFilterParam", TipoEvento.RENOVACAO.ordinal());
+	     
 		 Query query = session.createQuery(
 					"from LivroRetirado lr join fetch lr.cliente cl join fetch lr.livro l"
 							+ " where lr.livro.retirado = false"
@@ -158,9 +166,12 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 	@Override
 	public void generateLivroRetiradoAtrasadoReport() {
 		 Session session = sessionFactory.getCurrentSession();
+		 Filter filter = session.enableFilter("tipoEventoFilter");
+	     filter.setParameter("tipoEventoFilterParam", TipoEvento.RENOVACAO.ordinal());
+	     
 		 Query query = session.createQuery(
 					"from LivroRetirado lr join fetch lr.cliente cl join fetch lr.livro l"
-					+ " where lr.livro.retirado = true and lr.dataDevolucao > :dataDev"
+					+ " where lr.livro.retirado = true and lr.dataDevolucao < :dataDev"
 					+ " and cl.ativo = true and l.ativo = true");
 				 
 		 query.setParameter("dataDev",  Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant()), StandardBasicTypes.DATE);
@@ -245,15 +256,27 @@ public class LivroRetiradoDAO implements LivroRetiradoRepository{
 	@Override
 	public List<LivroRetirado> findSimilarLivroRetirado(Livro livro, Cliente cliente) {
 		Session session = sessionFactory.getCurrentSession();
-		
 		Query query = session.createQuery(
-				"from LivroRetirado lr join fetch lr.retirada join fetch lr.renovacoes join fetch lr.cliente cl join fetch lr.livro l join fetch l.prateleira p join fetch p.estante join fetch cl.cartao join fetch cl.endereco"
-				+ " where lr.livro.retirado = true "
+				"select distinct lr from LivroRetirado lr join fetch lr.retirada join fetch lr.renovacoes join fetch lr.cliente cl join fetch lr.livro l join fetch l.prateleira p join fetch p.estante join fetch cl.cartao join fetch cl.endereco"
+				+ " where l.retirado = true"
 				+ " and cl.ativo = true and l.ativo = true"
-				+ (livro.validate() ? " and lr.livro.ISBN = \'" + livro.getISBN() + "\'" : "")
-				+ (cliente.validate() ? " and lr.cliente.id = " + cliente.getId() : ""));
+				+ (livro.validate() ? " and l.ISBN = \'" + livro.getISBN() + "\'" : "")
+				+ (cliente.validate() ? " and cl.id = " + cliente.getId() : ""));
 	
 		List<LivroRetirado> result = (List<LivroRetirado>)query.list();
+		
+		/*
+		 * Má-prática: faltam exatas 3 horas pra entregar esse trabalho
+		 * sou obrigado a fazer essa gambi
+		 */
+		for (LivroRetirado lr : result) {
+			for(ListIterator<Evento> iter = lr.getRenovacoes().listIterator(); iter.hasNext();){
+			    Evento e = iter.next();
+			    if (e.getTipoEvento() != TipoEvento.RENOVACAO) {
+			    	iter.remove();
+			    }
+			}
+		}
 		
 		return result;
 	}

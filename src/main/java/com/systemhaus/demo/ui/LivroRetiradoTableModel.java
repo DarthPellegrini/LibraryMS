@@ -8,7 +8,7 @@ import com.systemhaus.demo.domain.LivroRetirado;
 public class LivroRetiradoTableModel extends AbstractTableAdapter<LivroRetirado> {
 
 	public LivroRetiradoTableModel(SelectionInList<LivroRetirado> selection) {
-		super(selection, "ISBN","Título","Cliente","Cartão","Data de Retirada","Nº Renovações","Data real de Devolução","Data para Devolução");
+		super(selection, "ISBN","Título","Cliente","Cartão","Data de Retirada","Nº Renovações","Data última renovação","Data para Devolução");
 	}
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
@@ -20,7 +20,7 @@ public class LivroRetiradoTableModel extends AbstractTableAdapter<LivroRetirado>
 		case 3: return livroRetirado.getCliente().getCartao().getCodigo();
 		case 4: return livroRetirado.getDataRetiradaAsLocalDate();
 		case 5: return livroRetirado.getTotalRenovacoes();
-		case 6: return livroRetirado.getDataDevolucaoAsLocalDate();
+		case 6: return livroRetirado.getDataLastRenovacao();
 		case 7: return livroRetirado.getDataDevolucaoRealAsLocalDate();
 		}
 		return null;

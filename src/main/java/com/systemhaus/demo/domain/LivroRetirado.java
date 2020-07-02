@@ -92,11 +92,11 @@ public class LivroRetirado extends Model{
 		this.renovacoes = renovacoes;
 	}
 	public int getTotalRenovacoes() {
-		return getRenovacoes().size();
+		return null == this.getRenovacoes() ? 0 : getRenovacoes().size();
 	}
 	
 	public Evento getLastRenovacao() {
-		return getRenovacoes().get(getRenovacoes().size()-1);
+		return null == this.getRenovacoes() ? null : getRenovacoes().isEmpty() ? null : getRenovacoes().get(getRenovacoes().size()-1);
 	}
 	
 	public Evento getDevolucao() {
@@ -104,10 +104,9 @@ public class LivroRetirado extends Model{
 	}
 	
 	public LocalDate getDataDevolucaoAsLocalDate() {
-		if (devolucao == null)
-			return null;
-		else
-			return devolucao.getDataRaw().toLocalDate();	
+		return Instant.ofEpochMilli(this.getDataDevolucao().getTime())
+		        .atZone(ZoneId.systemDefault())
+		        .toLocalDateTime().toLocalDate();	
 	}
 	
 	public Date getDataDevolucao() {

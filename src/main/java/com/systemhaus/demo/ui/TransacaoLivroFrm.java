@@ -149,7 +149,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 				case "ISBN":
 					livroModel.getBean().setISBN(txtfEscolhaLivro.getText());
 					break;
-				case "T�tulo":
+				case "Título":
 					livroModel.getBean().setTitulo(txtfEscolhaLivro.getText());
 					break;
 				case "Autor":
@@ -158,10 +158,10 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 				case "Editora":
 					livroModel.getBean().setEditora(txtfEscolhaLivro.getText());
 					break;
-				case "Edi��o":
+				case "Edição":
 					livroModel.getBean().setEdicao(server.strToInt(txtfEscolhaLivro.getText()));
 					break;
-				case "N� de P�ginas":
+				case "Nº de Páginas":
 					livroModel.getBean().setNumeroPaginas(server.strToInt(txtfEscolhaLivro.getText()));
 					break;
 			}
@@ -172,8 +172,9 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 				livros = server.findSimilarBooks(livroModel.getBean());
 				if (!livros.isEmpty()) {
 					setDataFromGivenBookList(livros,btnArray);
-					JOptionPane.showMessageDialog(null, "Nenhum livro buscado est� dispon�vel para retirada, somente devolu��o!");
+					JOptionPane.showMessageDialog(null, "Nenhum livro buscado está disponível para retirada, somente devolução!");
 				} else {
+					clearDataAndSetButtons(true, btnArray, addMode);
 					JOptionPane.showMessageDialog(null, "Nenhum livro encontrado!");
 				}
 			}
@@ -201,7 +202,7 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 				case "Rua":
 					clienteModel.getBean().setRua(txtfEscolhaCliente.getText());
 					break;
-				case "N�mero":
+				case "Número":
 					clienteModel.getBean().setNumero(server.strToInt(txtfEscolhaCliente.getText()));
 					break;
 			}
@@ -215,8 +216,10 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 					clearDataAndSetButtons(false, btnArray, searchMode);
 					changePanel(contentPanel, "tableC");
 				}
-			}else
+			}else {
+				clearDataAndSetButtons(true, btnArray, addMode);
 				JOptionPane.showMessageDialog(null, "Nenhum cliente encontrado!");
+			}
 		});
 		
 		btnRetirar.addActionListener(l -> {
@@ -258,13 +261,13 @@ public class TransacaoLivroFrm extends SkeletonFrm{
 					}
 				}else {
 					if(livroModel.getBean().validate() && clienteModel.getBean().validate())
-						JOptionPane.showMessageDialog(null, "não há nenhum exemplar deste livro que tenha sido retirado por este cliente!");
+						JOptionPane.showMessageDialog(null, "Não há nenhum exemplar deste livro que tenha sido retirado por este cliente!");
 					else
 						if(clienteModel.getBean().validate())
-							JOptionPane.showMessageDialog(null, "não há nenhum livro retirado por este cliente!");
+							JOptionPane.showMessageDialog(null, "Não há nenhum livro retirado por este cliente!");
 						else
 							if(livroModel.getBean().validate())
-								JOptionPane.showMessageDialog(null, "não há nenhum exemplar deste livro que tenha sido retirado!");
+								JOptionPane.showMessageDialog(null, "Não há nenhum exemplar deste livro que tenha sido retirado!");
 				}
 			}else
 				JOptionPane.showMessageDialog(null, "Por favor, pesquise por:"

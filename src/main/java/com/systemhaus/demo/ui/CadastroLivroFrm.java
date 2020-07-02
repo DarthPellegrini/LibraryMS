@@ -140,7 +140,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 					this.clearDataAndSetButtons(true, btnArray, addMode);
 					livroISBN = "";
 				}else
-					JOptionPane.showMessageDialog(null, "Ocorreu um erro na modificação do(s) livro(s)!");
+					JOptionPane.showMessageDialog(null, "Não é possível remover todos os livros, pois ainda existem livros retirados!");
 			}else
 				JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
 			} else {
@@ -155,7 +155,7 @@ public class CadastroLivroFrm extends SkeletonFrm{
 					JOptionPane.showMessageDialog(null, "Livro(s) deletado(s) com sucesso!");
 					this.clearDataAndSetButtons(true, btnArray, addMode);
 				}else
-					JOptionPane.showMessageDialog(null, "Ocorreu um erro na remoção do(s) livro(s)!");
+					JOptionPane.showMessageDialog(null, "Não é possível deletar todos os livros, pois ainda existem livros retirados!");
 			else
 				JOptionPane.showMessageDialog(null, "Por favor, preencha todos os campos!");
 			} else {

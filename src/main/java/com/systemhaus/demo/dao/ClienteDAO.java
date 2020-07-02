@@ -172,7 +172,7 @@ public class ClienteDAO implements ClienteRepository {
 		cliente.setAtivo(false);
 		session.update(cliente);
 	}
-
+	
 	@Transactional
 	@Override
 	public void update(Cliente cliente) {

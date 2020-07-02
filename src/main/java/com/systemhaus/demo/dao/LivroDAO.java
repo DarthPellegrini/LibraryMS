@@ -120,7 +120,7 @@ public class LivroDAO implements LivroRepository {
 		
 		Session session = sessionFactory.getCurrentSession();
 		
-		String hql = "from Livro l join fetch l.prateleira p join fetch p.estante e where ";
+		String hql = "from Livro l join fetch l.prateleira p join fetch p.estante e where l.ativo = true ";
 		String parameters = "";
 		String data[] = {example.getISBN(), example.getTitulo(), example.getAutor(), example.getEditora()};
 		String dataIndex[] = {"l.ISBN","l.titulo","l.autor","l.editora"};
@@ -129,13 +129,13 @@ public class LivroDAO implements LivroRepository {
 		
 		for (int i = 0; i < data.length; i++) 
 			if(!data[i].isEmpty())
-				parameters += (parameters.length() == 0 ? "" : " and ") + dataIndex[i] + " like \'%" + data[i] + "%\'";
+				parameters += " and " + dataIndex[i] + " like \'%" + data[i] + "%\'";
 		if (example.getEdicao() > 0)
-			parameters += (parameters.length() == 0 ? "" : " and ") + "l.edicao = " + String.valueOf(example.getEdicao());
+			parameters += " and " + "l.edicao = " + String.valueOf(example.getEdicao());
 		if (example.getNumeroPaginas() > 0)
-			parameters += (parameters.length() == 0 ? "" : " and ") + "l.numeroPaginas = " + String.valueOf(example.getNumeroPaginas());
+			parameters += " and " + "l.numeroPaginas = " + String.valueOf(example.getNumeroPaginas());
 		if(findAvailable)
-			parameters += (parameters.length() == 0 ? "" : " and ") + "l.retirado = " + isRetirado;
+			parameters += " and " + "l.retirado = " + isRetirado;
 		
 		Query query = session.createQuery(hql+parameters);
 		livros = query.list();
@@ -204,7 +204,7 @@ public class LivroDAO implements LivroRepository {
 	public void deleteAllTheseBooks(String iSBNOriginal) {
 		Session session = sessionFactory.getCurrentSession();
 		
-		Query query = session.createQuery("from Livro where l.ativo = true and ISBN = \'" + iSBNOriginal + "\'");
+		Query query = session.createQuery("from Livro where ativo = true and ISBN = \'" + iSBNOriginal + "\' and retirado = false");
 		
 		for (Livro l : (List<Livro>)query.list()) {
 			l.setAtivo(false);
@@ -217,7 +217,7 @@ public class LivroDAO implements LivroRepository {
 	public void deleteOnlyTheseBooks(String iSBNOriginal, int delete) {
 		Session session = sessionFactory.getCurrentSession();
 		
-		Query query = session.createQuery("from Livro where l.ativo = true and ISBN = \'" + iSBNOriginal + "\' and retirado = false");
+		Query query = session.createQuery("from Livro where ativo = true and ISBN = \'" + iSBNOriginal + "\' and retirado = false");
 		
 		List<Livro> livros = query.list();
 		

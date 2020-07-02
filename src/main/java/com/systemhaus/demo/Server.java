@@ -285,6 +285,7 @@ public class Server {
 					? livroRetirado.getRetirada().getDataRaw() 
 					: livroRetirado.getLastRenovacao().getDataRaw());
 			if(dataUltimaMovimentacao.plusDays(3).isBefore(LocalDateTime.now())) { 
+				
 				livroRetiradoRepository.estenderRetirada(livroRetirado);
 				return 0; //sucesso
 			}else return dataUltimaMovimentacao.plusDays(3).getDayOfYear()-LocalDateTime.now().getDayOfYear(); //erro n- renovação muito cedo
